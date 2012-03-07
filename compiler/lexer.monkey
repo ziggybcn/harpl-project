@@ -28,7 +28,7 @@ Class Lexer
 				tokens.AddLast(token)
 				i-=1	'Correct i offset, not nice.
 				
-			'Check for numeric literals:
+			'Check for numeric decimal literals:
 			ElseIf char>="0"[0] And char<="9"[0]
 				Local done:Bool, hasdot:Bool = false
 				done = False
@@ -48,7 +48,7 @@ Class Lexer
 						done = true
 					endif
 				wend
-				Local token:=New Token(sourceFile, tokenInit-lastOffset, lineNum ,txtStream[tokenInit..i],eToken.IDENTIFIER)
+				Local token:=New Token(sourceFile, tokenInit-lastOffset, lineNum ,txtStream[tokenInit..i],eToken.NUMBER )
 				tokens.AddLast(token)
 				i-=1	'Correct i offset, not nice.
 				
@@ -84,15 +84,23 @@ Class Lexer
 				token.text = ScapeChars (token.text)
 				tokens.AddLast(token)
 
-				
 			'If it is a End Of Sentence (wich can be a linefeed or a ; )
-			ElseIf char = "~n"[0] or char = ";"[0] or char = "~r"[0]
+			ElseIf char = "~n"[0] or char = "~r"[0]
+				Local token:=New Token(sourceFile,i-lastOffset, lineNum, txtStream[i..i+1],eToken.CARRIER)
+				tokens.AddLast(token)
+				if char = "~n"[0] then
+					lastOffset = i+1	'we have to add the CR in the offset
+					lineNum+= 1
+				endif
+			
+			elseif char = ";"[0]
 				Local token:=New Token(sourceFile,i-lastOffset, lineNum, txtStream[i..i+1],eToken.ENDSENTENCE)
 				tokens.AddLast(token)
 				if char = "~n"[0] then
 					lastOffset = i+1	'we have to add the CR in the offset
 					lineNum+= 1
 				endif
+			
 				
 			'If it is an operator:
 			ElseIf char = "+"[0] or char = "-"[0] or char = "*"[0] or char = "/"[0] or char = "%"[0] or char = "^"[0] or char = "&"[0] or char = "|"[0] or 
@@ -119,6 +127,40 @@ Class Lexer
 			EndIf
 			i+=1;
 		Wend
+		
+		'TOKEN MERGING:
+		Local node:list.Node<Token> = tokens.FirstNode()
+		repeat 
+			Local token:Token = node.Value()
+			Select token.Kind
+				Case eToken.OPERATOR 
+					'We join a dot + a numeral in a single identifier .5 means 0.5, we should accept this. :
+					if token.text = "." Then
+						Local nextnode:list.Node<Token> = node.NextNode()
+						if nextnode<>null Then
+							if nextnode.Value.Kind = eToken.NUMBER Then
+								token.text = "0" + token.text + nextnode.Value.text
+								token.Kind = eToken.NUMBER 
+								nextnode.Remove()
+							EndIf
+						endif
+						
+						'We joining >= and <= and <> and ><
+					ElseIf token.text = ">" or token.text = "<" Then
+						Local nextnode:list.Node<Token> = node.NextNode()
+						if nextnode<>null Then
+							if (nextnode.Value.text = "=" or nextnode.Value.text = ">" or nextnode.Value.text = "<") And 
+							nextnode.Value.Kind = eToken.OPERATOR and 
+							nextnode.Value.text <> node.Value.text then
+								token.text = token.text + nextnode.Value.text 
+								nextnode.Remove()
+							EndIf
+						endif
+					
+					EndIf
+			End
+			node = node.NextNode()
+		until node = null 'node = tokens.FirstNode()
 		
 		For Local t:Token = EachIn tokens
 			Print "$" + t.text + "$ " + t.docX + "," + t.docY

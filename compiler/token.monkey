@@ -28,4 +28,5 @@ Class eToken abstract
 	Const NUMBER:Int = 4
 	Const OPERATOR:Int = 8
 	Const ENDSENTENCE:Int = 16
+	Const CARRIER:Int = 32
 End
