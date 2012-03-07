@@ -21,7 +21,7 @@ End
 'summary: Returns strings from the middle of a string to its end. First character is 1 (instead of the regular 0 of Monkey strings)
 Function Mid:String(value:String, index:Int)
 	index -=1
-	Return value[index..(value.Length-index)]
+	Return value[index..]
 End
 
 'summary: Returns the 1 based position of a given substring on a string, or 0 if it is not found.

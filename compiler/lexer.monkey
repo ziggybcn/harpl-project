@@ -51,6 +51,27 @@ Class Lexer
 				Local token:=New Token(sourceFile, tokenInit-lastOffset, lineNum ,txtStream[tokenInit..i],eToken.NUMBER )
 				tokens.AddLast(token)
 				i-=1	'Correct i offset, not nice.
+			
+			'Check for hexadecimal numbers, ala HTML #FFFFFF, and so on...
+			ElseIf char = "#"[0]
+				Print "Parsing HEX:"
+				Local done:Bool
+				done = False
+				Local tokenInit:Int = i
+				i=i+1
+				While i<txtStream.Length And done = False
+					if (txtStream[i]>="0"[0] And txtStream[i]<="9") or (txtStream[i]>="A" And txtStream[i]<="Z") or (txtStream[i]>="a" And txtStream[i]<="z") Then 
+						i+=1
+					Else
+						done = true
+					endif
+				wend
+				'TODO: Convert HEX to regular decimal. This can be done while lexing (why not?)
+				Local newtext:string = Int("$" + txtStream[tokenInit+1 ..i])
+				Local token:=New Token(sourceFile, tokenInit-lastOffset, lineNum ,newtext,eToken.NUMBER )
+				tokens.AddLast(token)
+				i-=1	'Correct i offset, not nice.
+			
 				
 			'If it is a string literal with double quotes:
 			ElseIf char = "~q"[0]
@@ -127,10 +148,10 @@ Class Lexer
 			EndIf
 			i+=1;
 		Wend
-		
-		'TOKEN MERGING:
+		'Return 
+		'TOKEN MERGING UPSIDE DOWN:
 		Local node:list.Node<Token> = tokens.FirstNode()
-		repeat 
+		Repeat 
 			Local token:Token = node.Value()
 			Select token.Kind
 				Case eToken.OPERATOR 
@@ -138,7 +159,7 @@ Class Lexer
 					if token.text = "." Then
 						Local nextnode:list.Node<Token> = node.NextNode()
 						if nextnode<>null Then
-							if nextnode.Value.Kind = eToken.NUMBER Then
+							if nextnode.Value.Kind = eToken.NUMBER and nextnode.Value.text.Contains(".") = False Then
 								token.text = "0" + token.text + nextnode.Value.text
 								token.Kind = eToken.NUMBER 
 								nextnode.Remove()
@@ -158,10 +179,36 @@ Class Lexer
 						endif
 					
 					EndIf
+				Case eToken.NUMBER 
+					Local prevNode:list.Node<Token> = node.PrevNode()
+					if prevNode <> null And prevNode.Value.Kind = eToken.OPERATOR Then
+						Local grandpaNode:list.Node<Token> = prevNode.PrevNode()
+						if grandpaNode <> null And grandpaNode.Value.Kind = eToken.OPERATOR
+							if prevNode.Value.text = "-" then
+								if token.text[0] <> "-"[0] Then 
+									token.text = "-" + token.text
+								Else
+									token.text = Mid(token.text,2)
+								EndIf
+								prevNode.Remove()
+								node = node.PrevNode()	'Just to chain iterations properly!
+							ElseIf prevNode.Value.text = "+" then 'We can just ignore expresions of kind a = 45 * +7, and considere them 45 * 7
+								prevNode.Remove()
+								node = node.PrevNode()	'Just to chain iterations properly!							
+							endif
+
+						EndIf
+					EndIf
+				Default
 			End
 			node = node.NextNode()
-		until node = null 'node = tokens.FirstNode()
+		Until node = null 
 		
+
+		
+
+		
+				
 		For Local t:Token = EachIn tokens
 			Print "$" + t.text + "$ " + t.docX + "," + t.docY
 		Next
