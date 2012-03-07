@@ -1,6 +1,10 @@
+#Rem
+	summary: This function gets a string represetnation of a HEX number, and return the actual Integer number.
+#End
 Function HexToInteger:Int(Hex:String)
 	Local digit:Int, value:Int;
-	For Local i:Int = 0 until Hex.Length;
+	For Local i:Int = 0 until Hex.Length '-1;
+		value*=16
 		Select Hex[i]
 			Case "0"[0]; digit = 0;
 			Case "1"[0]; digit = 1;
@@ -21,7 +25,7 @@ Function HexToInteger:Int(Hex:String)
 			Default
 				Error("unexpected character on hexadecimal literal.");
 		End
-		value+=digit * math.Pow(16, Hex.Length -i -1);
+		value = (value + digit) 
 	Next
 	Return value;
 End

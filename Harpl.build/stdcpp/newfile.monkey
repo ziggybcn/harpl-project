@@ -1,1 +1,1 @@
-Print #FFFFFFFE
+Print #FF
