@@ -1,0 +1,4 @@
+syntax:glob
+*.JIPO
+*.JILayout
+*.build
