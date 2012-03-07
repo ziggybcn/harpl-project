@@ -2,14 +2,14 @@
 #include "main.h"
 
 //${CONFIG_BEGIN}
-#define CFG_CONFIG debug
+#define CFG_CONFIG release
 #define CFG_CPP_DOUBLE_PRECISION_FLOATS 1
 #define CFG_CPP_INCREMENTAL_GC 1
-#define CFG_DEBUG 1
 #define CFG_HOST winnt
 #define CFG_LANG cpp
 #define CFG_PARSER_FUNC_ATTRS 0
 #define CFG_REFLECTION_FILTER stdio
+#define CFG_RELEASE 1
 #define CFG_TARGET stdcpp
 //${CONFIG_END}
 
@@ -2134,29 +2134,16 @@ bb_boxes_BoolObject::bb_boxes_BoolObject(){
 	f_value=false;
 }
 bb_boxes_BoolObject* bb_boxes_BoolObject::g_new(bool t_value){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<11>";
 	this->f_value=t_value;
-	popErr();
 	return this;
 }
 bool bb_boxes_BoolObject::m_ToBool(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<15>";
-	popErr();
 	return f_value;
 }
 bool bb_boxes_BoolObject::m_Equals(bb_boxes_BoolObject* t_box){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<19>";
-	bool t_=f_value==t_box->f_value;
-	popErr();
-	return t_;
+	return f_value==t_box->f_value;
 }
 bb_boxes_BoolObject* bb_boxes_BoolObject::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<7>";
-	popErr();
 	return this;
 }
 void bb_boxes_BoolObject::mark(){
@@ -2166,57 +2153,29 @@ bb_boxes_IntObject::bb_boxes_IntObject(){
 	f_value=0;
 }
 bb_boxes_IntObject* bb_boxes_IntObject::g_new(int t_value){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<27>";
 	this->f_value=t_value;
-	popErr();
 	return this;
 }
 bb_boxes_IntObject* bb_boxes_IntObject::g_new2(Float t_value){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<31>";
 	this->f_value=int(t_value);
-	popErr();
 	return this;
 }
 int bb_boxes_IntObject::m_ToInt(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<35>";
-	popErr();
 	return f_value;
 }
 Float bb_boxes_IntObject::m_ToFloat(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<39>";
-	Float t_=Float(f_value);
-	popErr();
-	return t_;
+	return Float(f_value);
 }
 String bb_boxes_IntObject::m_ToString(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<43>";
-	String t_=String(f_value);
-	popErr();
-	return t_;
+	return String(f_value);
 }
 bool bb_boxes_IntObject::m_Equals2(bb_boxes_IntObject* t_box){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<47>";
-	bool t_=f_value==t_box->f_value;
-	popErr();
-	return t_;
+	return f_value==t_box->f_value;
 }
 int bb_boxes_IntObject::m_Compare(bb_boxes_IntObject* t_box){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<51>";
-	int t_=f_value-t_box->f_value;
-	popErr();
-	return t_;
+	return f_value-t_box->f_value;
 }
 bb_boxes_IntObject* bb_boxes_IntObject::g_new3(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<23>";
-	popErr();
 	return this;
 }
 void bb_boxes_IntObject::mark(){
@@ -2226,63 +2185,32 @@ bb_boxes_FloatObject::bb_boxes_FloatObject(){
 	f_value=FLOAT(.0);
 }
 bb_boxes_FloatObject* bb_boxes_FloatObject::g_new(int t_value){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<59>";
 	this->f_value=Float(t_value);
-	popErr();
 	return this;
 }
 bb_boxes_FloatObject* bb_boxes_FloatObject::g_new2(Float t_value){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<63>";
 	this->f_value=t_value;
-	popErr();
 	return this;
 }
 int bb_boxes_FloatObject::m_ToInt(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<67>";
-	int t_=int(f_value);
-	popErr();
-	return t_;
+	return int(f_value);
 }
 Float bb_boxes_FloatObject::m_ToFloat(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<71>";
-	popErr();
 	return f_value;
 }
 String bb_boxes_FloatObject::m_ToString(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<75>";
-	String t_=String(f_value);
-	popErr();
-	return t_;
+	return String(f_value);
 }
 bool bb_boxes_FloatObject::m_Equals3(bb_boxes_FloatObject* t_box){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<79>";
-	bool t_=f_value==t_box->f_value;
-	popErr();
-	return t_;
+	return f_value==t_box->f_value;
 }
 int bb_boxes_FloatObject::m_Compare2(bb_boxes_FloatObject* t_box){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<83>";
 	if(f_value<t_box->f_value){
-		errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<83>";
-		popErr();
 		return -1;
 	}
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<84>";
-	int t_=((f_value>t_box->f_value)?1:0);
-	popErr();
-	return t_;
+	return ((f_value>t_box->f_value)?1:0);
 }
 bb_boxes_FloatObject* bb_boxes_FloatObject::g_new3(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<55>";
-	popErr();
 	return this;
 }
 void bb_boxes_FloatObject::mark(){
@@ -2292,50 +2220,27 @@ bb_boxes_StringObject::bb_boxes_StringObject(){
 	f_value=String();
 }
 bb_boxes_StringObject* bb_boxes_StringObject::g_new(int t_value){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<92>";
 	this->f_value=String(t_value);
-	popErr();
 	return this;
 }
 bb_boxes_StringObject* bb_boxes_StringObject::g_new2(Float t_value){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<96>";
 	this->f_value=String(t_value);
-	popErr();
 	return this;
 }
 bb_boxes_StringObject* bb_boxes_StringObject::g_new3(String t_value){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<100>";
 	this->f_value=t_value;
-	popErr();
 	return this;
 }
 String bb_boxes_StringObject::m_ToString(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<104>";
-	popErr();
 	return f_value;
 }
 bool bb_boxes_StringObject::m_Equals4(bb_boxes_StringObject* t_box){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<108>";
-	bool t_=f_value==t_box->f_value;
-	popErr();
-	return t_;
+	return f_value==t_box->f_value;
 }
 int bb_boxes_StringObject::m_Compare3(bb_boxes_StringObject* t_box){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<112>";
-	int t_=f_value.Compare(t_box->f_value);
-	popErr();
-	return t_;
+	return f_value.Compare(t_box->f_value);
 }
 bb_boxes_StringObject* bb_boxes_StringObject::g_new4(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/boxes.monkey<88>";
-	popErr();
 	return this;
 }
 void bb_boxes_StringObject::mark(){
@@ -2351,27 +2256,16 @@ bb_reflection_ClassInfo::bb_reflection_ClassInfo(){
 	f__ctors=Array<bb_reflection_FunctionInfo* >();
 }
 bb_reflection_ClassInfo* bb_reflection_ClassInfo::g_new(String t_name,int t_attrs,bb_reflection_ClassInfo* t_sclass,Array<bb_reflection_ClassInfo* > t_ifaces){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<257>";
 	f__name=t_name;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<258>";
 	f__attrs=t_attrs;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<259>";
 	gc_assign(f__sclass,t_sclass);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<260>";
 	gc_assign(f__ifaces,t_ifaces);
-	popErr();
 	return this;
 }
 bb_reflection_ClassInfo* bb_reflection_ClassInfo::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<254>";
-	popErr();
 	return this;
 }
 int bb_reflection_ClassInfo::m_Init(){
-	pushErr();
-	popErr();
 	return 0;
 }
 void bb_reflection_ClassInfo::mark(){
@@ -2392,13 +2286,13 @@ bb_reflection_R2* bb_reflection_R2::g_new(){
 }
 int bb_reflection_R2::m_Init(){
 	gc_assign(f__fields,Array<bb_reflection_FieldInfo* >(1));
-	gc_assign(f__fields.At(0),((new bb_reflection_R3)->g_new()));
+	gc_assign(f__fields[0],((new bb_reflection_R3)->g_new()));
 	gc_assign(f__methods,Array<bb_reflection_MethodInfo* >(2));
-	gc_assign(f__methods.At(0),((new bb_reflection_R5)->g_new()));
-	gc_assign(f__methods.At(1),((new bb_reflection_R6)->g_new()));
+	gc_assign(f__methods[0],((new bb_reflection_R5)->g_new()));
+	gc_assign(f__methods[1],((new bb_reflection_R6)->g_new()));
 	gc_assign(f__ctors,Array<bb_reflection_FunctionInfo* >(2));
-	gc_assign(f__ctors.At(0),((new bb_reflection_R4)->g_new()));
-	gc_assign(f__ctors.At(1),((new bb_reflection_R7)->g_new()));
+	gc_assign(f__ctors[0],((new bb_reflection_R4)->g_new()));
+	gc_assign(f__ctors[1],((new bb_reflection_R7)->g_new()));
 	return 0;
 }
 void bb_reflection_R2::mark(){
@@ -2407,10 +2301,7 @@ void bb_reflection_R2::mark(){
 bb_reflection_UnknownClass::bb_reflection_UnknownClass(){
 }
 bb_reflection_UnknownClass* bb_reflection_UnknownClass::g_new(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<599>";
 	bb_reflection_ClassInfo::g_new(String(L"?"),0,0,Array<bb_reflection_ClassInfo* >());
-	popErr();
 	return this;
 }
 void bb_reflection_UnknownClass::mark(){
@@ -2427,17 +2318,17 @@ bb_reflection_R8* bb_reflection_R8::g_new(){
 }
 int bb_reflection_R8::m_Init(){
 	gc_assign(f__fields,Array<bb_reflection_FieldInfo* >(1));
-	gc_assign(f__fields.At(0),((new bb_reflection_R9)->g_new()));
+	gc_assign(f__fields[0],((new bb_reflection_R9)->g_new()));
 	gc_assign(f__methods,Array<bb_reflection_MethodInfo* >(5));
-	gc_assign(f__methods.At(0),((new bb_reflection_R12)->g_new()));
-	gc_assign(f__methods.At(1),((new bb_reflection_R13)->g_new()));
-	gc_assign(f__methods.At(2),((new bb_reflection_R14)->g_new()));
-	gc_assign(f__methods.At(3),((new bb_reflection_R15)->g_new()));
-	gc_assign(f__methods.At(4),((new bb_reflection_R16)->g_new()));
+	gc_assign(f__methods[0],((new bb_reflection_R12)->g_new()));
+	gc_assign(f__methods[1],((new bb_reflection_R13)->g_new()));
+	gc_assign(f__methods[2],((new bb_reflection_R14)->g_new()));
+	gc_assign(f__methods[3],((new bb_reflection_R15)->g_new()));
+	gc_assign(f__methods[4],((new bb_reflection_R16)->g_new()));
 	gc_assign(f__ctors,Array<bb_reflection_FunctionInfo* >(3));
-	gc_assign(f__ctors.At(0),((new bb_reflection_R10)->g_new()));
-	gc_assign(f__ctors.At(1),((new bb_reflection_R11)->g_new()));
-	gc_assign(f__ctors.At(2),((new bb_reflection_R17)->g_new()));
+	gc_assign(f__ctors[0],((new bb_reflection_R10)->g_new()));
+	gc_assign(f__ctors[1],((new bb_reflection_R11)->g_new()));
+	gc_assign(f__ctors[2],((new bb_reflection_R17)->g_new()));
 	return 0;
 }
 void bb_reflection_R8::mark(){
@@ -2453,17 +2344,17 @@ bb_reflection_R18* bb_reflection_R18::g_new(){
 }
 int bb_reflection_R18::m_Init(){
 	gc_assign(f__fields,Array<bb_reflection_FieldInfo* >(1));
-	gc_assign(f__fields.At(0),((new bb_reflection_R19)->g_new()));
+	gc_assign(f__fields[0],((new bb_reflection_R19)->g_new()));
 	gc_assign(f__methods,Array<bb_reflection_MethodInfo* >(5));
-	gc_assign(f__methods.At(0),((new bb_reflection_R22)->g_new()));
-	gc_assign(f__methods.At(1),((new bb_reflection_R23)->g_new()));
-	gc_assign(f__methods.At(2),((new bb_reflection_R24)->g_new()));
-	gc_assign(f__methods.At(3),((new bb_reflection_R25)->g_new()));
-	gc_assign(f__methods.At(4),((new bb_reflection_R26)->g_new()));
+	gc_assign(f__methods[0],((new bb_reflection_R22)->g_new()));
+	gc_assign(f__methods[1],((new bb_reflection_R23)->g_new()));
+	gc_assign(f__methods[2],((new bb_reflection_R24)->g_new()));
+	gc_assign(f__methods[3],((new bb_reflection_R25)->g_new()));
+	gc_assign(f__methods[4],((new bb_reflection_R26)->g_new()));
 	gc_assign(f__ctors,Array<bb_reflection_FunctionInfo* >(3));
-	gc_assign(f__ctors.At(0),((new bb_reflection_R20)->g_new()));
-	gc_assign(f__ctors.At(1),((new bb_reflection_R21)->g_new()));
-	gc_assign(f__ctors.At(2),((new bb_reflection_R27)->g_new()));
+	gc_assign(f__ctors[0],((new bb_reflection_R20)->g_new()));
+	gc_assign(f__ctors[1],((new bb_reflection_R21)->g_new()));
+	gc_assign(f__ctors[2],((new bb_reflection_R27)->g_new()));
 	return 0;
 }
 void bb_reflection_R18::mark(){
@@ -2479,16 +2370,16 @@ bb_reflection_R28* bb_reflection_R28::g_new(){
 }
 int bb_reflection_R28::m_Init(){
 	gc_assign(f__fields,Array<bb_reflection_FieldInfo* >(1));
-	gc_assign(f__fields.At(0),((new bb_reflection_R29)->g_new()));
+	gc_assign(f__fields[0],((new bb_reflection_R29)->g_new()));
 	gc_assign(f__methods,Array<bb_reflection_MethodInfo* >(3));
-	gc_assign(f__methods.At(0),((new bb_reflection_R33)->g_new()));
-	gc_assign(f__methods.At(1),((new bb_reflection_R34)->g_new()));
-	gc_assign(f__methods.At(2),((new bb_reflection_R35)->g_new()));
+	gc_assign(f__methods[0],((new bb_reflection_R33)->g_new()));
+	gc_assign(f__methods[1],((new bb_reflection_R34)->g_new()));
+	gc_assign(f__methods[2],((new bb_reflection_R35)->g_new()));
 	gc_assign(f__ctors,Array<bb_reflection_FunctionInfo* >(4));
-	gc_assign(f__ctors.At(0),((new bb_reflection_R30)->g_new()));
-	gc_assign(f__ctors.At(1),((new bb_reflection_R31)->g_new()));
-	gc_assign(f__ctors.At(2),((new bb_reflection_R32)->g_new()));
-	gc_assign(f__ctors.At(3),((new bb_reflection_R36)->g_new()));
+	gc_assign(f__ctors[0],((new bb_reflection_R30)->g_new()));
+	gc_assign(f__ctors[1],((new bb_reflection_R31)->g_new()));
+	gc_assign(f__ctors[2],((new bb_reflection_R32)->g_new()));
+	gc_assign(f__ctors[3],((new bb_reflection_R36)->g_new()));
 	return 0;
 }
 void bb_reflection_R28::mark(){
@@ -2498,9 +2389,6 @@ bb_reflection_ClassInfo* bb_reflection__stringClass;
 bb_reflection__GetClass::bb_reflection__GetClass(){
 }
 bb_reflection__GetClass* bb_reflection__GetClass::g_new(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<582>";
-	popErr();
 	return this;
 }
 void bb_reflection__GetClass::mark(){
@@ -2509,11 +2397,7 @@ void bb_reflection__GetClass::mark(){
 bb_reflection___GetClass::bb_reflection___GetClass(){
 }
 bb_reflection___GetClass* bb_reflection___GetClass::g_new(){
-	pushErr();
-	errInfo="$SOURCE<361>";
 	bb_reflection__GetClass::g_new();
-	errInfo="$SOURCE<361>";
-	popErr();
 	return this;
 }
 void bb_reflection___GetClass::mark(){
@@ -2522,108 +2406,65 @@ void bb_reflection___GetClass::mark(){
 bb_reflection__GetClass* bb_reflection__getClass;
 int bb_reflection___init(){
 	gc_assign(bb_reflection__classes,Array<bb_reflection_ClassInfo* >(4));
-	gc_assign(bb_reflection__classes.At(0),((new bb_reflection_R2)->g_new()));
-	gc_assign(bb_reflection__classes.At(1),((new bb_reflection_R8)->g_new()));
-	gc_assign(bb_reflection__classes.At(2),((new bb_reflection_R18)->g_new()));
-	gc_assign(bb_reflection__classes.At(3),((new bb_reflection_R28)->g_new()));
-	bb_reflection__classes.At(0)->m_Init();
-	bb_reflection__classes.At(1)->m_Init();
-	bb_reflection__classes.At(2)->m_Init();
-	bb_reflection__classes.At(3)->m_Init();
+	gc_assign(bb_reflection__classes[0],((new bb_reflection_R2)->g_new()));
+	gc_assign(bb_reflection__classes[1],((new bb_reflection_R8)->g_new()));
+	gc_assign(bb_reflection__classes[2],((new bb_reflection_R18)->g_new()));
+	gc_assign(bb_reflection__classes[3],((new bb_reflection_R28)->g_new()));
+	bb_reflection__classes[0]->m_Init();
+	bb_reflection__classes[1]->m_Init();
+	bb_reflection__classes[2]->m_Init();
+	bb_reflection__classes[3]->m_Init();
 	gc_assign(bb_reflection__getClass,((new bb_reflection___GetClass)->g_new()));
 	return 0;
 }
 int bb_reflection__init;
 String bb_Harpl_AppString(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<18>";
-	errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<18>";
-	popErr();
-	return String(L"HARPL COMPILER 00.00.00-A");
+	return String(L"Harpl compiler 00.00.00-A");
 }
 int bb_Harpl_ShowCommandLineArgs(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<49>";
 	Print(String(L"Syntax: HARPL [filename]"));
-	errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<50>";
-	popErr();
 	return 1;
 }
 void bb_Harpl_AbortExecution(String t_message,int t_errorLevel){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<55>";
 	Print(String(L"Error: ")+t_message);
-	errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<56>";
-	Print(String(L"Execution of HARPL COMPILER has been canceled."));
-	errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<57>";
+	Print(String(L"Execution of Harpl compiler has been canceled."));
 	ExitApp(t_errorLevel);
-	popErr();
 }
 bb_compiler_Compiler::bb_compiler_Compiler(){
 	f_compileErrors=(new bb_list_List)->g_new();
 	f_lexer=(new bb_lexer_Lexer)->g_new();
 }
 bb_compiler_Compiler* bb_compiler_Compiler::g_new(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<4>";
-	popErr();
 	return this;
 }
 int bb_compiler_Compiler::m_AddError(String t_description,String t_file,int t_posX,int t_posY){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<29>";
 	if(f_compileErrors==0){
-		errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<29>";
 		gc_assign(f_compileErrors,(new bb_list_List)->g_new());
 	}
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<30>";
 	bb_compiler_CompileError* t_err=(new bb_compiler_CompileError)->g_new();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<31>";
 	t_err->f_description=t_description;
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<32>";
 	t_err->f_file=t_file;
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<33>";
 	t_err->f_posX=t_posX;
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<34>";
 	t_err->f_posY=t_posY;
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<35>";
 	f_compileErrors->m_AddLast(t_err);
-	popErr();
 	return 0;
 }
 bool bb_compiler_Compiler::m_CompileFile(String t_filename){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<8>";
 	if(FileType(t_filename)!=1){
-		errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<9>";
 		m_AddError(String(L"File ")+t_filename+String(L" was not found."),String(),-1,-1);
-		errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<10>";
-		popErr();
 		return false;
 	}
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<13>";
 	String t_txtStream=LoadString(t_filename);
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<15>";
 	if(t_txtStream==String()){
-		errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<15>";
 		m_AddError(String(L"File ")+t_filename+String(L" is empty."),t_filename,0,0);
 	}
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<17>";
 	gc_assign(f_lexer,(new bb_lexer_Lexer)->g_new());
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<19>";
 	if(f_lexer->m_Tokenize(t_txtStream,this,t_filename)==0){
-		errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<19>";
-		popErr();
 		return false;
 	}
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<21>";
 	if(this->f_compileErrors->m_IsEmpty()==false){
-		errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<22>";
-		popErr();
 		return false;
 	}else{
-		errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<24>";
-		popErr();
 		return true;
 	}
 }
@@ -2639,9 +2480,6 @@ bb_compiler_CompileError::bb_compiler_CompileError(){
 	f_posY=0;
 }
 bb_compiler_CompileError* bb_compiler_CompileError::g_new(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/compiler.monkey<44>";
-	popErr();
 	return this;
 }
 void bb_compiler_CompileError::mark(){
@@ -2651,49 +2489,26 @@ bb_list_List::bb_list_List(){
 	f__head=((new bb_list_HeadNode)->g_new());
 }
 bb_list_List* bb_list_List::g_new(){
-	pushErr();
-	popErr();
 	return this;
 }
 bb_list_Node* bb_list_List::m_AddLast(bb_compiler_CompileError* t_data){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<120>";
-	bb_list_Node* t_=(new bb_list_Node)->g_new(f__head,f__head->f__pred,t_data);
-	popErr();
-	return t_;
+	return (new bb_list_Node)->g_new(f__head,f__head->f__pred,t_data);
 }
 bb_list_List* bb_list_List::g_new2(Array<bb_compiler_CompileError* > t_data){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<13>";
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<13>";
 	Array<bb_compiler_CompileError* > t_=t_data;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<13>";
 	int t_2=0;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<13>";
 	while(t_2<t_.Length()){
-		errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<13>";
-		bb_compiler_CompileError* t_t=t_.At(t_2);
-		errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<13>";
+		bb_compiler_CompileError* t_t=t_[t_2];
 		t_2=t_2+1;
-		errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<14>";
 		m_AddLast(t_t);
 	}
-	popErr();
 	return this;
 }
 bool bb_list_List::m_IsEmpty(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<50>";
-	bool t_=f__head->f__succ==f__head;
-	popErr();
-	return t_;
+	return f__head->f__succ==f__head;
 }
 bb_list_Enumerator2* bb_list_List::m_ObjectEnumerator(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<124>";
-	bb_list_Enumerator2* t_=(new bb_list_Enumerator2)->g_new(this);
-	popErr();
-	return t_;
+	return (new bb_list_Enumerator2)->g_new(this);
 }
 void bb_list_List::mark(){
 	Object::mark();
@@ -2705,24 +2520,14 @@ bb_list_Node::bb_list_Node(){
 	f__data=0;
 }
 bb_list_Node* bb_list_Node::g_new(bb_list_Node* t_succ,bb_list_Node* t_pred,bb_compiler_CompileError* t_data){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<199>";
 	gc_assign(f__succ,t_succ);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<200>";
 	gc_assign(f__pred,t_pred);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<201>";
 	gc_assign(f__succ->f__pred,this);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<202>";
 	gc_assign(f__pred->f__succ,this);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<203>";
 	gc_assign(f__data,t_data);
-	popErr();
 	return this;
 }
 bb_list_Node* bb_list_Node::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<196>";
-	popErr();
 	return this;
 }
 void bb_list_Node::mark(){
@@ -2734,14 +2539,9 @@ void bb_list_Node::mark(){
 bb_list_HeadNode::bb_list_HeadNode(){
 }
 bb_list_HeadNode* bb_list_HeadNode::g_new(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<248>";
 	bb_list_Node::g_new2();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<249>";
 	gc_assign(f__succ,(this));
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<250>";
 	gc_assign(f__pred,(this));
-	popErr();
 	return this;
 }
 void bb_list_HeadNode::mark(){
@@ -2751,261 +2551,149 @@ bb_lexer_Lexer::bb_lexer_Lexer(){
 	f_tokens=(new bb_list_List2)->g_new();
 }
 bb_lexer_Lexer* bb_lexer_Lexer::g_new(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<4>";
-	popErr();
 	return this;
 }
 int bb_lexer_Lexer::m_Tokenize(String t_txtStream,bb_compiler_Compiler* t_compiler,String t_sourceFile){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<8>";
 	if(f_tokens==0){
-		errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<8>";
 		gc_assign(f_tokens,(new bb_list_List2)->g_new());
 	}
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<9>";
 	f_tokens->m_Clear();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<12>";
 	int t_i=0;
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<12>";
 	int t_lastOffset=0;
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<12>";
 	int t_lineNum=0;
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<13>";
 	Print(String(L"Tokenizing..."));
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<14>";
 	while(t_i<t_txtStream.Length()){
-		errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<17>";
 		int t_char=(int)t_txtStream[t_i];
-		errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<20>";
 		if(t_char>=97 && t_char<=122 || t_char>=65 && t_char<=90){
-			errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<21>";
 			bool t_done=false;
-			errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<22>";
 			t_done=false;
-			errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<23>";
 			int t_tokenInit=t_i;
-			errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<24>";
 			while(t_i<t_txtStream.Length() && t_done==false){
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<25>";
 				if(bb_lexer_IsAValidIdentifierChar((int)t_txtStream[t_i])==false){
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<25>";
 					t_done=true;
 				}else{
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<25>";
 					t_i+=1;
 				}
 			}
-			errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<27>";
 			bb_token_Token* t_token=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit-t_lastOffset,t_lineNum,t_txtStream.Slice(t_tokenInit,t_i),1);
-			errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<28>";
 			f_tokens->m_AddLast2(t_token);
-			errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<29>";
 			t_i-=1;
 		}else{
-			errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<32>";
 			if(t_char>=48 && t_char<=57){
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<33>";
 				bool t_done2=false;
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<33>";
 				bool t_hasdot=false;
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<34>";
 				t_done2=false;
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<35>";
 				int t_tokenInit2=t_i;
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<36>";
 				while(t_i<t_txtStream.Length() && t_done2==false){
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<37>";
 					if((int)t_txtStream[t_i]>=48 && String((int)t_txtStream[t_i])<=String(L"9")){
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<38>";
 						t_i+=1;
 					}else{
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<39>";
 						if((int)t_txtStream[t_i]==46){
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<40>";
 							if(t_hasdot==false){
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<41>";
 								t_hasdot=true;
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<42>";
 								t_i+=1;
 							}else{
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<44>";
 								t_compiler->m_AddError(String(L"Malformed numeric literal"),t_sourceFile,t_tokenInit2-t_lastOffset,t_lineNum);
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<45>";
 								t_done2=true;
 							}
 						}else{
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<48>";
 							t_done2=true;
 						}
 					}
 				}
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<51>";
 				bb_token_Token* t_token2=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit2-t_lastOffset,t_lineNum,t_txtStream.Slice(t_tokenInit2,t_i),4);
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<52>";
 				f_tokens->m_AddLast2(t_token2);
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<53>";
 				t_i-=1;
 			}else{
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<56>";
 				if(t_char==35){
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<57>";
-					Print(String(L"Parsing HEX:"));
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<58>";
 					bool t_done3=false;
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<59>";
 					t_done3=false;
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<60>";
 					int t_tokenInit3=t_i;
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<61>";
 					t_i=t_i+1;
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<62>";
 					while(t_i<t_txtStream.Length() && t_done3==false){
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<63>";
 						if((int)t_txtStream[t_i]>=48 && String((int)t_txtStream[t_i])<=String(L"9") || String((int)t_txtStream[t_i])>=String(L"A") && String((int)t_txtStream[t_i])<=String(L"Z") || String((int)t_txtStream[t_i])>=String(L"a") && String((int)t_txtStream[t_i])<=String(L"z")){
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<64>";
 							t_i+=1;
 						}else{
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<66>";
 							t_done3=true;
 						}
 					}
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<69>";
-					Print(String(L"VALUE: $")+t_txtStream.Slice(t_tokenInit3+1,t_i)+String(L"!!"));
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<70>";
 					String t_newtext=String((String(L"$")+t_txtStream.Slice(t_tokenInit3+1,t_i)).ToInt());
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<71>";
 					bb_token_Token* t_token3=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit3-t_lastOffset,t_lineNum,t_newtext,4);
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<72>";
 					f_tokens->m_AddLast2(t_token3);
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<73>";
 					t_i-=1;
 				}else{
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<77>";
 					if(t_char==34){
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<78>";
 						bool t_done4=false;
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<79>";
 						t_done4=false;
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<80>";
 						int t_tokenInit4=t_i+1;
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<81>";
 						t_i+=1;
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<82>";
 						while(t_i<t_txtStream.Length() && t_done4==false){
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<83>";
 							if((int)t_txtStream[t_i]==34){
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<83>";
 								t_done4=true;
 							}else{
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<83>";
 								t_i+=1;
 							}
 						}
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<85>";
 						if(t_done4==false){
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<86>";
 							t_compiler->m_AddError(String(L"Expecting \""),t_sourceFile,t_tokenInit4-t_lastOffset-1,t_lineNum);
 						}
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<88>";
 						bb_token_Token* t_token4=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit4-t_lastOffset-1,t_lineNum,t_txtStream.Slice(t_tokenInit4,t_i),2);
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<89>";
 						t_token4->f_text=bb_lexer_ScapeChars(t_token4->f_text);
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<90>";
 						f_tokens->m_AddLast2(t_token4);
 					}else{
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<93>";
 						if(t_char==39){
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<94>";
 							bool t_done5=false;
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<95>";
 							t_done5=false;
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<96>";
 							int t_tokenInit5=t_i+1;
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<97>";
 							t_i+=1;
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<98>";
 							while(t_i<t_txtStream.Length() && t_done5==false){
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<99>";
 								if((int)t_txtStream[t_i]==39){
-									errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<99>";
 									t_done5=true;
 								}else{
-									errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<99>";
 									t_i+=1;
 								}
 							}
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<101>";
 							if(t_done5==false){
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<102>";
 								t_compiler->m_AddError(String(L"Expecting '"),t_sourceFile,t_tokenInit5-t_lastOffset-1,t_lineNum);
 							}
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<104>";
 							bb_token_Token* t_token5=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit5-t_lastOffset-1,t_lineNum,t_txtStream.Slice(t_tokenInit5,t_i),2);
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<105>";
 							t_token5->f_text=bb_lexer_ScapeChars(t_token5->f_text);
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<106>";
 							f_tokens->m_AddLast2(t_token5);
 						}else{
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<109>";
 							if(t_char==10 || t_char==13){
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<110>";
 								bb_token_Token* t_token6=(new bb_token_Token)->g_new(t_sourceFile,t_i-t_lastOffset,t_lineNum,t_txtStream.Slice(t_i,t_i+1),32);
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<111>";
 								f_tokens->m_AddLast2(t_token6);
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<112>";
 								if(t_char==10){
-									errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<113>";
 									t_lastOffset=t_i+1;
-									errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<114>";
 									t_lineNum+=1;
 								}
 							}else{
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<117>";
 								if(t_char==59){
-									errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<118>";
 									bb_token_Token* t_token7=(new bb_token_Token)->g_new(t_sourceFile,t_i-t_lastOffset,t_lineNum,t_txtStream.Slice(t_i,t_i+1),16);
-									errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<119>";
 									f_tokens->m_AddLast2(t_token7);
-									errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<120>";
 									if(t_char==10){
-										errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<121>";
 										t_lastOffset=t_i+1;
-										errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<122>";
 										t_lineNum+=1;
 									}
 								}else{
-									errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<128>";
 									if(t_char==43 || t_char==45 || t_char==42 || t_char==47 || t_char==37 || t_char==94 || t_char==38 || t_char==124 || t_char==62 || t_char==60 || t_char==61 || t_char==40 || t_char==41 || t_char==91 || t_char==93 || t_char==46){
-										errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<129>";
 										bb_token_Token* t_token8=(new bb_token_Token)->g_new(t_sourceFile,t_i-t_lastOffset,t_lineNum,t_txtStream.Slice(t_i,t_i+1),8);
-										errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<130>";
 										f_tokens->m_AddLast2(t_token8);
 									}else{
-										errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<133>";
 										if(t_char==32 || t_char==9){
 										}else{
-											errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<136>";
 											if(t_char==33){
-												errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<137>";
 												bool t_done6=false;
-												errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<138>";
 												t_done6=false;
-												errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<139>";
 												t_i+=1;
-												errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<140>";
 												while(t_i<t_txtStream.Length() && t_done6==false){
-													errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<141>";
 													if((int)t_txtStream[t_i]==10 || (int)t_txtStream[t_i]==13){
-														errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<141>";
 														t_done6=true;
 													}else{
-														errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<141>";
 														t_i+=1;
 													}
 												}
 											}else{
-												errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<146>";
 												t_compiler->m_AddError(String(L"Syntax error. Unexpected character: ")+String((Char)(t_char),1),t_sourceFile,t_i-t_lastOffset,t_lineNum);
 											}
 										}
@@ -3017,83 +2705,50 @@ int bb_lexer_Lexer::m_Tokenize(String t_txtStream,bb_compiler_Compiler* t_compil
 				}
 			}
 		}
-		errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<149>";
 		t_i+=1;
 	}
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<153>";
 	bb_list_Node2* t_node=f_tokens->m_FirstNode();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<205>";
 	do{
-		errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<155>";
 		bb_token_Token* t_token9=t_node->m_Value();
-		errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<156>";
 		int t_1=t_token9->m_Kind();
-		errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<157>";
 		if(t_1==8){
-			errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<159>";
 			if(t_token9->f_text==String(L".")){
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<160>";
 				bb_list_Node2* t_nextnode=t_node->m_NextNode();
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<161>";
 				if(t_nextnode!=0){
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<162>";
 					if(t_nextnode->m_Value()->m_Kind()==4 && t_nextnode->m_Value()->f_text.Contains(String(L"."))==false){
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<163>";
 						t_token9->f_text=String(L"0")+t_token9->f_text+t_nextnode->m_Value()->f_text;
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<164>";
 						t_token9->m_Kind2(4);
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<165>";
 						t_nextnode->m_Remove();
 					}
 				}
 			}else{
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<170>";
 				if(t_token9->f_text==String(L">") || t_token9->f_text==String(L"<")){
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<171>";
 					bb_list_Node2* t_nextnode2=t_node->m_NextNode();
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<172>";
 					if(t_nextnode2!=0){
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<175>";
 						if((t_nextnode2->m_Value()->f_text==String(L"=") || t_nextnode2->m_Value()->f_text==String(L">") || t_nextnode2->m_Value()->f_text==String(L"<")) && t_nextnode2->m_Value()->m_Kind()==8 && t_nextnode2->m_Value()->f_text!=t_node->m_Value()->f_text){
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<176>";
 							t_token9->f_text=t_token9->f_text+t_nextnode2->m_Value()->f_text;
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<177>";
 							t_nextnode2->m_Remove();
 						}
 					}
 				}
 			}
 		}else{
-			errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<182>";
 			if(t_1==4){
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<183>";
 				bb_list_Node2* t_prevNode=t_node->m_PrevNode();
-				errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<184>";
 				if(t_prevNode!=0 && t_prevNode->m_Value()->m_Kind()==8){
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<185>";
 					bb_list_Node2* t_grandpaNode=t_prevNode->m_PrevNode();
-					errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<186>";
 					if(t_grandpaNode!=0 && t_grandpaNode->m_Value()->m_Kind()==8){
-						errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<187>";
 						if(t_prevNode->m_Value()->f_text==String(L"-")){
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<188>";
 							if((int)t_token9->f_text[0]!=45){
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<189>";
 								t_token9->f_text=String(L"-")+t_token9->f_text;
 							}else{
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<191>";
 								t_token9->f_text=bb_retro_Mid2(t_token9->f_text,2);
 							}
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<193>";
 							t_prevNode->m_Remove();
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<194>";
 							t_node=t_node->m_PrevNode();
 						}else{
-							errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<195>";
 							if(t_prevNode->m_Value()->f_text==String(L"+")){
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<196>";
 								t_prevNode->m_Remove();
-								errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<197>";
 								t_node=t_node->m_PrevNode();
 							}
 						}
@@ -3101,21 +2756,13 @@ int bb_lexer_Lexer::m_Tokenize(String t_txtStream,bb_compiler_Compiler* t_compil
 				}
 			}
 		}
-		errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<204>";
 		t_node=t_node->m_NextNode();
 	}while(!(t_node==0));
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<212>";
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<212>";
 	bb_list_Enumerator* t_=f_tokens->m_ObjectEnumerator();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<212>";
 	while(t_->m_HasNext()){
-		errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<212>";
 		bb_token_Token* t_t=t_->m_NextObject();
-		errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<213>";
 		Print(String(L"$")+t_t->f_text+String(L"$ ")+String(t_t->f_docX)+String(L",")+String(t_t->f_docY));
 	}
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<215>";
-	popErr();
 	return 1;
 }
 void bb_lexer_Lexer::mark(){
@@ -3130,36 +2777,20 @@ bb_token_Token::bb_token_Token(){
 	f_text=String();
 }
 int bb_token_Token::m_Kind(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/token.monkey<10>";
-	popErr();
 	return f__kind;
 }
 void bb_token_Token::m_Kind2(int t_value){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/token.monkey<13>";
 	f__kind=t_value;
-	popErr();
 }
 bb_token_Token* bb_token_Token::g_new(String t_sourceDocument,int t_x,int t_y,String t_text,int t_kind){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/token.monkey<16>";
 	this->f_sourceFile=t_sourceDocument;
-	errInfo="C:/Monkey Compiler/Harpl/compiler/token.monkey<17>";
 	this->m_Kind2(t_kind);
-	errInfo="C:/Monkey Compiler/Harpl/compiler/token.monkey<18>";
 	this->f_docX=t_x;
-	errInfo="C:/Monkey Compiler/Harpl/compiler/token.monkey<19>";
 	this->f_docY=t_y;
-	errInfo="C:/Monkey Compiler/Harpl/compiler/token.monkey<20>";
 	this->f_text=t_text;
-	popErr();
 	return this;
 }
 bb_token_Token* bb_token_Token::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/token.monkey<1>";
-	popErr();
 	return this;
 }
 void bb_token_Token::mark(){
@@ -3169,58 +2800,31 @@ bb_list_List2::bb_list_List2(){
 	f__head=((new bb_list_HeadNode2)->g_new());
 }
 bb_list_List2* bb_list_List2::g_new(){
-	pushErr();
-	popErr();
 	return this;
 }
 bb_list_Node2* bb_list_List2::m_AddLast2(bb_token_Token* t_data){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<120>";
-	bb_list_Node2* t_=(new bb_list_Node2)->g_new(f__head,f__head->f__pred,t_data);
-	popErr();
-	return t_;
+	return (new bb_list_Node2)->g_new(f__head,f__head->f__pred,t_data);
 }
 bb_list_List2* bb_list_List2::g_new2(Array<bb_token_Token* > t_data){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<13>";
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<13>";
 	Array<bb_token_Token* > t_=t_data;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<13>";
 	int t_2=0;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<13>";
 	while(t_2<t_.Length()){
-		errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<13>";
-		bb_token_Token* t_t=t_.At(t_2);
-		errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<13>";
+		bb_token_Token* t_t=t_[t_2];
 		t_2=t_2+1;
-		errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<14>";
 		m_AddLast2(t_t);
 	}
-	popErr();
 	return this;
 }
 int bb_list_List2::m_Clear(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<36>";
 	gc_assign(f__head->f__succ,f__head);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<37>";
 	gc_assign(f__head->f__pred,f__head);
-	popErr();
 	return 0;
 }
 bb_list_Node2* bb_list_List2::m_FirstNode(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<62>";
-	bb_list_Node2* t_=f__head->m_NextNode();
-	popErr();
-	return t_;
+	return f__head->m_NextNode();
 }
 bb_list_Enumerator* bb_list_List2::m_ObjectEnumerator(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<124>";
-	bb_list_Enumerator* t_=(new bb_list_Enumerator)->g_new(this);
-	popErr();
-	return t_;
+	return (new bb_list_Enumerator)->g_new(this);
 }
 void bb_list_List2::mark(){
 	Object::mark();
@@ -3232,75 +2836,32 @@ bb_list_Node2::bb_list_Node2(){
 	f__data=0;
 }
 bb_list_Node2* bb_list_Node2::g_new(bb_list_Node2* t_succ,bb_list_Node2* t_pred,bb_token_Token* t_data){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<199>";
 	gc_assign(f__succ,t_succ);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<200>";
 	gc_assign(f__pred,t_pred);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<201>";
 	gc_assign(f__succ->f__pred,this);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<202>";
 	gc_assign(f__pred->f__succ,this);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<203>";
 	gc_assign(f__data,t_data);
-	popErr();
 	return this;
 }
 bb_list_Node2* bb_list_Node2::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<196>";
-	popErr();
 	return this;
 }
 bb_list_Node2* bb_list_Node2::m_GetNode(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<239>";
-	popErr();
 	return this;
 }
 bb_list_Node2* bb_list_Node2::m_NextNode(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<220>";
-	if(f__succ->f__pred!=this){
-		errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<220>";
-		Error(String(L"Illegal operation on removed node"));
-	}
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<222>";
-	bb_list_Node2* t_=f__succ->m_GetNode();
-	popErr();
-	return t_;
+	return f__succ->m_GetNode();
 }
 bb_token_Token* bb_list_Node2::m_Value(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<207>";
-	popErr();
 	return f__data;
 }
 int bb_list_Node2::m_Remove(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<212>";
-	if(f__succ->f__pred!=this){
-		errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<212>";
-		Error(String(L"Illegal operation on removed node"));
-	}
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<214>";
 	gc_assign(f__succ->f__pred,f__pred);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<215>";
 	gc_assign(f__pred->f__succ,f__succ);
-	popErr();
 	return 0;
 }
 bb_list_Node2* bb_list_Node2::m_PrevNode(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<227>";
-	if(f__succ->f__pred!=this){
-		errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<227>";
-		Error(String(L"Illegal operation on removed node"));
-	}
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<229>";
-	bb_list_Node2* t_=f__pred->m_GetNode();
-	popErr();
-	return t_;
+	return f__pred->m_GetNode();
 }
 void bb_list_Node2::mark(){
 	Object::mark();
@@ -3311,35 +2872,21 @@ void bb_list_Node2::mark(){
 bb_list_HeadNode2::bb_list_HeadNode2(){
 }
 bb_list_HeadNode2* bb_list_HeadNode2::g_new(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<248>";
 	bb_list_Node2::g_new2();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<249>";
 	gc_assign(f__succ,(this));
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<250>";
 	gc_assign(f__pred,(this));
-	popErr();
 	return this;
 }
 bb_list_Node2* bb_list_HeadNode2::m_GetNode(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<254>";
-	popErr();
 	return 0;
 }
 void bb_list_HeadNode2::mark(){
 	bb_list_Node2::mark();
 }
 bool bb_lexer_IsAValidIdentifierChar(int t_char){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<220>";
 	if(t_char>=97 && t_char<=122 || t_char>=65 && t_char<=90 || t_char==95 || t_char>=48 && t_char<=57){
-		errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<221>";
-		popErr();
 		return true;
 	}else{
-		errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<223>";
-		popErr();
 		return false;
 	}
 }
@@ -3349,69 +2896,37 @@ void bb_token_eToken::mark(){
 	Object::mark();
 }
 String bb_lexer_ScapeChars(String t_text){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/compiler/lexer.monkey<228>";
-	String t_=t_text.Replace(String(L"~n"),String(L"\n")).Replace(String(L"~q"),String(L"'")).Replace(String(L"~d"),String(L"\"")).Replace(String(L"~~"),String(L"~")).Replace(String(L"~t"),String(L"\t")).Replace(String(L"~r"),String(L"\r"));
-	popErr();
-	return t_;
+	return t_text.Replace(String(L"~n"),String(L"\n")).Replace(String(L"~q"),String(L"'")).Replace(String(L"~d"),String(L"\"")).Replace(String(L"~~"),String(L"~")).Replace(String(L"~t"),String(L"\t")).Replace(String(L"~r"),String(L"\r"));
 }
 String bb_retro_Mid(String t_value,int t_index,int t_count){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/utils/retro.monkey<17>";
 	t_index-=1;
-	errInfo="C:/Monkey Compiler/Harpl/utils/retro.monkey<18>";
-	String t_=t_value.Slice(t_index,t_index+t_count);
-	popErr();
-	return t_;
+	return t_value.Slice(t_index,t_index+t_count);
 }
 String bb_retro_Mid2(String t_value,int t_index){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/utils/retro.monkey<23>";
 	t_index-=1;
-	errInfo="C:/Monkey Compiler/Harpl/utils/retro.monkey<24>";
-	String t_=t_value.Slice(t_index);
-	popErr();
-	return t_;
+	return t_value.Slice(t_index);
 }
 bb_list_Enumerator::bb_list_Enumerator(){
 	f__list=0;
 	f__curr=0;
 }
 bb_list_Enumerator* bb_list_Enumerator::g_new(bb_list_List2* t_list){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<264>";
 	gc_assign(f__list,t_list);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<265>";
 	gc_assign(f__curr,t_list->f__head->f__succ);
-	popErr();
 	return this;
 }
 bb_list_Enumerator* bb_list_Enumerator::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<261>";
-	popErr();
 	return this;
 }
 bool bb_list_Enumerator::m_HasNext(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<269>";
 	while(f__curr->f__succ->f__pred!=f__curr){
-		errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<270>";
 		gc_assign(f__curr,f__curr->f__succ);
 	}
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<272>";
-	bool t_=f__curr!=f__list->f__head;
-	popErr();
-	return t_;
+	return f__curr!=f__list->f__head;
 }
 bb_token_Token* bb_list_Enumerator::m_NextObject(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<276>";
 	bb_token_Token* t_data=f__curr->f__data;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<277>";
 	gc_assign(f__curr,f__curr->f__succ);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<278>";
-	popErr();
 	return t_data;
 }
 void bb_list_Enumerator::mark(){
@@ -3424,40 +2939,22 @@ bb_list_Enumerator2::bb_list_Enumerator2(){
 	f__curr=0;
 }
 bb_list_Enumerator2* bb_list_Enumerator2::g_new(bb_list_List* t_list){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<264>";
 	gc_assign(f__list,t_list);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<265>";
 	gc_assign(f__curr,t_list->f__head->f__succ);
-	popErr();
 	return this;
 }
 bb_list_Enumerator2* bb_list_Enumerator2::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<261>";
-	popErr();
 	return this;
 }
 bool bb_list_Enumerator2::m_HasNext(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<269>";
 	while(f__curr->f__succ->f__pred!=f__curr){
-		errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<270>";
 		gc_assign(f__curr,f__curr->f__succ);
 	}
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<272>";
-	bool t_=f__curr!=f__list->f__head;
-	popErr();
-	return t_;
+	return f__curr!=f__list->f__head;
 }
 bb_compiler_CompileError* bb_list_Enumerator2::m_NextObject(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<276>";
 	bb_compiler_CompileError* t_data=f__curr->f__data;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<277>";
 	gc_assign(f__curr,f__curr->f__succ);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/monkey/list.monkey<278>";
-	popErr();
 	return t_data;
 }
 void bb_list_Enumerator2::mark(){
@@ -3466,47 +2963,30 @@ void bb_list_Enumerator2::mark(){
 	gc_mark_q(f__curr);
 }
 int bbMain(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<25>";
+	Print(String(L"======================================================"));
 	Print(bb_Harpl_AppString());
-	errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<26>";
+	Print(String(L"======================================================"));
 	if(AppArgs().Length()<2){
-		errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<27>";
 		bb_Harpl_ShowCommandLineArgs();
-		errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<28>";
 		bb_Harpl_AbortExecution(String(L"No command-line parameters were found."),0);
 	}else{
-		errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<29>";
 		if(AppArgs().Length()>2){
-			errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<30>";
 			bb_Harpl_ShowCommandLineArgs();
-			errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<31>";
 			bb_Harpl_AbortExecution(String(L"Too many parameters."),-1);
 		}
 	}
-	errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<34>";
 	bb_compiler_Compiler* t_C=(new bb_compiler_Compiler)->g_new();
-	errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<35>";
-	if(t_C->m_CompileFile(AppArgs().At(1))==false){
-		errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<36>";
-		errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<36>";
+	if(t_C->m_CompileFile(AppArgs()[1])==false){
 		bb_list_Enumerator2* t_=t_C->f_compileErrors->m_ObjectEnumerator();
-		errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<36>";
 		while(t_->m_HasNext()){
-			errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<36>";
 			bb_compiler_CompileError* t_err=t_->m_NextObject();
-			errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<37>";
 			Print(String(L"Error: ")+t_err->f_description);
-			errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<38>";
 			if(t_err->f_file!=String()){
-				errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<39>";
 				Print(String(L"    At file: ")+t_err->f_file+String(L"[")+String(t_err->f_posX)+String(L",")+String(t_err->f_posY)+String(L"]"));
 			}
-			errInfo="C:/Monkey Compiler/Harpl/Harpl.monkey<41>";
 			Print(String());
 		}
 	}
-	popErr();
 	return 0;
 }
 bb_reflection_FieldInfo::bb_reflection_FieldInfo(){
@@ -3515,20 +2995,12 @@ bb_reflection_FieldInfo::bb_reflection_FieldInfo(){
 	f__type=0;
 }
 bb_reflection_FieldInfo* bb_reflection_FieldInfo::g_new(String t_name,int t_attrs,bb_reflection_ClassInfo* t_type){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<153>";
 	f__name=t_name;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<154>";
 	f__attrs=t_attrs;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<155>";
 	gc_assign(f__type,t_type);
-	popErr();
 	return this;
 }
 bb_reflection_FieldInfo* bb_reflection_FieldInfo::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<150>";
-	popErr();
 	return this;
 }
 void bb_reflection_FieldInfo::mark(){
@@ -3551,22 +3023,13 @@ bb_reflection_MethodInfo::bb_reflection_MethodInfo(){
 	f__argTypes=Array<bb_reflection_ClassInfo* >();
 }
 bb_reflection_MethodInfo* bb_reflection_MethodInfo::g_new(String t_name,int t_attrs,bb_reflection_ClassInfo* t_retType,Array<bb_reflection_ClassInfo* > t_argTypes){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<185>";
 	f__name=t_name;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<186>";
 	f__attrs=t_attrs;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<187>";
 	gc_assign(f__retType,t_retType);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<188>";
 	gc_assign(f__argTypes,t_argTypes);
-	popErr();
 	return this;
 }
 bb_reflection_MethodInfo* bb_reflection_MethodInfo::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<182>";
-	popErr();
 	return this;
 }
 void bb_reflection_MethodInfo::mark(){
@@ -3586,7 +3049,7 @@ void bb_reflection_R5::mark(){
 bb_reflection_R6::bb_reflection_R6(){
 }
 bb_reflection_R6* bb_reflection_R6::g_new(){
-	bb_reflection_ClassInfo* t_[]={bb_reflection__classes.At(0)};
+	bb_reflection_ClassInfo* t_[]={bb_reflection__classes[0]};
 	bb_reflection_MethodInfo::g_new(String(L"Equals"),0,bb_reflection__boolClass,Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
@@ -3600,22 +3063,13 @@ bb_reflection_FunctionInfo::bb_reflection_FunctionInfo(){
 	f__argTypes=Array<bb_reflection_ClassInfo* >();
 }
 bb_reflection_FunctionInfo* bb_reflection_FunctionInfo::g_new(String t_name,int t_attrs,bb_reflection_ClassInfo* t_retType,Array<bb_reflection_ClassInfo* > t_argTypes){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<221>";
 	f__name=t_name;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<222>";
 	f__attrs=t_attrs;
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<223>";
 	gc_assign(f__retType,t_retType);
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<224>";
 	gc_assign(f__argTypes,t_argTypes);
-	popErr();
 	return this;
 }
 bb_reflection_FunctionInfo* bb_reflection_FunctionInfo::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro54/modules/reflection/reflection.monkey<218>";
-	popErr();
 	return this;
 }
 void bb_reflection_FunctionInfo::mark(){
@@ -3627,7 +3081,7 @@ bb_reflection_R4::bb_reflection_R4(){
 }
 bb_reflection_R4* bb_reflection_R4::g_new(){
 	bb_reflection_ClassInfo* t_[]={bb_reflection__boolClass};
-	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.BoolObject.new"),0,bb_reflection__classes.At(0),Array<bb_reflection_ClassInfo* >(t_,1));
+	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.BoolObject.new"),0,bb_reflection__classes[0],Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
 void bb_reflection_R4::mark(){
@@ -3636,7 +3090,7 @@ void bb_reflection_R4::mark(){
 bb_reflection_R7::bb_reflection_R7(){
 }
 bb_reflection_R7* bb_reflection_R7::g_new(){
-	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.BoolObject.new"),0,bb_reflection__classes.At(0),Array<bb_reflection_ClassInfo* >());
+	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.BoolObject.new"),0,bb_reflection__classes[0],Array<bb_reflection_ClassInfo* >());
 	return this;
 }
 void bb_reflection_R7::mark(){
@@ -3681,7 +3135,7 @@ void bb_reflection_R14::mark(){
 bb_reflection_R15::bb_reflection_R15(){
 }
 bb_reflection_R15* bb_reflection_R15::g_new(){
-	bb_reflection_ClassInfo* t_[]={bb_reflection__classes.At(1)};
+	bb_reflection_ClassInfo* t_[]={bb_reflection__classes[1]};
 	bb_reflection_MethodInfo::g_new(String(L"Equals"),0,bb_reflection__boolClass,Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
@@ -3691,7 +3145,7 @@ void bb_reflection_R15::mark(){
 bb_reflection_R16::bb_reflection_R16(){
 }
 bb_reflection_R16* bb_reflection_R16::g_new(){
-	bb_reflection_ClassInfo* t_[]={bb_reflection__classes.At(1)};
+	bb_reflection_ClassInfo* t_[]={bb_reflection__classes[1]};
 	bb_reflection_MethodInfo::g_new(String(L"Compare"),0,bb_reflection__intClass,Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
@@ -3702,7 +3156,7 @@ bb_reflection_R10::bb_reflection_R10(){
 }
 bb_reflection_R10* bb_reflection_R10::g_new(){
 	bb_reflection_ClassInfo* t_[]={bb_reflection__intClass};
-	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.IntObject.new"),0,bb_reflection__classes.At(1),Array<bb_reflection_ClassInfo* >(t_,1));
+	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.IntObject.new"),0,bb_reflection__classes[1],Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
 void bb_reflection_R10::mark(){
@@ -3712,7 +3166,7 @@ bb_reflection_R11::bb_reflection_R11(){
 }
 bb_reflection_R11* bb_reflection_R11::g_new(){
 	bb_reflection_ClassInfo* t_[]={bb_reflection__floatClass};
-	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.IntObject.new"),0,bb_reflection__classes.At(1),Array<bb_reflection_ClassInfo* >(t_,1));
+	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.IntObject.new"),0,bb_reflection__classes[1],Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
 void bb_reflection_R11::mark(){
@@ -3721,7 +3175,7 @@ void bb_reflection_R11::mark(){
 bb_reflection_R17::bb_reflection_R17(){
 }
 bb_reflection_R17* bb_reflection_R17::g_new(){
-	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.IntObject.new"),0,bb_reflection__classes.At(1),Array<bb_reflection_ClassInfo* >());
+	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.IntObject.new"),0,bb_reflection__classes[1],Array<bb_reflection_ClassInfo* >());
 	return this;
 }
 void bb_reflection_R17::mark(){
@@ -3766,7 +3220,7 @@ void bb_reflection_R24::mark(){
 bb_reflection_R25::bb_reflection_R25(){
 }
 bb_reflection_R25* bb_reflection_R25::g_new(){
-	bb_reflection_ClassInfo* t_[]={bb_reflection__classes.At(2)};
+	bb_reflection_ClassInfo* t_[]={bb_reflection__classes[2]};
 	bb_reflection_MethodInfo::g_new(String(L"Equals"),0,bb_reflection__boolClass,Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
@@ -3776,7 +3230,7 @@ void bb_reflection_R25::mark(){
 bb_reflection_R26::bb_reflection_R26(){
 }
 bb_reflection_R26* bb_reflection_R26::g_new(){
-	bb_reflection_ClassInfo* t_[]={bb_reflection__classes.At(2)};
+	bb_reflection_ClassInfo* t_[]={bb_reflection__classes[2]};
 	bb_reflection_MethodInfo::g_new(String(L"Compare"),0,bb_reflection__intClass,Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
@@ -3787,7 +3241,7 @@ bb_reflection_R20::bb_reflection_R20(){
 }
 bb_reflection_R20* bb_reflection_R20::g_new(){
 	bb_reflection_ClassInfo* t_[]={bb_reflection__intClass};
-	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.FloatObject.new"),0,bb_reflection__classes.At(2),Array<bb_reflection_ClassInfo* >(t_,1));
+	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.FloatObject.new"),0,bb_reflection__classes[2],Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
 void bb_reflection_R20::mark(){
@@ -3797,7 +3251,7 @@ bb_reflection_R21::bb_reflection_R21(){
 }
 bb_reflection_R21* bb_reflection_R21::g_new(){
 	bb_reflection_ClassInfo* t_[]={bb_reflection__floatClass};
-	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.FloatObject.new"),0,bb_reflection__classes.At(2),Array<bb_reflection_ClassInfo* >(t_,1));
+	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.FloatObject.new"),0,bb_reflection__classes[2],Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
 void bb_reflection_R21::mark(){
@@ -3806,7 +3260,7 @@ void bb_reflection_R21::mark(){
 bb_reflection_R27::bb_reflection_R27(){
 }
 bb_reflection_R27* bb_reflection_R27::g_new(){
-	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.FloatObject.new"),0,bb_reflection__classes.At(2),Array<bb_reflection_ClassInfo* >());
+	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.FloatObject.new"),0,bb_reflection__classes[2],Array<bb_reflection_ClassInfo* >());
 	return this;
 }
 void bb_reflection_R27::mark(){
@@ -3833,7 +3287,7 @@ void bb_reflection_R33::mark(){
 bb_reflection_R34::bb_reflection_R34(){
 }
 bb_reflection_R34* bb_reflection_R34::g_new(){
-	bb_reflection_ClassInfo* t_[]={bb_reflection__classes.At(3)};
+	bb_reflection_ClassInfo* t_[]={bb_reflection__classes[3]};
 	bb_reflection_MethodInfo::g_new(String(L"Equals"),0,bb_reflection__boolClass,Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
@@ -3843,7 +3297,7 @@ void bb_reflection_R34::mark(){
 bb_reflection_R35::bb_reflection_R35(){
 }
 bb_reflection_R35* bb_reflection_R35::g_new(){
-	bb_reflection_ClassInfo* t_[]={bb_reflection__classes.At(3)};
+	bb_reflection_ClassInfo* t_[]={bb_reflection__classes[3]};
 	bb_reflection_MethodInfo::g_new(String(L"Compare"),0,bb_reflection__intClass,Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
@@ -3854,7 +3308,7 @@ bb_reflection_R30::bb_reflection_R30(){
 }
 bb_reflection_R30* bb_reflection_R30::g_new(){
 	bb_reflection_ClassInfo* t_[]={bb_reflection__intClass};
-	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.StringObject.new"),0,bb_reflection__classes.At(3),Array<bb_reflection_ClassInfo* >(t_,1));
+	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.StringObject.new"),0,bb_reflection__classes[3],Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
 void bb_reflection_R30::mark(){
@@ -3864,7 +3318,7 @@ bb_reflection_R31::bb_reflection_R31(){
 }
 bb_reflection_R31* bb_reflection_R31::g_new(){
 	bb_reflection_ClassInfo* t_[]={bb_reflection__floatClass};
-	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.StringObject.new"),0,bb_reflection__classes.At(3),Array<bb_reflection_ClassInfo* >(t_,1));
+	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.StringObject.new"),0,bb_reflection__classes[3],Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
 void bb_reflection_R31::mark(){
@@ -3874,7 +3328,7 @@ bb_reflection_R32::bb_reflection_R32(){
 }
 bb_reflection_R32* bb_reflection_R32::g_new(){
 	bb_reflection_ClassInfo* t_[]={bb_reflection__stringClass};
-	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.StringObject.new"),0,bb_reflection__classes.At(3),Array<bb_reflection_ClassInfo* >(t_,1));
+	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.StringObject.new"),0,bb_reflection__classes[3],Array<bb_reflection_ClassInfo* >(t_,1));
 	return this;
 }
 void bb_reflection_R32::mark(){
@@ -3883,7 +3337,7 @@ void bb_reflection_R32::mark(){
 bb_reflection_R36::bb_reflection_R36(){
 }
 bb_reflection_R36* bb_reflection_R36::g_new(){
-	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.StringObject.new"),0,bb_reflection__classes.At(3),Array<bb_reflection_ClassInfo* >());
+	bb_reflection_FunctionInfo::g_new(String(L"monkey.boxes.StringObject.new"),0,bb_reflection__classes[3],Array<bb_reflection_ClassInfo* >());
 	return this;
 }
 void bb_reflection_R36::mark(){

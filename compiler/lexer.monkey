@@ -8,7 +8,6 @@ Class Lexer
 		If tokens=null Then tokens = New List<Token>
 		tokens.Clear()
 		
-		
 		Local i:Int = 0, lastOffset:Int = 0, lineNum:Int = 0
 		Print "Tokenizing..."
 		While i<txtStream.Length
@@ -54,7 +53,6 @@ Class Lexer
 			
 			'Check for hexadecimal numbers, ala HTML #FFFFFF, and so on...
 			ElseIf char = "#"[0]
-				Print "Parsing HEX:"
 				Local done:Bool
 				done = False
 				Local tokenInit:Int = i
@@ -203,12 +201,7 @@ Class Lexer
 			End
 			node = node.NextNode()
 		Until node = null 
-		
 
-		
-
-		
-				
 		For Local t:Token = EachIn tokens
 			Print "$" + t.text + "$ " + t.docX + "," + t.docY
 		Next

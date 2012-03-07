@@ -3,11 +3,13 @@
 #end
 Import utils.stdio
 Import utils.retro
-Import reflection 
+#if CONFIG="debug"
+	Import reflection 
+#end
 Import compiler.compiler 
 Import os
 'summary: This const contains the name of this application
-Const APPNAME:String = "HARPL COMPILER"
+Const APPNAME:String = "Harpl compiler"
 'summary: This const contains the string representation of current version
 Const APPVERSION:String = "00.00.00-A"
 'summary: This const contains any additional version information (such as BETA, RC, whatever) to the current version
@@ -22,7 +24,9 @@ End
 	summary:This is the entry point of the Harpl compiler
 #end
 Function Main()
+	Print "======================================================"
 	Print AppString
+	Print "======================================================"
 	If AppArgs.Length<2 Then 
 		ShowCommandLineArgs()
 		AbortExecution("No command-line parameters were found.", 0)
