@@ -3,6 +3,7 @@
 #end
 Import utils.stdio
 Import utils.retro
+Import utils.stringutils 
 'Import reflection 
 
 Import compiler.compiler 
@@ -34,9 +35,9 @@ Function Main()
 		AbortExecution("Too many parameters.", -1)
 	endif
 	
-	Local C:= New Compiler
-	if C.CompileFile (AppArgs[1]) = False Then
-		For Local err:CompileError = eachin C.compileErrors 
+	Local localCompiler:= New Compiler
+	If localCompiler.CompileFile (AppArgs[1]) = False Then
+		For Local err:CompileError = eachin localCompiler.compileErrors 
 			Print "Error: " + err.description
 			if err.file <>"" Then
 				Print "    At file: " + err.file + "[" + err.posX + "," + err.posY + "]"

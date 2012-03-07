@@ -82,7 +82,7 @@ Class Lexer
 					endif
 				wend
 				'TODO: Convert HEX to regular decimal. This can be done while lexing (why not?)
-				Local newtext:string = Int("$" + txtStream[tokenInit+1 ..i])
+				Local newtext:string = HexToInteger(txtStream[tokenInit+1 ..i]) 'Int("$" + txtStream[tokenInit+1 ..i])
 				Local token:=New Token(sourceFile, tokenInit-lastOffset, lineNum ,newtext,eToken.NUMBER )
 				tokens.AddLast(token)
 				i-=1	'Correct i offset, not nice.
