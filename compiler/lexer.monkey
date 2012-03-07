@@ -1,0 +1,140 @@
+Import Harpl
+Import token
+
+Class Lexer
+	Field tokens:=New List<Token>
+	Method Tokenize(txtStream:String, compiler:Compiler, sourceFile:string)
+
+		If tokens=null Then tokens = New List<Token>
+		tokens.Clear()
+		
+		
+		Local i:Int = 0, lastOffset:Int = 0, lineNum:Int = 0
+		Print "Tokenizing..."
+		While i<txtStream.Length
+			'We begin an Identifier:
+			'Print txtStream[i]
+			Local char:Int = txtStream[i] 
+			
+			'If it is a regular identifier:
+			If (char>="a"[0] And char<="z"[0]) or (char>="A"[0] And char<="Z"[0]) Then
+				Local done:Bool 
+				done = False
+				Local tokenInit:Int = i
+				While i<txtStream.Length And done = False
+					if IsAValidIdentifierChar(txtStream[i]) = false Then done = True else i+=1
+				wend
+				Local token:=New Token(sourceFile, tokenInit-lastOffset, lineNum ,txtStream[tokenInit..i],eToken.IDENTIFIER)
+				tokens.AddLast(token)
+				i-=1	'Correct i offset, not nice.
+				
+			'Check for numeric literals:
+			ElseIf char>="0"[0] And char<="9"[0]
+				Local done:Bool, hasdot:Bool = false
+				done = False
+				Local tokenInit:Int = i
+				While i<txtStream.Length And done = False
+					if (txtStream[i]>="0"[0] And txtStream[i]<="9") Then 
+						i+=1
+					ElseIf txtStream[i] = "."[0]
+						if hasdot = False Then 
+							hasdot = True
+							i+=1
+						Else 
+							compiler.AddError("Malformed numeric literal",sourceFile,tokenInit-lastOffset,lineNum)
+							done = true
+						EndIf
+					Else
+						done = true
+					endif
+				wend
+				Local token:=New Token(sourceFile, tokenInit-lastOffset, lineNum ,txtStream[tokenInit..i],eToken.IDENTIFIER)
+				tokens.AddLast(token)
+				i-=1	'Correct i offset, not nice.
+				
+			'If it is a string literal with double quotes:
+			ElseIf char = "~q"[0]
+				Local done:Bool 
+				done = False
+				Local tokenInit:Int = i+1
+				i+=1;
+				While i<txtStream.Length And done = False
+					if (txtStream[i] = "~q"[0]) Then done = True else i+=1
+				wend
+				if done=False Then
+					compiler.AddError("Expecting ~q",sourceFile,tokenInit-lastOffset-1,lineNum)
+				EndIf
+				Local token:=New Token(sourceFile, tokenInit -lastOffset-1 ,lineNum,txtStream[tokenInit..i],eToken.STRINGLITERAL)
+				token.text = ScapeChars (token.text)
+				tokens.AddLast(token)
+
+			'If it is a string literal with single quotes:
+			ElseIf char = "'"[0]
+				Local done:Bool 
+				done = False
+				Local tokenInit:Int = i+1
+				i+=1;
+				While i<txtStream.Length And done = False
+					if (txtStream[i] = "'"[0]) Then done = True else i+=1
+				wend
+				if done=False Then
+					compiler.AddError("Expecting '",sourceFile,tokenInit-lastOffset-1,lineNum)
+				EndIf
+				Local token:=New Token(sourceFile,tokenInit - lastOffset-1, lineNum,txtStream[tokenInit..i],eToken.STRINGLITERAL)
+				token.text = ScapeChars (token.text)
+				tokens.AddLast(token)
+
+				
+			'If it is a End Of Sentence (wich can be a linefeed or a ; )
+			ElseIf char = "~n"[0] or char = ";"[0] or char = "~r"[0]
+				Local token:=New Token(sourceFile,i-lastOffset, lineNum, txtStream[i..i+1],eToken.ENDSENTENCE)
+				tokens.AddLast(token)
+				if char = "~n"[0] then
+					lastOffset = i+1	'we have to add the CR in the offset
+					lineNum+= 1
+				endif
+				
+			'If it is an operator:
+			ElseIf char = "+"[0] or char = "-"[0] or char = "*"[0] or char = "/"[0] or char = "%"[0] or char = "^"[0] or char = "&"[0] or char = "|"[0] or 
+				char = ">"[0] or char = "<"[0] or char = "="[0] or char = "("[0] or char = ")"[0] or char = "["[0] or char = "]"[0] or char="."[0] then
+				Local token:=New Token(sourceFile, i-lastOffset, lineNum,txtStream[i..i+1],eToken.OPERATOR)
+				tokens.AddLast(token)
+			
+			'valid separators:
+			ElseIf char = " "[0] or char = "~t"[0]
+			
+			'If it is a Comment
+			ElseIf char = "!"[0]
+				Local done:Bool 
+				done = False
+				i+=1;
+				While i<txtStream.Length And done = False
+					if (txtStream[i] = "~n"[0] or txtStream[i] = "~r"[0]) Then done = True else i+=1
+				wend
+
+			'Otherwise SYNTAX ERROR!!
+			Else
+				compiler.AddError("Syntax error. Unexpected character: " + String.FromChar(char),sourceFile,i-lastOffset,lineNum)
+				'Return False
+			EndIf
+			i+=1;
+		Wend
+		
+		For Local t:Token = EachIn tokens
+			Print "$" + t.text + "$ " + t.docX + "," + t.docY
+		Next
+		Return true
+	End method
+End
+
+Function IsAValidIdentifierChar:Bool(char:Int)
+	if (char>="a"[0] And char<="z"[0]) or (char>="A"[0] And char<="Z"[0]) or char = "_"[0] or (char>="0"[0] And char<="9"[0])
+		Return true
+	Else
+		Return false
+	EndIf
+End
+
+Function ScapeChars:String(text:String)
+	Return text.Replace("~~n","~n").Replace("~~q","'").Replace("~~d","~q").Replace("~~~~","~~").Replace("~~t","~t").Replace("~~r","~r")
+End
