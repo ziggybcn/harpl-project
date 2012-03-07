@@ -1,8 +1,25 @@
 Import Harpl
 Import token
+#rem
+	header: This is the lexer module. This module has all the required resources to split the Harpl source code into tokens.
+	A token is the minimum significative unit of Harpl source code. Like words on a natural language.
+#end
 
+#rem
+	summary: The Lexer class handles the lexing of Harpl source code.
+#end
 Class Lexer
+	'summary: This field contains the list of tokens after a Lexing process
 	Field tokens:=New List<Token>
+	#Rem
+		summary: This method processes all source code from a txtStream (a string) and fills in an ordererd tokens list, ready to be semanted.
+		The required parameters for this process are:
+		[list]
+		[*]The txtStream that contains the source code. This is the source code to be compiled in the form of a String.
+		[*]The Harpl compiler associated to this process, so any lexing syntax error can be notified to the compiler.
+		[*]The complete path of the source code document on disk, from where the txtstream has been read. This information is required to fill properly any compilation error details
+		[/list]
+	#End
 	Method Tokenize(txtStream:String, compiler:Compiler, sourceFile:string)
 
 		If tokens=null Then tokens = New List<Token>
@@ -209,6 +226,7 @@ Class Lexer
 	End method
 End
 
+Private
 Function IsAValidIdentifierChar:Bool(char:Int)
 	if (char>="a"[0] And char<="z"[0]) or (char>="A"[0] And char<="Z"[0]) or char = "_"[0] or (char>="0"[0] And char<="9"[0])
 		Return true

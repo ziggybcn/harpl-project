@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="es" http-equiv="Content-Language" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<link href="style.css" rel="stylesheet" type="text/css" />
+<title>compiler.lexer</title>
+</head>
+<body>
+<h3>compiler.lexer</h3>This is the lexer module. This module has all the required resources to split the Harpl source code into tokens.<br />	A token is the minimum significative unit of Harpl source code. Like words on a natural language.<br /><h3>Table of contents:</h3>Classes:<br><ul><li><a href='#11Lexer'>Lexer</a> <i>( Class Lexer  ) </i> <br/></ul><table style='width: 100%' id=11Lexer><tr id=Lexer><td class='tablehead' colspan='2'>Class Lexer </td></tr><tr><td style='width:90px'>Description:</td><td>The Lexer class handles the lexing of Harpl source code.</td></tr><tr><td style='width:90px'>Table of contents:</td><td>Methods:<br><ul><li><a href='#23Tokenize'>Tokenize</a> <i>( Method Tokenize(txtStream:String, compiler:Compiler, sourceFile:string) ) </i> <br/></ul>Fields:<br><ul><li><a href='#13tokens'>tokens</a> <i>( Field tokens:=New List&lt;Token&gt; ) </i> <br/></ul></td></tr><tr><td colspan='2'><table style='width: 100%' class = 'subtable'><tr id=23Tokenize><td class='subtablehead' colspan='2' id=Tokenize>Method Tokenize(txtStream:String, compiler:Compiler, sourceFile:string)</td></tr><tr><td style='width:90px'>Description:</td><td>This method processes all source code from a txtStream (a string) and fills in an ordererd tokens list, ready to be semanted.</td></tr><tr><td style='width:90px'>Returns:</td><td>Int</td></tr><tr><td style='width:90px'>Details:</td><td>		The required parameters for this process are:<br />		<ul>		<li>The txtStream that contains the source code. This is the source code to be compiled in the form of a String.<br />		<li>The Harpl compiler associated to this process, so any lexing syntax error can be notified to the compiler.<br />		<li>The complete path of the source code document on disk, from where the txtstream has been read. This information is required to fill properly any compilation error details<br />		</ul></td></tr></table></tr></td><tr><td colspan='2'><table style='width: 100%' class = 'subtable'><tr id=13tokens><td class='subtablehead' colspan='2' id=tokens>Field tokens:=New List&lt;Token&gt;</td></tr><tr><td style='width:90px'>Description:</td><td>This field contains the list of tokens after a Lexing process</td></tr></table></tr></td></table><br />
+<p class="junglefooter">This document was generated using the <a href="http://www.jungleide.com/">Jungle IDE</a> document generator version 12.02.29-A</p>
+</body>
+</html>

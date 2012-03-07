@@ -3,9 +3,8 @@
 #end
 Import utils.stdio
 Import utils.retro
-#if CONFIG="debug"
-	Import reflection 
-#end
+'Import reflection 
+
 Import compiler.compiler 
 Import os
 'summary: This const contains the name of this application
