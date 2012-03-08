@@ -1,3 +1,4 @@
 syntax:glob
 *.JIPO
 *.JILayout
+Harpl.build/*

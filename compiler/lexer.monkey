@@ -164,11 +164,11 @@ Class Lexer
 			'Otherwise SYNTAX ERROR!!
 			Else
 				compiler.AddError("Syntax error. Unexpected character: " + String.FromChar(char),sourceFile,i-lastOffset,lineNum)
-				'Return False
+
 			EndIf
 			i+=1;
 		Wend
-		'Return 
+
 		'TOKEN MERGING UPSIDE DOWN:
 		Local node:list.Node<Token> = tokens.FirstNode()
 		Repeat 
@@ -227,7 +227,10 @@ Class Lexer
 		For Local t:Token = EachIn tokens
 			Print "$" + t.text + "$ " + t.docX + "," + t.docY
 		Next
-		Return true
+
+		'returns TRUE if there are no compiler errors after the whole thing.
+		Return compiler.compileErrors.IsEmpty()
+		
 	End method
 End
 

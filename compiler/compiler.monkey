@@ -25,7 +25,7 @@ Class Compiler
 	To get the lsit of all compilation errors, you can access the field compileErrors of the class instance.
 	#end
 	Method CompileFile:Bool (filename:String)
-		if FileType(filename) <> 1 Then 
+		If FileType(filename) <> 1 Then 'file does not exist
 			AddError("File " + filename + " was not found.","",-1,-1)
 			Return False
 		EndIf
