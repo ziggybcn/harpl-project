@@ -31,7 +31,6 @@ Class Lexer
 		Print "Tokenizing..."
 		While i<txtStream.Length
 			'We begin an Identifier:
-			'Print txtStream[i]
 			Local char:Int = txtStream[i] 
 			
 			'If it is a regular identifier:
@@ -42,7 +41,8 @@ Class Lexer
 				While i<txtStream.Length And done = False
 					if IsAValidIdentifierChar(txtStream[i]) = false Then done = True else i+=1
 				wend
-				Local token:=New Token(sourceFile, tokenInit-lastOffset, lineNum ,txtStream[tokenInit..i],eToken.IDENTIFIER)
+				Local identifierText:String = txtStream[tokenInit..i].ToLower()	'Remove ToLower for a case sensitive language. Harpl is not.
+				Local token:=New Token(sourceFile, tokenInit-lastOffset, lineNum ,identifierText,eToken.IDENTIFIER)
 				tokens.AddLast(token)
 				i-=1	'Correct i offset, not nice.
 				
@@ -145,7 +145,7 @@ Class Lexer
 				
 			'If it is an operator:
 			ElseIf char = "+"[0] or char = "-"[0] or char = "*"[0] or char = "/"[0] or char = "%"[0] or char = "^"[0] or char = "&"[0] or char = "|"[0] or 
-				char = ">"[0] or char = "<"[0] or char = "="[0] or char = "("[0] or char = ")"[0] or char = "["[0] or char = "]"[0] or char="."[0] then
+				char = ">"[0] or char = "<"[0] or char = "="[0] or char = "("[0] or char = ")"[0] or char = "["[0] or char = "]"[0] or char="."[0] or char=","[0] then
 				Local token:=New Token(sourceFile, i-lastOffset, lineNum,txtStream[i..i+1],eToken.OPERATOR)
 				tokens.AddLast(token)
 			

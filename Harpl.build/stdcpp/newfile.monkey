@@ -1,1 +1,3 @@
-Print #FF
+Function Main()
+	Var Myvariable is String
+End

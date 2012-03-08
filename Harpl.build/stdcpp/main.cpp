@@ -2808,216 +2808,218 @@ int bb_lexer_Lexer::m_Tokenize(String t_txtStream,bb_compiler_Compiler* t_compil
 				}
 			}
 			errInfo="C:/harpl-project/compiler/lexer.monkey<45>";
-			bb_token_Token* t_token=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit-t_lastOffset,t_lineNum,t_txtStream.Slice(t_tokenInit,t_i),1);
+			String t_identifierText=t_txtStream.Slice(t_tokenInit,t_i).ToLower();
 			errInfo="C:/harpl-project/compiler/lexer.monkey<46>";
-			f_tokens->m_AddLast2(t_token);
+			bb_token_Token* t_token=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit-t_lastOffset,t_lineNum,t_identifierText,1);
 			errInfo="C:/harpl-project/compiler/lexer.monkey<47>";
+			f_tokens->m_AddLast2(t_token);
+			errInfo="C:/harpl-project/compiler/lexer.monkey<48>";
 			t_i-=1;
 		}else{
-			errInfo="C:/harpl-project/compiler/lexer.monkey<50>";
+			errInfo="C:/harpl-project/compiler/lexer.monkey<51>";
 			if(t_char>=48 && t_char<=57){
-				errInfo="C:/harpl-project/compiler/lexer.monkey<51>";
-				bool t_done2=false;
-				errInfo="C:/harpl-project/compiler/lexer.monkey<51>";
-				bool t_hasdot=false;
 				errInfo="C:/harpl-project/compiler/lexer.monkey<52>";
-				t_done2=false;
+				bool t_done2=false;
+				errInfo="C:/harpl-project/compiler/lexer.monkey<52>";
+				bool t_hasdot=false;
 				errInfo="C:/harpl-project/compiler/lexer.monkey<53>";
-				int t_tokenInit2=t_i;
+				t_done2=false;
 				errInfo="C:/harpl-project/compiler/lexer.monkey<54>";
+				int t_tokenInit2=t_i;
+				errInfo="C:/harpl-project/compiler/lexer.monkey<55>";
 				while(t_i<t_txtStream.Length() && t_done2==false){
-					errInfo="C:/harpl-project/compiler/lexer.monkey<55>";
+					errInfo="C:/harpl-project/compiler/lexer.monkey<56>";
 					if((int)t_txtStream[t_i]>=48 && String((int)t_txtStream[t_i])<=String(L"9")){
-						errInfo="C:/harpl-project/compiler/lexer.monkey<56>";
+						errInfo="C:/harpl-project/compiler/lexer.monkey<57>";
 						t_i+=1;
 					}else{
-						errInfo="C:/harpl-project/compiler/lexer.monkey<57>";
+						errInfo="C:/harpl-project/compiler/lexer.monkey<58>";
 						if((int)t_txtStream[t_i]==46){
-							errInfo="C:/harpl-project/compiler/lexer.monkey<58>";
+							errInfo="C:/harpl-project/compiler/lexer.monkey<59>";
 							if(t_hasdot==false){
-								errInfo="C:/harpl-project/compiler/lexer.monkey<59>";
-								t_hasdot=true;
 								errInfo="C:/harpl-project/compiler/lexer.monkey<60>";
+								t_hasdot=true;
+								errInfo="C:/harpl-project/compiler/lexer.monkey<61>";
 								t_i+=1;
 							}else{
-								errInfo="C:/harpl-project/compiler/lexer.monkey<62>";
-								t_compiler->m_AddError(String(L"Malformed numeric literal"),t_sourceFile,t_tokenInit2-t_lastOffset,t_lineNum);
 								errInfo="C:/harpl-project/compiler/lexer.monkey<63>";
+								t_compiler->m_AddError(String(L"Malformed numeric literal"),t_sourceFile,t_tokenInit2-t_lastOffset,t_lineNum);
+								errInfo="C:/harpl-project/compiler/lexer.monkey<64>";
 								t_done2=true;
 							}
 						}else{
-							errInfo="C:/harpl-project/compiler/lexer.monkey<66>";
+							errInfo="C:/harpl-project/compiler/lexer.monkey<67>";
 							t_done2=true;
 						}
 					}
 				}
-				errInfo="C:/harpl-project/compiler/lexer.monkey<69>";
-				bb_token_Token* t_token2=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit2-t_lastOffset,t_lineNum,t_txtStream.Slice(t_tokenInit2,t_i),4);
 				errInfo="C:/harpl-project/compiler/lexer.monkey<70>";
-				f_tokens->m_AddLast2(t_token2);
+				bb_token_Token* t_token2=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit2-t_lastOffset,t_lineNum,t_txtStream.Slice(t_tokenInit2,t_i),4);
 				errInfo="C:/harpl-project/compiler/lexer.monkey<71>";
+				f_tokens->m_AddLast2(t_token2);
+				errInfo="C:/harpl-project/compiler/lexer.monkey<72>";
 				t_i-=1;
 			}else{
-				errInfo="C:/harpl-project/compiler/lexer.monkey<74>";
+				errInfo="C:/harpl-project/compiler/lexer.monkey<75>";
 				if(t_char==35){
-					errInfo="C:/harpl-project/compiler/lexer.monkey<75>";
-					bool t_done3=false;
 					errInfo="C:/harpl-project/compiler/lexer.monkey<76>";
-					t_done3=false;
+					bool t_done3=false;
 					errInfo="C:/harpl-project/compiler/lexer.monkey<77>";
-					int t_tokenInit3=t_i;
+					t_done3=false;
 					errInfo="C:/harpl-project/compiler/lexer.monkey<78>";
-					t_i=t_i+1;
+					int t_tokenInit3=t_i;
 					errInfo="C:/harpl-project/compiler/lexer.monkey<79>";
+					t_i=t_i+1;
+					errInfo="C:/harpl-project/compiler/lexer.monkey<80>";
 					while(t_i<t_txtStream.Length() && t_done3==false){
-						errInfo="C:/harpl-project/compiler/lexer.monkey<80>";
+						errInfo="C:/harpl-project/compiler/lexer.monkey<81>";
 						if((int)t_txtStream[t_i]>=48 && String((int)t_txtStream[t_i])<=String(L"9") || String((int)t_txtStream[t_i])>=String(L"A") && String((int)t_txtStream[t_i])<=String(L"Z") || String((int)t_txtStream[t_i])>=String(L"a") && String((int)t_txtStream[t_i])<=String(L"z")){
-							errInfo="C:/harpl-project/compiler/lexer.monkey<81>";
+							errInfo="C:/harpl-project/compiler/lexer.monkey<82>";
 							t_i+=1;
 						}else{
-							errInfo="C:/harpl-project/compiler/lexer.monkey<83>";
+							errInfo="C:/harpl-project/compiler/lexer.monkey<84>";
 							t_done3=true;
 						}
 					}
-					errInfo="C:/harpl-project/compiler/lexer.monkey<87>";
-					String t_newtext=String(bb_stringutils_HexToInteger(t_txtStream.Slice(t_tokenInit3+1,t_i),t_boolRef));
 					errInfo="C:/harpl-project/compiler/lexer.monkey<88>";
+					String t_newtext=String(bb_stringutils_HexToInteger(t_txtStream.Slice(t_tokenInit3+1,t_i),t_boolRef));
+					errInfo="C:/harpl-project/compiler/lexer.monkey<89>";
 					if(t_boolRef->f_value==false){
-						errInfo="C:/harpl-project/compiler/lexer.monkey<89>";
+						errInfo="C:/harpl-project/compiler/lexer.monkey<90>";
 						t_compiler->m_AddError(String(L"Malformed HEX identifier: ")+t_txtStream.Slice(t_tokenInit3,t_i),t_sourceFile,t_tokenInit3-t_lastOffset-1,t_lineNum);
 					}
-					errInfo="C:/harpl-project/compiler/lexer.monkey<91>";
-					bb_token_Token* t_token3=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit3-t_lastOffset,t_lineNum,t_newtext,4);
 					errInfo="C:/harpl-project/compiler/lexer.monkey<92>";
-					f_tokens->m_AddLast2(t_token3);
+					bb_token_Token* t_token3=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit3-t_lastOffset,t_lineNum,t_newtext,4);
 					errInfo="C:/harpl-project/compiler/lexer.monkey<93>";
+					f_tokens->m_AddLast2(t_token3);
+					errInfo="C:/harpl-project/compiler/lexer.monkey<94>";
 					t_i-=1;
 				}else{
-					errInfo="C:/harpl-project/compiler/lexer.monkey<97>";
+					errInfo="C:/harpl-project/compiler/lexer.monkey<98>";
 					if(t_char==34){
-						errInfo="C:/harpl-project/compiler/lexer.monkey<98>";
-						bool t_done4=false;
 						errInfo="C:/harpl-project/compiler/lexer.monkey<99>";
-						t_done4=false;
+						bool t_done4=false;
 						errInfo="C:/harpl-project/compiler/lexer.monkey<100>";
-						int t_tokenInit4=t_i+1;
+						t_done4=false;
 						errInfo="C:/harpl-project/compiler/lexer.monkey<101>";
-						t_i+=1;
+						int t_tokenInit4=t_i+1;
 						errInfo="C:/harpl-project/compiler/lexer.monkey<102>";
+						t_i+=1;
+						errInfo="C:/harpl-project/compiler/lexer.monkey<103>";
 						while(t_i<t_txtStream.Length() && t_done4==false){
-							errInfo="C:/harpl-project/compiler/lexer.monkey<103>";
+							errInfo="C:/harpl-project/compiler/lexer.monkey<104>";
 							if((int)t_txtStream[t_i]==34){
-								errInfo="C:/harpl-project/compiler/lexer.monkey<103>";
+								errInfo="C:/harpl-project/compiler/lexer.monkey<104>";
 								t_done4=true;
 							}else{
-								errInfo="C:/harpl-project/compiler/lexer.monkey<103>";
+								errInfo="C:/harpl-project/compiler/lexer.monkey<104>";
 								t_i+=1;
 							}
 						}
-						errInfo="C:/harpl-project/compiler/lexer.monkey<105>";
+						errInfo="C:/harpl-project/compiler/lexer.monkey<106>";
 						if(t_done4==false){
-							errInfo="C:/harpl-project/compiler/lexer.monkey<106>";
+							errInfo="C:/harpl-project/compiler/lexer.monkey<107>";
 							t_compiler->m_AddError(String(L"Expecting \""),t_sourceFile,t_tokenInit4-t_lastOffset-1,t_lineNum);
 						}
-						errInfo="C:/harpl-project/compiler/lexer.monkey<108>";
-						bb_token_Token* t_token4=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit4-t_lastOffset-1,t_lineNum,t_txtStream.Slice(t_tokenInit4,t_i),2);
 						errInfo="C:/harpl-project/compiler/lexer.monkey<109>";
-						t_token4->f_text=bb_lexer_ScapeChars(t_token4->f_text);
+						bb_token_Token* t_token4=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit4-t_lastOffset-1,t_lineNum,t_txtStream.Slice(t_tokenInit4,t_i),2);
 						errInfo="C:/harpl-project/compiler/lexer.monkey<110>";
+						t_token4->f_text=bb_lexer_ScapeChars(t_token4->f_text);
+						errInfo="C:/harpl-project/compiler/lexer.monkey<111>";
 						f_tokens->m_AddLast2(t_token4);
 					}else{
-						errInfo="C:/harpl-project/compiler/lexer.monkey<113>";
+						errInfo="C:/harpl-project/compiler/lexer.monkey<114>";
 						if(t_char==39){
-							errInfo="C:/harpl-project/compiler/lexer.monkey<114>";
-							bool t_done5=false;
 							errInfo="C:/harpl-project/compiler/lexer.monkey<115>";
-							t_done5=false;
+							bool t_done5=false;
 							errInfo="C:/harpl-project/compiler/lexer.monkey<116>";
-							int t_tokenInit5=t_i+1;
+							t_done5=false;
 							errInfo="C:/harpl-project/compiler/lexer.monkey<117>";
-							t_i+=1;
+							int t_tokenInit5=t_i+1;
 							errInfo="C:/harpl-project/compiler/lexer.monkey<118>";
+							t_i+=1;
+							errInfo="C:/harpl-project/compiler/lexer.monkey<119>";
 							while(t_i<t_txtStream.Length() && t_done5==false){
-								errInfo="C:/harpl-project/compiler/lexer.monkey<119>";
+								errInfo="C:/harpl-project/compiler/lexer.monkey<120>";
 								if((int)t_txtStream[t_i]==39){
-									errInfo="C:/harpl-project/compiler/lexer.monkey<119>";
+									errInfo="C:/harpl-project/compiler/lexer.monkey<120>";
 									t_done5=true;
 								}else{
-									errInfo="C:/harpl-project/compiler/lexer.monkey<119>";
+									errInfo="C:/harpl-project/compiler/lexer.monkey<120>";
 									t_i+=1;
 								}
 							}
-							errInfo="C:/harpl-project/compiler/lexer.monkey<121>";
+							errInfo="C:/harpl-project/compiler/lexer.monkey<122>";
 							if(t_done5==false){
-								errInfo="C:/harpl-project/compiler/lexer.monkey<122>";
+								errInfo="C:/harpl-project/compiler/lexer.monkey<123>";
 								t_compiler->m_AddError(String(L"Expecting '"),t_sourceFile,t_tokenInit5-t_lastOffset-1,t_lineNum);
 							}
-							errInfo="C:/harpl-project/compiler/lexer.monkey<124>";
-							bb_token_Token* t_token5=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit5-t_lastOffset-1,t_lineNum,t_txtStream.Slice(t_tokenInit5,t_i),2);
 							errInfo="C:/harpl-project/compiler/lexer.monkey<125>";
-							t_token5->f_text=bb_lexer_ScapeChars(t_token5->f_text);
+							bb_token_Token* t_token5=(new bb_token_Token)->g_new(t_sourceFile,t_tokenInit5-t_lastOffset-1,t_lineNum,t_txtStream.Slice(t_tokenInit5,t_i),2);
 							errInfo="C:/harpl-project/compiler/lexer.monkey<126>";
+							t_token5->f_text=bb_lexer_ScapeChars(t_token5->f_text);
+							errInfo="C:/harpl-project/compiler/lexer.monkey<127>";
 							f_tokens->m_AddLast2(t_token5);
 						}else{
-							errInfo="C:/harpl-project/compiler/lexer.monkey<129>";
+							errInfo="C:/harpl-project/compiler/lexer.monkey<130>";
 							if(t_char==10 || t_char==13){
-								errInfo="C:/harpl-project/compiler/lexer.monkey<130>";
-								bb_token_Token* t_token6=(new bb_token_Token)->g_new(t_sourceFile,t_i-t_lastOffset,t_lineNum,t_txtStream.Slice(t_i,t_i+1),32);
 								errInfo="C:/harpl-project/compiler/lexer.monkey<131>";
-								f_tokens->m_AddLast2(t_token6);
+								bb_token_Token* t_token6=(new bb_token_Token)->g_new(t_sourceFile,t_i-t_lastOffset,t_lineNum,t_txtStream.Slice(t_i,t_i+1),32);
 								errInfo="C:/harpl-project/compiler/lexer.monkey<132>";
+								f_tokens->m_AddLast2(t_token6);
+								errInfo="C:/harpl-project/compiler/lexer.monkey<133>";
 								if(t_char==10){
-									errInfo="C:/harpl-project/compiler/lexer.monkey<133>";
-									t_lastOffset=t_i+1;
 									errInfo="C:/harpl-project/compiler/lexer.monkey<134>";
+									t_lastOffset=t_i+1;
+									errInfo="C:/harpl-project/compiler/lexer.monkey<135>";
 									t_lineNum+=1;
 								}
 							}else{
-								errInfo="C:/harpl-project/compiler/lexer.monkey<137>";
+								errInfo="C:/harpl-project/compiler/lexer.monkey<138>";
 								if(t_char==59){
-									errInfo="C:/harpl-project/compiler/lexer.monkey<138>";
-									bb_token_Token* t_token7=(new bb_token_Token)->g_new(t_sourceFile,t_i-t_lastOffset,t_lineNum,t_txtStream.Slice(t_i,t_i+1),16);
 									errInfo="C:/harpl-project/compiler/lexer.monkey<139>";
-									f_tokens->m_AddLast2(t_token7);
+									bb_token_Token* t_token7=(new bb_token_Token)->g_new(t_sourceFile,t_i-t_lastOffset,t_lineNum,t_txtStream.Slice(t_i,t_i+1),16);
 									errInfo="C:/harpl-project/compiler/lexer.monkey<140>";
+									f_tokens->m_AddLast2(t_token7);
+									errInfo="C:/harpl-project/compiler/lexer.monkey<141>";
 									if(t_char==10){
-										errInfo="C:/harpl-project/compiler/lexer.monkey<141>";
-										t_lastOffset=t_i+1;
 										errInfo="C:/harpl-project/compiler/lexer.monkey<142>";
+										t_lastOffset=t_i+1;
+										errInfo="C:/harpl-project/compiler/lexer.monkey<143>";
 										t_lineNum+=1;
 									}
 								}else{
-									errInfo="C:/harpl-project/compiler/lexer.monkey<148>";
+									errInfo="C:/harpl-project/compiler/lexer.monkey<149>";
 									if(t_char==43 || t_char==45 || t_char==42 || t_char==47 || t_char==37 || t_char==94 || t_char==38 || t_char==124 || t_char==62 || t_char==60 || t_char==61 || t_char==40 || t_char==41 || t_char==91 || t_char==93 || t_char==46){
-										errInfo="C:/harpl-project/compiler/lexer.monkey<149>";
-										bb_token_Token* t_token8=(new bb_token_Token)->g_new(t_sourceFile,t_i-t_lastOffset,t_lineNum,t_txtStream.Slice(t_i,t_i+1),8);
 										errInfo="C:/harpl-project/compiler/lexer.monkey<150>";
+										bb_token_Token* t_token8=(new bb_token_Token)->g_new(t_sourceFile,t_i-t_lastOffset,t_lineNum,t_txtStream.Slice(t_i,t_i+1),8);
+										errInfo="C:/harpl-project/compiler/lexer.monkey<151>";
 										f_tokens->m_AddLast2(t_token8);
 									}else{
-										errInfo="C:/harpl-project/compiler/lexer.monkey<153>";
+										errInfo="C:/harpl-project/compiler/lexer.monkey<154>";
 										if(t_char==32 || t_char==9){
 										}else{
-											errInfo="C:/harpl-project/compiler/lexer.monkey<156>";
+											errInfo="C:/harpl-project/compiler/lexer.monkey<157>";
 											if(t_char==33){
-												errInfo="C:/harpl-project/compiler/lexer.monkey<157>";
-												bool t_done6=false;
 												errInfo="C:/harpl-project/compiler/lexer.monkey<158>";
-												t_done6=false;
+												bool t_done6=false;
 												errInfo="C:/harpl-project/compiler/lexer.monkey<159>";
-												t_i+=1;
+												t_done6=false;
 												errInfo="C:/harpl-project/compiler/lexer.monkey<160>";
+												t_i+=1;
+												errInfo="C:/harpl-project/compiler/lexer.monkey<161>";
 												while(t_i<t_txtStream.Length() && t_done6==false){
-													errInfo="C:/harpl-project/compiler/lexer.monkey<161>";
+													errInfo="C:/harpl-project/compiler/lexer.monkey<162>";
 													if((int)t_txtStream[t_i]==10 || (int)t_txtStream[t_i]==13){
-														errInfo="C:/harpl-project/compiler/lexer.monkey<161>";
+														errInfo="C:/harpl-project/compiler/lexer.monkey<162>";
 														t_done6=true;
 													}else{
-														errInfo="C:/harpl-project/compiler/lexer.monkey<161>";
+														errInfo="C:/harpl-project/compiler/lexer.monkey<162>";
 														t_i+=1;
 													}
 												}
 											}else{
-												errInfo="C:/harpl-project/compiler/lexer.monkey<166>";
+												errInfo="C:/harpl-project/compiler/lexer.monkey<167>";
 												t_compiler->m_AddError(String(L"Syntax error. Unexpected character: ")+String((Char)(t_char),1),t_sourceFile,t_i-t_lastOffset,t_lineNum);
 											}
 										}
@@ -3029,83 +3031,83 @@ int bb_lexer_Lexer::m_Tokenize(String t_txtStream,bb_compiler_Compiler* t_compil
 				}
 			}
 		}
-		errInfo="C:/harpl-project/compiler/lexer.monkey<169>";
+		errInfo="C:/harpl-project/compiler/lexer.monkey<170>";
 		t_i+=1;
 	}
-	errInfo="C:/harpl-project/compiler/lexer.monkey<173>";
+	errInfo="C:/harpl-project/compiler/lexer.monkey<174>";
 	bb_list_Node2* t_node=f_tokens->m_FirstNode();
-	errInfo="C:/harpl-project/compiler/lexer.monkey<225>";
+	errInfo="C:/harpl-project/compiler/lexer.monkey<226>";
 	do{
-		errInfo="C:/harpl-project/compiler/lexer.monkey<175>";
-		bb_token_Token* t_token9=t_node->m_Value();
 		errInfo="C:/harpl-project/compiler/lexer.monkey<176>";
-		int t_1=t_token9->m_Kind();
+		bb_token_Token* t_token9=t_node->m_Value();
 		errInfo="C:/harpl-project/compiler/lexer.monkey<177>";
+		int t_1=t_token9->m_Kind();
+		errInfo="C:/harpl-project/compiler/lexer.monkey<178>";
 		if(t_1==8){
-			errInfo="C:/harpl-project/compiler/lexer.monkey<179>";
+			errInfo="C:/harpl-project/compiler/lexer.monkey<180>";
 			if(t_token9->f_text==String(L".")){
-				errInfo="C:/harpl-project/compiler/lexer.monkey<180>";
-				bb_list_Node2* t_nextnode=t_node->m_NextNode();
 				errInfo="C:/harpl-project/compiler/lexer.monkey<181>";
+				bb_list_Node2* t_nextnode=t_node->m_NextNode();
+				errInfo="C:/harpl-project/compiler/lexer.monkey<182>";
 				if(t_nextnode!=0){
-					errInfo="C:/harpl-project/compiler/lexer.monkey<182>";
+					errInfo="C:/harpl-project/compiler/lexer.monkey<183>";
 					if(t_nextnode->m_Value()->m_Kind()==4 && t_nextnode->m_Value()->f_text.Contains(String(L"."))==false){
-						errInfo="C:/harpl-project/compiler/lexer.monkey<183>";
-						t_token9->f_text=String(L"0")+t_token9->f_text+t_nextnode->m_Value()->f_text;
 						errInfo="C:/harpl-project/compiler/lexer.monkey<184>";
-						t_token9->m_Kind2(4);
+						t_token9->f_text=String(L"0")+t_token9->f_text+t_nextnode->m_Value()->f_text;
 						errInfo="C:/harpl-project/compiler/lexer.monkey<185>";
+						t_token9->m_Kind2(4);
+						errInfo="C:/harpl-project/compiler/lexer.monkey<186>";
 						t_nextnode->m_Remove();
 					}
 				}
 			}else{
-				errInfo="C:/harpl-project/compiler/lexer.monkey<190>";
+				errInfo="C:/harpl-project/compiler/lexer.monkey<191>";
 				if(t_token9->f_text==String(L">") || t_token9->f_text==String(L"<")){
-					errInfo="C:/harpl-project/compiler/lexer.monkey<191>";
-					bb_list_Node2* t_nextnode2=t_node->m_NextNode();
 					errInfo="C:/harpl-project/compiler/lexer.monkey<192>";
+					bb_list_Node2* t_nextnode2=t_node->m_NextNode();
+					errInfo="C:/harpl-project/compiler/lexer.monkey<193>";
 					if(t_nextnode2!=0){
-						errInfo="C:/harpl-project/compiler/lexer.monkey<195>";
+						errInfo="C:/harpl-project/compiler/lexer.monkey<196>";
 						if((t_nextnode2->m_Value()->f_text==String(L"=") || t_nextnode2->m_Value()->f_text==String(L">") || t_nextnode2->m_Value()->f_text==String(L"<")) && t_nextnode2->m_Value()->m_Kind()==8 && t_nextnode2->m_Value()->f_text!=t_node->m_Value()->f_text){
-							errInfo="C:/harpl-project/compiler/lexer.monkey<196>";
-							t_token9->f_text=t_token9->f_text+t_nextnode2->m_Value()->f_text;
 							errInfo="C:/harpl-project/compiler/lexer.monkey<197>";
+							t_token9->f_text=t_token9->f_text+t_nextnode2->m_Value()->f_text;
+							errInfo="C:/harpl-project/compiler/lexer.monkey<198>";
 							t_nextnode2->m_Remove();
 						}
 					}
 				}
 			}
 		}else{
-			errInfo="C:/harpl-project/compiler/lexer.monkey<202>";
+			errInfo="C:/harpl-project/compiler/lexer.monkey<203>";
 			if(t_1==4){
-				errInfo="C:/harpl-project/compiler/lexer.monkey<203>";
-				bb_list_Node2* t_prevNode=t_node->m_PrevNode();
 				errInfo="C:/harpl-project/compiler/lexer.monkey<204>";
+				bb_list_Node2* t_prevNode=t_node->m_PrevNode();
+				errInfo="C:/harpl-project/compiler/lexer.monkey<205>";
 				if(t_prevNode!=0 && t_prevNode->m_Value()->m_Kind()==8){
-					errInfo="C:/harpl-project/compiler/lexer.monkey<205>";
-					bb_list_Node2* t_grandpaNode=t_prevNode->m_PrevNode();
 					errInfo="C:/harpl-project/compiler/lexer.monkey<206>";
+					bb_list_Node2* t_grandpaNode=t_prevNode->m_PrevNode();
+					errInfo="C:/harpl-project/compiler/lexer.monkey<207>";
 					if(t_grandpaNode!=0 && t_grandpaNode->m_Value()->m_Kind()==8){
-						errInfo="C:/harpl-project/compiler/lexer.monkey<207>";
+						errInfo="C:/harpl-project/compiler/lexer.monkey<208>";
 						if(t_prevNode->m_Value()->f_text==String(L"-")){
-							errInfo="C:/harpl-project/compiler/lexer.monkey<208>";
+							errInfo="C:/harpl-project/compiler/lexer.monkey<209>";
 							if((int)t_token9->f_text[0]!=45){
-								errInfo="C:/harpl-project/compiler/lexer.monkey<209>";
+								errInfo="C:/harpl-project/compiler/lexer.monkey<210>";
 								t_token9->f_text=String(L"-")+t_token9->f_text;
 							}else{
-								errInfo="C:/harpl-project/compiler/lexer.monkey<211>";
+								errInfo="C:/harpl-project/compiler/lexer.monkey<212>";
 								t_token9->f_text=bb_retro_Mid2(t_token9->f_text,2);
 							}
-							errInfo="C:/harpl-project/compiler/lexer.monkey<213>";
-							t_prevNode->m_Remove();
 							errInfo="C:/harpl-project/compiler/lexer.monkey<214>";
+							t_prevNode->m_Remove();
+							errInfo="C:/harpl-project/compiler/lexer.monkey<215>";
 							t_node=t_node->m_PrevNode();
 						}else{
-							errInfo="C:/harpl-project/compiler/lexer.monkey<215>";
+							errInfo="C:/harpl-project/compiler/lexer.monkey<216>";
 							if(t_prevNode->m_Value()->f_text==String(L"+")){
-								errInfo="C:/harpl-project/compiler/lexer.monkey<216>";
-								t_prevNode->m_Remove();
 								errInfo="C:/harpl-project/compiler/lexer.monkey<217>";
+								t_prevNode->m_Remove();
+								errInfo="C:/harpl-project/compiler/lexer.monkey<218>";
 								t_node=t_node->m_PrevNode();
 							}
 						}
@@ -3113,20 +3115,20 @@ int bb_lexer_Lexer::m_Tokenize(String t_txtStream,bb_compiler_Compiler* t_compil
 				}
 			}
 		}
-		errInfo="C:/harpl-project/compiler/lexer.monkey<224>";
+		errInfo="C:/harpl-project/compiler/lexer.monkey<225>";
 		t_node=t_node->m_NextNode();
 	}while(!(t_node==0));
-	errInfo="C:/harpl-project/compiler/lexer.monkey<227>";
-	errInfo="C:/harpl-project/compiler/lexer.monkey<227>";
+	errInfo="C:/harpl-project/compiler/lexer.monkey<228>";
+	errInfo="C:/harpl-project/compiler/lexer.monkey<228>";
 	bb_list_Enumerator* t_=f_tokens->m_ObjectEnumerator();
-	errInfo="C:/harpl-project/compiler/lexer.monkey<227>";
+	errInfo="C:/harpl-project/compiler/lexer.monkey<228>";
 	while(t_->m_HasNext()){
-		errInfo="C:/harpl-project/compiler/lexer.monkey<227>";
-		bb_token_Token* t_t=t_->m_NextObject();
 		errInfo="C:/harpl-project/compiler/lexer.monkey<228>";
+		bb_token_Token* t_t=t_->m_NextObject();
+		errInfo="C:/harpl-project/compiler/lexer.monkey<229>";
 		Print(String(L"$")+t_t->f_text+String(L"$ ")+String(t_t->f_docX)+String(L",")+String(t_t->f_docY));
 	}
-	errInfo="C:/harpl-project/compiler/lexer.monkey<230>";
+	errInfo="C:/harpl-project/compiler/lexer.monkey<231>";
 	popErr();
 	return 1;
 }
@@ -3356,13 +3358,13 @@ void bb_list_HeadNode2::mark(){
 }
 bool bb_lexer_IsAValidIdentifierChar(int t_char){
 	pushErr();
-	errInfo="C:/harpl-project/compiler/lexer.monkey<236>";
+	errInfo="C:/harpl-project/compiler/lexer.monkey<237>";
 	if(t_char>=97 && t_char<=122 || t_char>=65 && t_char<=90 || t_char==95 || t_char>=48 && t_char<=57){
-		errInfo="C:/harpl-project/compiler/lexer.monkey<237>";
+		errInfo="C:/harpl-project/compiler/lexer.monkey<238>";
 		popErr();
 		return true;
 	}else{
-		errInfo="C:/harpl-project/compiler/lexer.monkey<239>";
+		errInfo="C:/harpl-project/compiler/lexer.monkey<240>";
 		popErr();
 		return false;
 	}
@@ -3470,7 +3472,8 @@ int bb_stringutils_HexToInteger(String t_hex,bb_byref_BoolByRef* t_success){
 																			t_success->f_value=false;
 																		}
 																		errInfo="C:/harpl-project/utils/stringutils.monkey<28>";
-																		break;
+																		popErr();
+																		return 0;
 																	}
 																}
 															}
@@ -3501,7 +3504,7 @@ int bb_stringutils_HexToInteger(String t_hex,bb_byref_BoolByRef* t_success){
 }
 String bb_lexer_ScapeChars(String t_text){
 	pushErr();
-	errInfo="C:/harpl-project/compiler/lexer.monkey<244>";
+	errInfo="C:/harpl-project/compiler/lexer.monkey<245>";
 	String t_=t_text.Replace(String(L"~n"),String(L"\n")).Replace(String(L"~q"),String(L"'")).Replace(String(L"~d"),String(L"\"")).Replace(String(L"~~"),String(L"~")).Replace(String(L"~t"),String(L"\t")).Replace(String(L"~r"),String(L"\r"));
 	popErr();
 	return t_;

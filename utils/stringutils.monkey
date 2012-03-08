@@ -25,7 +25,7 @@ Function HexToInteger:Int(hex:String, success:BoolByRef = null)
 			Case "F"[0], "f"[0]; digit = 15;
 			Default
 				If success <> null Then success.value = False;
-				Exit
+				Return 0
 		End
 		value = (value + digit) 
 	Next
