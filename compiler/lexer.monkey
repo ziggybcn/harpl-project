@@ -224,9 +224,9 @@ Class Lexer
 			node = node.NextNode()
 		Until node = null 
 
-		For Local t:Token = EachIn tokens
-			Print "$" + t.text + "$ " + t.docX + "," + t.docY
-		Next
+'		For Local t:Token = EachIn tokens
+'			Print "$" + t.text + "$ " + t.docX + "," + t.docY
+'		Next
 
 		'returns TRUE if there are no compiler errors after the whole thing.
 		Return compiler.compileErrors.IsEmpty()

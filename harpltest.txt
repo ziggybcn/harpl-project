@@ -1,1 +1,6 @@
+!this is the test file used to test the Harpl compiler, well, just a small parser currenlty...
 Print "Hello world!"
+local a as Integer = 45 + 6.45
+function marcal {"This is done!"}
+
+end function
