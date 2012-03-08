@@ -1,11 +1,12 @@
+Import byref
 #Rem
 	summary: This function gets a string represetnation of a HEX number, and return the actual Integer number.
 #End
-Function HexToInteger:Int(Hex:String)
+Function HexToInteger:Int(hex:String, success:BoolByRef = null)
 	Local digit:Int, value:Int;
-	For Local i:Int = 0 until Hex.Length '-1;
+	For Local i:Int = 0 until hex.Length '-1;
 		value*=16
-		Select Hex[i]
+		Select hex[i]
 			Case "0"[0]; digit = 0;
 			Case "1"[0]; digit = 1;
 			Case "2"[0]; digit = 2;
@@ -23,9 +24,11 @@ Function HexToInteger:Int(Hex:String)
 			Case "E"[0], "e"[0]; digit = 14;
 			Case "F"[0], "f"[0]; digit = 15;
 			Default
-				Error("unexpected character on hexadecimal literal.");
+				If success <> null Then success.value = False;
+				Exit
 		End
 		value = (value + digit) 
 	Next
+	if success <> null then success.value = True;
 	Return value;
 End

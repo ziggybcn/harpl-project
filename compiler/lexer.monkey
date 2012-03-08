@@ -22,7 +22,9 @@ Class Lexer
 	#End
 	Method Tokenize(txtStream:String, compiler:Compiler, sourceFile:string)
 
+		Local boolRef:BoolByRef = New BoolByRef 'Used to retrieve results from "byref" boolean parameters
 		If tokens=null Then tokens = New List<Token>
+		
 		tokens.Clear()
 		
 		Local i:Int = 0, lastOffset:Int = 0, lineNum:Int = 0
@@ -82,7 +84,10 @@ Class Lexer
 					endif
 				wend
 				'TODO: Convert HEX to regular decimal. This can be done while lexing (why not?)
-				Local newtext:string = HexToInteger(txtStream[tokenInit+1 ..i]) 'Int("$" + txtStream[tokenInit+1 ..i])
+				Local newtext:string = HexToInteger(txtStream[tokenInit+1 ..i], boolRef )
+				if boolRef.value = False Then	'conversion from Hex to regular Int has failed:
+					 compiler.AddError("Malformed HEX identifier: " + txtStream[tokenInit ..i], sourceFile,tokenInit-lastOffset-1,lineNum)
+				EndIf
 				Local token:=New Token(sourceFile, tokenInit-lastOffset, lineNum ,newtext,eToken.NUMBER )
 				tokens.AddLast(token)
 				i-=1	'Correct i offset, not nice.
