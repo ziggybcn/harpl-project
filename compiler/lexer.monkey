@@ -43,6 +43,7 @@ Class Lexer
 				wend
 				Local identifierText:String = txtStream[tokenInit..i].ToLower()	'Remove ToLower for a case sensitive language. Harpl is not.
 				Local token:=New Token(sourceFile, tokenInit-lastOffset, lineNum ,identifierText,eToken.IDENTIFIER)
+				IsATextualOperator(token)
 				tokens.AddLast(token)
 				i-=1	'Correct i offset, not nice.
 				
@@ -224,9 +225,9 @@ Class Lexer
 			node = node.NextNode()
 		Until node = null 
 
-'		For Local t:Token = EachIn tokens
-'			Print "$" + t.text + "$ " + t.docX + "," + t.docY
-'		Next
+		For Local t:Token = EachIn tokens
+			Print t.Kind + " at (" + t.docX + "," + t.docY + ") = ~q" + t.text + "~q"
+		Next
 
 		'returns TRUE if there are no compiler errors after the whole thing.
 		Return compiler.compileErrors.IsEmpty()
@@ -245,4 +246,14 @@ End
 
 Function ScapeChars:String(text:String)
 	Return text.Replace("~~n","~n").Replace("~~q","'").Replace("~~d","~q").Replace("~~~~","~~").Replace("~~t","~t").Replace("~~r","~r")
+End
+
+Function IsATextualOperator:Bool(token:Token)
+	Select token.text
+		Case "and", "or", "not"
+			token.Kind = eToken.OPERATOR 
+			Return true
+		default
+			Return false
+	End
 End

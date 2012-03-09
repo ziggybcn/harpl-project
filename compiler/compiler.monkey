@@ -45,8 +45,10 @@ Class Compiler
 		endif
 	End
 	
+	Field ErrorsCount:Int = 0
 	Method AddError(description:String, file:String, posX:Int, posY:Int)
 		If compileErrors = null Then compileErrors = New List<CompileError>
+		If ErrorsCount>100 Then return
 		Local err:CompileError = new CompileError
 		err.description = description 
 		err.file = file
@@ -58,6 +60,7 @@ Class Compiler
 	Method ResetCompiler:Void()
 		compileErrors = New List<CompileError>
 		lexer = New Lexer
+		ErrorsCount = 0
 	End
 
 End

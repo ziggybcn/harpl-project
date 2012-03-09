@@ -1,6 +1,8 @@
 !this is the test file used to test the Harpl compiler, well, just a small parser currenlty...
-Print "Hello world!"
-local a as Integer = 45 + 6.45
-function marcal {"This is done!"}
 
-end function
+Variable MyVar is Integer = 0, MyOtherVar is String = "Hello world!"
+
+While Variable<100
+	MyVar+1	!I really like the idea, looks like something interesting.
+	Output "The value of MyVar is = " & MyVar	!We'll need an i/o layer
+End While
