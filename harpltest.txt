@@ -1,9 +1,1 @@
-5/1*6+MyVariable
-"hola!"(45,67+
-DrawText("Hola, mundo!") - 45 ,45+56
-Variable MyVar is Integer = 0, MyOtherVar is String = "Hello world!"
-
-While Variable<100
-	MyVar+1	!I really like the idea, looks like something interesting.
-	Output "The value of MyVar is = " & MyVar	!We'll need an i/o layer
-End While
+0-2^2+MyVariable*45 & "Hola mundo!"

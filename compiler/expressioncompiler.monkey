@@ -4,17 +4,17 @@ Class ExpressionCompiler
 
 	Field compiler:Compiler
 
-	Field IntCounter:Int = 0
-	Field StringCounter:Int = 0
-	Field FloatCounter:Int = 0
-	Field BooleanCounter:Int = 0
-	
+	Field intCounter:Int = 0
+	Field stringCounter:Int = 0
+	Field floatCounter:Int = 0
+	Field booleanCounter:Int = 0
+		
 	Method CompileExpression(scope:CompilerDataScope)
 	
-		IntCounter = 0
-		StringCounter= 0
-		FloatCounter= 0
-		BooleanCounter= 0
+		intCounter = 0
+		stringCounter= 0
+		floatCounter= 0
+		booleanCounter= 0
 	
 		If compiler = Null  Then Error "No compiler associated to the ExpressionCompiler!"
 
@@ -103,6 +103,13 @@ Class ExpressionCompiler
 		Next
 		Print("--Done--")
 		return WriteAsm(expression, scope )
+
+		'We addapt the temporal arrays for internal calculations to the whole program needs, not more, not less. We can determine this at compilation time:
+		if compiler.generatedAsm.requiredBoolSize < booleanCounter Then compiler.generatedAsm.requiredBoolSize = booleanCounter
+		if compiler.generatedAsm.requiredFloatSize  < floatCounter Then compiler.generatedAsm.requiredFloatSize = floatCounter
+		if compiler.generatedAsm.requiredStringSize < stringCounter Then compiler.generatedAsm.requiredStringSize = stringCounter
+		if compiler.generatedAsm.requiredIntSize < intCounter Then compiler.generatedAsm.requiredIntSize = intCounter
+		
 	End
 	
 	Private
@@ -121,14 +128,11 @@ Class ExpressionCompiler
 		'Unnary operators
 		
 	
-		if ProcessBinaryOperator(["^"], AssemblerObj.POW		,expression, scope) = False Then Return false
-		if ProcessBinaryOperator(["*","/","%"], AssemblerObj.MUL 		,expression, scope) = False Then Return false
-		'if ProcessBinaryOperator("/", AssemblerObj.DIV  	,expression, scope) = False Then Return false
-		'if ProcessBinaryOperator("%", AssemblerObj.MODULUS 	,expression, scope) = False Then Return false
-		if ProcessBinaryOperator(["+","-"], AssemblerObj.SUM  	,expression, scope) = False Then Return false
-		'if ProcessBinaryOperator("-", AssemblerObj.SUB  	,expression, scope) = False Then Return false
-		if ProcessBinaryOperator(["&","|"], AssemblerObj.NUMAND   ,expression, scope) = False Then Return false
-		'if ProcessBinaryOperator("|", AssemblerObj.NUMOR  	,expression, scope) = False Then Return false
+		if ProcessBinaryOperator(["^"], AssemblerObj.POW			,expression, scope) = False Then Return false
+		if ProcessBinaryOperator(["*","/","%"], AssemblerObj.MUL 	,expression, scope) = False Then Return false
+		if ProcessBinaryOperator(["+","-"], AssemblerObj.SUM  		,expression, scope) = False Then Return false
+		if ProcessBinaryOperator(["&"], AssemblerObj.NUMAND   		,expression, scope) = False Then Return false
+		if ProcessBinaryOperator(["|"], AssemblerObj.NUMAND   		,expression, scope) = False Then Return false
 				
 		Print "And then it is:"
 		For local t:Token = EachIn expression
@@ -163,8 +167,12 @@ Class ExpressionCompiler
 	Method ProcessBinaryOperator?(opItems:String[], pref:String, expression:List<Token>, scope:CompilerDataScope)
 		Local node:list.Node<Token>
 		node = expression.FirstNode()
-		While node.NextNode<>null
+		While node <> null
 			Local curT:Token = node.Value()
+			if curT.Kind <> eToken.OPERATOR Then 
+				node = node.NextNode()
+				Continue
+			EndIf
 			'WE HAVE AN OPERATION
 			For Local i:Int = 0 until opItems.Length
 				local op:String = opItems[i]
@@ -195,14 +203,56 @@ Class ExpressionCompiler
 					EndIf
 					if operateNum = False then
 						compiler.generatedAsm.code.AddLast(pref + prefix1 + prefix2)
+						'TODO: SCOPE NESTING LEVEL!!
+						
 						'TODO: Missing scope info!!!
 						compiler.generatedAsm.code.AddLast(Prev.text)
+						
 						'TODO: Missing scope info!!!
 						compiler.generatedAsm.code.AddLast(Post.text)
 		
 						'MIRAMOS EN QUE TIPO DE TEMP HAY QUE GUARDARLO: NECESITAMOS SCOPE!!
-				
+						Local Store:String 
+						Select op
 						
+							'Returning Int or String:
+							Case "&"
+							if prefix1 = expKinds.STRINGLITERAL or prefix1 = expKinds.STRINGVAR or
+								prefix2 = expKinds.STRINGLITERAL or prefix2 = expKinds.STRINGVAR or
+								prefix1 = expKinds.TMPSTRING or prefix2 = expKinds.TMPSTRING								
+								'WE STORE IN A TMP STRING
+								Store = eTmpTokens.TMPSTRING + stringCounter
+								Self.stringCounter +=1
+
+							Else
+								'WE STORE IN AN INTEGER
+								Store = eTmpTokens.TMPINT + intCounter 
+								Self.intCounter +=1
+								
+							endif
+							'Returning Int:
+							Case "|", "%"
+								Store = eTmpTokens.TMPINT + intCounter 
+								Self.intCounter +=1
+							
+							'Returning Float:
+							Case "+","-","*","/", "^"
+								Store = eTmpTokens.TMPFLOAT + floatCounter
+								Self.floatCounter +=1
+							
+							'Returning Bool:
+							Case "=",">=", "<=", ">", "<"
+								Store = eTmpTokens.TMPBOOL  + booleanCounter
+								Self.booleanCounter +=1
+							Default
+								'Error("Operator unknown:" + op)
+								compiler.AddError("Uknown operator",curT)
+							End Select
+							If Store<> "" then compiler.generatedAsm.code.AddLast(Store) Else compiler.generatedAsm.code.AddLast("?")
+							node.PrevNode.Remove()
+							node.NextNode.Remove()
+							curT.Kind = eToken.IDENTIFIER 
+							curT.text = Store
 					Else
 						Local result:String 
 						Select curT.text
@@ -227,7 +277,8 @@ Class ExpressionCompiler
 					Exit	'We do not re-parse the same token, we could, as it is not an operator any more but not nice.
 				EndIf
 			Next
-			if node.NextNode<>null then	node = node.NextNode
+			'if node.NextNode<>null then	node = node.NextNode
+			node = node.NextNode
 		Wend
 		Return true
 	End
@@ -236,14 +287,18 @@ Class ExpressionCompiler
 		Select t.Kind
 			Case eToken.STRINGLITERAL 
 				Return expKinds.STRINGLITERAL 	'STRINGLITERAL
+				
 			Case eToken.IDENTIFIER 
-				if t.text.StartsWith("!N") Then
+				if t.text.StartsWith(eTmpTokens.TMPINT) Then  '"!N" etc.
 					Return expKinds.TMPINTEGER 	'TEMP INTEGER
-				elseif t.text.StartsWith("!F") Then
+					
+				elseif t.text.StartsWith(eTmpTokens.TMPFLOAT ) Then
 					Return expKinds.TMPFLOAT 'TEMP FLOAT
-				elseif t.text.StartsWith("!S") Then
+					
+				elseif t.text.StartsWith(eTmpTokens.TMPSTRING) Then
 					Return expKinds.TMPSTRING  'TEMP STRING
-				elseif t.text.StartsWith("!B") Then
+					
+				elseif t.text.StartsWith(eTmpTokens.TMPBOOL) Then
 					Return expKinds.TMPBOOL 'TEMP BOOLEAN
 				Else
 					'TODO: ITERATE THROUG PARENT SCOPES
@@ -320,6 +375,13 @@ Class expKinds abstract
 	Const TMPFLOAT:String = "TF"
 	Const TMPSTRING:String = "TS"
 	Const TMPBOOL:String = "TB"
+End
+
+Class eTmpTokens
+	Const TMPSTRING:String = "!S"
+	Const TMPINT:String = "!I"
+	Const TMPFLOAT:String = "!F"
+	Const TMPBOOL:String = "!B"
 End
 
 

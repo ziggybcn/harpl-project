@@ -12,4 +12,7 @@ Class AssemblerObj
 	 Const MODULUS:String = "MOD_"
 	 Const NUMAND:String = "NUMAND_"
 	 Const NUMOR:String = "NUMOR_"
+	 
+ 	Field requiredStringSize:Int, requiredFloatSize:Int, requiredIntSize:Int, requiredBoolSize:int
+
 End

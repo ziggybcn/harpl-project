@@ -49,8 +49,11 @@ Class Compiler
 		scope.AddVariable(Self,t,CompVariable.vINT )
 		EE.compiler = self
 		EE.CompileExpression(scope)
-		Print "Next token:" + lexer.tokens.First().text
-		
+		if lexer.tokens.IsEmpty = false then
+			Print "Next token:" + lexer.tokens.First().text
+		Else
+			Print "There is no next token."
+		endif
 		if Self.compileErrors.IsEmpty = False then
 			Return False
 		Else
@@ -70,6 +73,10 @@ Class Compiler
 		err.posX = posX 
 		err.posY = posY 
 		compileErrors.AddLast(err)
+	End
+	
+	Method AddError(description:String, token:Token)
+		AddError(description,token.sourceFile,token.docX,token.docY)
 	End
 	
 	Method ResetCompiler:Void()

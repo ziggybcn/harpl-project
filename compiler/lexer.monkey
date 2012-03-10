@@ -173,6 +173,7 @@ Class Lexer
 		'TOKEN MERGING UPSIDE DOWN:
 		Local node:list.Node<Token> = tokens.FirstNode()
 		Repeat 
+			Local skipNext:Bool = false
 			Local token:Token = node.Value()
 			Select token.Kind
 				Case eToken.OPERATOR 
@@ -204,7 +205,7 @@ Class Lexer
 					Local prevNode:list.Node<Token> = node.PrevNode()
 					if prevNode <> null And prevNode.Value.Kind = eToken.OPERATOR Then
 						Local grandpaNode:list.Node<Token> = prevNode.PrevNode()
-						if grandpaNode <> null And grandpaNode.Value.Kind = eToken.OPERATOR
+						if (grandpaNode <> null And grandpaNode.Value.Kind = eToken.OPERATOR) or grandpaNode = null
 							if prevNode.Value.text = "-" then
 								if token.text[0] <> "-"[0] Then 
 									token.text = "-" + token.text
@@ -212,17 +213,19 @@ Class Lexer
 									token.text = Mid(token.text,2)
 								EndIf
 								prevNode.Remove()
-								node = node.PrevNode()	'Just to chain iterations properly!
+								'node = node.PrevNode()	'Just to chain iterations properly!
+								skipNext = True;
 							ElseIf prevNode.Value.text = "+" then 'We can just ignore expresions of kind a = 45 * +7, and considere them 45 * 7
 								prevNode.Remove()
-								node = node.PrevNode()	'Just to chain iterations properly!							
+								'node = node.PrevNode()	'Just to chain iterations properly!							
+								skipNext = True;
 							endif
 
 						EndIf
 					EndIf
 				Default
 			End
-			node = node.NextNode()
+			if Not skipNext Then node = node.NextNode()
 		Until node = null 
 '
 		For Local t:Token = EachIn tokens
