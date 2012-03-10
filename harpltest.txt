@@ -1,5 +1,6 @@
-!this is the test file used to test the Harpl compiler, well, just a small parser currenlty...
-
+45+56+
+"hola!"(45,67+
+DrawText("Hola, mundo!") - 45 ,45+56
 Variable MyVar is Integer = 0, MyOtherVar is String = "Hello world!"
 
 While Variable<100

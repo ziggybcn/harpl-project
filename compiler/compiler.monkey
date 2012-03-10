@@ -1,6 +1,8 @@
 Import Harpl
 Import lexer
-Import reflection 
+'Import reflection 
+Import compiler.expressioncompiler 
+
 
 #Rem
 	header:The Harpl compiler module contains the classes that are required to perform and handle compilation of Harpl source code.
@@ -37,15 +39,23 @@ Class Compiler
 		lexer=New Lexer
 		'If the lexing fails, can't make second compiler pass!
 		If lexer.Tokenize(txtStream, self, filename ) = False Then Return false
+		generatedAsm = New AssemblerObj 
+	
+		Local EE:= New ExpressionCompiler 
+		EE.compiler = self
+		EE.CompileExpression()
+		Print "Next token:" + lexer.tokens.First().text
 		
 		if Self.compileErrors.IsEmpty = False then
 			Return False
 		Else
 			Return True
 		endif
+
 	End
 	
 	Field ErrorsCount:Int = 0
+	
 	Method AddError(description:String, file:String, posX:Int, posY:Int)
 		If compileErrors = null Then compileErrors = New List<CompileError>
 		If ErrorsCount>100 Then return
@@ -62,7 +72,8 @@ Class Compiler
 		lexer = New Lexer
 		ErrorsCount = 0
 	End
-
+	
+	Field generatedAsm:AssemblerObj 
 End
 
 #rem

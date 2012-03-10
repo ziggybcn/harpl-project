@@ -128,7 +128,7 @@ Class Lexer
 
 			'If it is a End Of Sentence (wich can be a linefeed or a ; )
 			ElseIf char = "~n"[0] or char = "~r"[0]
-				Local token:=New Token(sourceFile,i-lastOffset, lineNum, txtStream[i..i+1],eToken.CARRIER)
+				Local token:=New Token(sourceFile,i-lastOffset, lineNum, "~~N",eToken.CARRIER)
 				tokens.AddLast(token)
 				if char = "~n"[0] then
 					lastOffset = i+1	'we have to add the CR in the offset
@@ -224,7 +224,7 @@ Class Lexer
 			End
 			node = node.NextNode()
 		Until node = null 
-
+'
 		For Local t:Token = EachIn tokens
 			Print t.Kind + " at (" + t.docX + "," + t.docY + ") = ~q" + t.text + "~q"
 		Next
