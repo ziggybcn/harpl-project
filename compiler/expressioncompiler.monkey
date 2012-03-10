@@ -126,13 +126,21 @@ Class ExpressionCompiler
 		'Pending Braces!!
 		
 		'Unnary operators
-		
 	
-		if ProcessBinaryOperator(["^"], AssemblerObj.POW			,expression, scope) = False Then Return false
-		if ProcessBinaryOperator(["*","/","%"], AssemblerObj.MUL 	,expression, scope) = False Then Return false
-		if ProcessBinaryOperator(["+","-"], AssemblerObj.SUM  		,expression, scope) = False Then Return false
-		if ProcessBinaryOperator(["&"], AssemblerObj.NUMAND   		,expression, scope) = False Then Return false
-		if ProcessBinaryOperator(["|"], AssemblerObj.NUMAND   		,expression, scope) = False Then Return false
+		if ProcessBinaryOperator(
+			["^", AssemblerObj.POW] ,
+			expression, scope) = False Then Return false
+
+		if ProcessBinaryOperator(
+			["*", AssemblerObj.MUL,
+			 "/", AssemblerObj.DIV,
+			 "%", AssemblerObj.MODULUS], expression, scope) = False Then Return false
+			
+		if ProcessBinaryOperator(
+			["+",AssemblerObj.SUM,
+			 "-", AssemblerObj.SUB ] ,expression, scope) = False Then Return false
+		if ProcessBinaryOperator(["&", AssemblerObj.OP_AND] ,expression, scope) = False Then Return false
+		if ProcessBinaryOperator(["|", AssemblerObj.OP_OR] ,expression, scope) = False Then Return false
 				
 		Print "And then it is:"
 		For local t:Token = EachIn expression
@@ -164,7 +172,7 @@ Class ExpressionCompiler
 		
 	End
 	
-	Method ProcessBinaryOperator?(opItems:String[], pref:String, expression:List<Token>, scope:CompilerDataScope)
+	Method ProcessBinaryOperator?(opItems:String[], expression:List<Token>, scope:CompilerDataScope)
 		Local node:list.Node<Token>
 		node = expression.FirstNode()
 		While node <> null
@@ -174,8 +182,9 @@ Class ExpressionCompiler
 				Continue
 			EndIf
 			'WE HAVE AN OPERATION
-			For Local i:Int = 0 until opItems.Length
+			For Local i:Int = 0 until opItems.Length step 2
 				local op:String = opItems[i]
+				Local pref:String = opItems[i+1]
 				if curT.Kind = eToken.OPERATOR And curT.text = op Then
 					'IF IT'S MALFORMED:	
 					if node.PrevNode = null or node.NextNode = null Then

@@ -10,8 +10,8 @@ Class AssemblerObj
 	 Const MUL:String = "MUL_"
 	 Const POW:String = "POW_"
 	 Const MODULUS:String = "MOD_"
-	 Const NUMAND:String = "NUMAND_"
-	 Const NUMOR:String = "NUMOR_"
+	 Const OP_AND:String = "AND_"
+	 Const OP_OR:String = "OR_"
 	 
  	Field requiredStringSize:Int, requiredFloatSize:Int, requiredIntSize:Int, requiredBoolSize:int
 
