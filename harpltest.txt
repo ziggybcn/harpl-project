@@ -1,4 +1,4 @@
-45+56+
+5/1*6+MyVariable
 "hola!"(45,67+
 DrawText("Hola, mundo!") - 45 ,45+56
 Variable MyVar is Integer = 0, MyOtherVar is String = "Hello world!"

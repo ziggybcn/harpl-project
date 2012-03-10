@@ -2,7 +2,7 @@ Import Harpl
 Import lexer
 'Import reflection 
 Import compiler.expressioncompiler 
-
+Import compiler.compilerdatascope 
 
 #Rem
 	header:The Harpl compiler module contains the classes that are required to perform and handle compilation of Harpl source code.
@@ -31,7 +31,7 @@ Class Compiler
 			AddError("File " + filename + " was not found.","",-1,-1)
 			Return False
 		EndIf
-		
+		generatedAsm = New AssemblerObj
 		Local txtStream:String = LoadString(filename)
 		
 		If txtStream = "" Then AddError("File " + filename + " is empty.", filename, 0, 0)
@@ -42,8 +42,13 @@ Class Compiler
 		generatedAsm = New AssemblerObj 
 	
 		Local EE:= New ExpressionCompiler 
+		Local scope:= New CompilerDataScope
+		Local t:Token = new Token
+		t.Kind = eToken.IDENTIFIER 
+		t.text = "myvariable"
+		scope.AddVariable(Self,t,CompVariable.vINT )
 		EE.compiler = self
-		EE.CompileExpression()
+		EE.CompileExpression(scope)
 		Print "Next token:" + lexer.tokens.First().text
 		
 		if Self.compileErrors.IsEmpty = False then

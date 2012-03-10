@@ -5,7 +5,7 @@ Import utils.stdio
 Import utils.retro
 Import utils.stringutils 
 Import reflection 
-Import compiler.compiler 
+Import compiler.compiler  
 Import vmaassembler.assemblerobj 
 
 Import os
