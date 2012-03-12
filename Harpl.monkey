@@ -4,9 +4,10 @@
 Import utils.stdio
 Import utils.retro
 Import utils.stringutils 
-'Import reflection 
+Import reflection
 Import compiler.compiler  
 Import vmaassembler.assemblerobj 
+Import harplvm.hvm
 
 Import os
 'summary: This const contains the name of this application
@@ -36,15 +37,23 @@ Function Main()
 		AbortExecution("Too many parameters.", -1)
 	endif
 	
-	Local localCompiler:= New Compiler
-	If localCompiler.CompileFile (AppArgs[1]) = False Then
-		For Local err:CompileError = eachin localCompiler.compileErrors 
+	Local lCompiler := New Compiler
+	If lCompiler.CompileFile (AppArgs[1]) = False Then
+		For Local err:CompileError = eachin lCompiler.compileErrors
 			Print "Error: " + err.description
 			if err.file <>"" Then
 				Print "    At file: " + err.file + "[" + err.posX + "," + err.posY + "]"
 			EndIf
 			Print ""
 		Next
+	Else
+		local bco:ByteCodeObj = HarplByteCoder.GenerateByteCode(lCompiler.generatedAsm)
+		Local virtualMachine:Hvm = new Hvm
+		if bco <> null then
+			virtualMachine.Run(bco)
+		Else
+			Print "The Byte Code Generator could not generate a valid bytecode object."
+		endif
 	EndIf
 	
 End

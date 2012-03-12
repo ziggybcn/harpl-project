@@ -219,13 +219,18 @@ Class ExpressionCompiler
 					EndIf
 					if operateNum = False then
 						compiler.generatedAsm.code.AddLast(pref + prefix1 + prefix2)
-						'TODO: SCOPE NESTING LEVEL!!
 						
-						'TODO: Missing scope info!!!
 						compiler.generatedAsm.code.AddLast(Prev.text)
-						
+						if prefix1 = expKinds.BOOLVAR or prefix1 = expKinds.FLOATVAR or prefix1 = expKinds.INTVAR or prefix1 = expKinds.STRINGVAR Then
+							'TODO: Missing scope info!!! We asume scope level 0 by now...
+							compiler.generatedAsm.code.AddLast("0")
+						EndIf
 						'TODO: Missing scope info!!!
 						compiler.generatedAsm.code.AddLast(Post.text)
+						if prefix2 = expKinds.BOOLVAR or prefix2 = expKinds.FLOATVAR or prefix2 = expKinds.INTVAR or prefix2 = expKinds.STRINGVAR Then
+							'TODO: Missing scope info!!! We asume scope level 0 by now...
+							compiler.generatedAsm.code.AddLast("0")
+						EndIf
 		
 						'MIRAMOS EN QUE TIPO DE TEMP HAY QUE GUARDARLO: NECESITAMOS SCOPE!!
 						Local Store:String
@@ -372,18 +377,18 @@ End
 
 
 Class expKinds abstract
-	Const INTPREFIX:String = "IN"
-	Const FLOATPREFIX:String = "FN"
-	Const INTVAR:String = "IV"
-	Const BOOLVAR:String = "BV"
-	Const FLOATVAR:String = "FV"
-	Const STRINGVAR:String = "SV"
-	Const ERRORUNKNOWNVAR:String = "ER"
-	Const STRINGLITERAL:String = "ST"
-	Const TMPINTEGER:String = "TN"
-	Const TMPFLOAT:String = "TF"
-	Const TMPSTRING:String = "TS"
-	Const TMPBOOL:String = "TB"
+	Const INTPREFIX:String = "IN"	'Integer literak
+	Const FLOATPREFIX:String = "FN"	'Float literal
+	Const INTVAR:String = "IV"	'Integer variable
+	Const BOOLVAR:String = "BV"	'Bool variable
+	Const FLOATVAR:String = "FV"	'Float variable
+	Const STRINGVAR:String = "SV"	'String variable
+	Const ERRORUNKNOWNVAR:String = "ER"	'ERROR
+	Const STRINGLITERAL:String = "ST"	'String literal
+	Const TMPINTEGER:String = "TN"	'TEMP integer
+	Const TMPFLOAT:String = "TF"	'TMP float
+	Const TMPSTRING:String = "TS"	'TMP String
+	Const TMPBOOL:String = "TB"		'TMPBool
 End
 
 Class eTmpTokens

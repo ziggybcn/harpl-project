@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<JiProj xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" EntryPoint=".\Harpl.monkey" Name="Harpl Compiler" OriginalLocation="C:\harpl-project\">
+<JiProj xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" EntryPoint=".\Harpl.monkey" Name="Harpl Compiler" OriginalLocation="C:\Monkey Compiler\Harpl\">
   <Files>
     <Document Filename=".\compiler\compiler.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />
@@ -36,6 +36,20 @@
         <Y>0</Y>
       </CursorPos>
     </Document>
+    <Document Filename=".\harplvm\bytecodeobj.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+      <DocGUID />
+      <CursorPos>
+        <X>0</X>
+        <Y>0</Y>
+      </CursorPos>
+    </Document>
+    <Document Filename=".\harplvm\harplfunction.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+      <DocGUID />
+      <CursorPos>
+        <X>0</X>
+        <Y>0</Y>
+      </CursorPos>
+    </Document>
     <Document Filename=".\harplvm\hbcc.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />
       <CursorPos>
@@ -44,6 +58,13 @@
       </CursorPos>
     </Document>
     <Document Filename=".\harplvm\hvm.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+      <DocGUID />
+      <CursorPos>
+        <X>0</X>
+        <Y>0</Y>
+      </CursorPos>
+    </Document>
+    <Document Filename=".\harplvm\runtimescope.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />
       <CursorPos>
         <X>0</X>
