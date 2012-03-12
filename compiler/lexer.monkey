@@ -136,7 +136,7 @@ Class Lexer
 				endif
 			
 			elseif char = ";"[0]
-				Local token:=New Token(sourceFile,i-lastOffset, lineNum, txtStream[i..i+1],eToken.ENDSENTENCE)
+				Local token := New Token(sourceFile, i - lastOffset, lineNum, txtStream[i..i + 1], eToken.ENDSENTENCE)
 				tokens.AddLast(token)
 				if char = "~n"[0] then
 					lastOffset = i+1	'we have to add the CR in the offset

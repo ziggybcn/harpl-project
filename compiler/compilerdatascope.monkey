@@ -8,7 +8,7 @@ Class CompilerDataScope
 	
 	Method AddVariable:Bool(compiler:Compiler,name:Token,Kind:Int)
 		if variables.Contains(name.text)
-			compiler.AddError("Duplicate variable definition: " + name.text,name.sourceFile, name.docX, name.docY)
+			compiler.AddError("Duplicate variable definition: " + name.text, name)
 			Return False
 		EndIf
 		

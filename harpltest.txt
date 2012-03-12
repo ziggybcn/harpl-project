@@ -1,1 +1,1 @@
-0-2^2+MyVariable*45 & "Hola mundo!"
+Write 45+6;

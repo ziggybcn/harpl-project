@@ -7,10 +7,10 @@ Import Harpl
 	This class also contains all string contants that represent Harpl assembler instructions and instruction prefixes.
 #end
 Class AssemblerObj
-	Field code:List<String> = new List<String>
+ 	Field code:List < String >= new List < String >
 
 	'summary: Substraction prefix on the Harpl Assembler
-	Const SUB:String = "SUB_"
+ 	Const SUB:String = "SUB_"
 
 	'summary: Addition prefix on the Harpl Assembler
 	Const SUM:String = "SUM_"

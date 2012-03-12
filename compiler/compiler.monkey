@@ -28,7 +28,7 @@ Class Compiler
 	#end
 	Method CompileFile:Bool (filename:String)
 		If FileType(filename) <> 1 Then 'file does not exist
-			AddError("File " + filename + " was not found.","",-1,-1)
+			AddError("File " + filename + " was not found.", "", -1, -1)
 			Return False
 		EndIf
 		generatedAsm = New AssemblerObj
@@ -41,7 +41,7 @@ Class Compiler
 		If lexer.Tokenize(txtStream, self, filename ) = False Then Return false
 		generatedAsm = New AssemblerObj 
 	
-		Local EE:= New ExpressionCompiler 
+		Local EE:= New ExpressionCompiler
 		Local scope:= New CompilerDataScope
 		Local t:Token = new Token
 		t.Kind = eToken.IDENTIFIER 
@@ -80,7 +80,7 @@ Class Compiler
 	End
 	
 	Method ResetCompiler:Void()
-		compileErrors = New List<CompileError>
+		compileErrors = New List < CompileError >
 		lexer = New Lexer
 		ErrorsCount = 0
 	End
