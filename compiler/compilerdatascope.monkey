@@ -33,6 +33,8 @@ Class CompVariable
 	Const vBOOL:Int = 8
 	Const vOBJ:Int = 16
 	Const vARRAY:Int = 32
+
+	Field isBeingUsed:Bool = false
 	
 	Field Name:String
 	Field Kind:Int

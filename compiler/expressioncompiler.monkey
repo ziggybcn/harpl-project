@@ -85,7 +85,7 @@ Class ExpressionCompiler
 				EndIf
 			EndIf
 			
-			if currentToken.Kind <> eToken.CARRIER Then
+			If currentToken.Kind <> eToken.CARRIER Then
 				expression.AddLast(currentToken)
 				prevToken = currentToken
 			endif
@@ -351,7 +351,7 @@ Function TellPrefix:String(t:Token, scope:CompilerDataScope, compiler:Compiler)
 			elseif t.text.StartsWith(eTmpTokens.TMPBOOL) Then
 				Return expKinds.TMPBOOL 'TEMP BOOLEAN
 			Else
-				'TODO: ITERATE THROUG PARENT SCOPES
+				'TODO: ITERATE THROUG PARENT SCOPES, AND GET POSSIBLE HIDING WARNINGS. ALSO MARK USED/UNUSED VAR.
 				if scope.variables.Contains(t.text) = False Then
 					compiler.AddError("Unknown identifier: " + t.text,t.sourceFile, t.docX, t.docY )
 					For local v:CompVariable = EachIn scope.variables.Values
@@ -360,6 +360,7 @@ Function TellPrefix:String(t:Token, scope:CompilerDataScope, compiler:Compiler)
 					Return expKinds.ERRORUNKNOWNVAR 
 				Else
 					Local vari:CompVariable = scope.variables.ValueForKey(t.text)
+					vari.isBeingUsed = true
 					Select vari.Kind
 						Case CompVariable.vINT 
 							Return expKinds.INTVAR 
