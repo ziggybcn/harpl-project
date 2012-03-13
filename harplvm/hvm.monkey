@@ -1,7 +1,7 @@
 Import Harpl
 Import harplvm.bytecodeobj
 Import harplvm.harplfunction
-Import harplvm.hbcc
+Import harplvm.harplbytecoder
 Import harplvm.runtimescope
 
 #Rem
@@ -19,10 +19,10 @@ Class Hvm
 	
 	Method Run(byteCodeObj:ByteCodeObj)
 
-		if byteCodeObj = null Then Error "Tried to run a null program."
+		If byteCodeObj = null Then Error "Tried to run a null program."
 
 		'We initialize the VM speciffic built-in functions:
-		if instructionSet.Length = 0 Then RegisterBuiltIn
+		If instructionSet.Length = 0 Then RegisterBuiltIn
 		
 		'We initialite the HEAP space:
 		tmpStrings = tmpStrings[..byteCodeObj.requiredStringsSize]
@@ -46,56 +46,14 @@ Class RunTimeError
 End
 
 Class VM_InstructionSet
-#REM
-	IN
-	FN
-	IV
-	BV
-	FV
-	SV
-	ST
-	TN
-	TF
-	TS
-	TB
-#END
-	Const SUM_INIV = 1
-	Const SUM_INFV = 2
-	Const SUM_INTN = 3
-	Const SUM_INTF = 4
-
-	Const SUM_FNIV = 5
-	Const SUM_FNFV = 6
-	Const SUM_FNTN = 7
-	Const SUM_FNTF = 8
-	
-	Const SUM_IVIV = 9
-	Const SUM_IVFV = 10
-	Const SUM_IVTN = 11
-	Const SUM_IVTF = 12
-	Const SUM_IVIN = 13
-	Const SUM_IVFN = 14
-	
-	Const SUM_FVIV = 15
-	Const SUM_FVFV = 16
-	Const SUM_FVTN = 17
-	Const SUM_FVTF = 18
-	Const SUM_FVIN = 19
-	Const SUM_FVFN = 20
-
-	Const SUM_TNIV = 21
-	Const SUM_TNFV = 22
-	Const SUM_TNTN = 23
-	Const SUM_TNTF = 24
-	Const SUM_TNIN = 25
-	Const SUM_TNFN = 26
-
-	Const SUM_TFIV = 27
-	Const SUM_TFFV = 28
-	Const SUM_TFTN = 29
-	Const SUM_TFTF = 30
-	Const SUM_TFIN = 31
-	Const SUM_TFFN = 32
+	Const Sum = 1
+	Const Sub = 2
+	Const Mul = 3
+	Const Div = 4
+	Const Pow = 5
+	Const Modulus = 6
+	Const BitAnd = 7
+	Const BitOr = 8
 End
 
 

@@ -86,6 +86,8 @@ Class Compiler
 	End
 	
 	Field generatedAsm:AssemblerObj 
+	
+
 End
 
 #rem

@@ -84,6 +84,7 @@ Class ExpressionCompiler
 					EndIf
 				EndIf
 			EndIf
+			
 			if currentToken.Kind <> eToken.CARRIER Then
 				expression.AddLast(currentToken)
 				prevToken = currentToken
@@ -145,8 +146,8 @@ Class ExpressionCompiler
 		if ProcessBinaryOperator(
 			["+", AssemblerObj.SUM,
 			 "-", AssemblerObj.SUB], expression, scope) = False Then Return false
-		if ProcessBinaryOperator(["&", AssemblerObj.OP_AND], expression, scope) = False Then Return false
-		if ProcessBinaryOperator(["|", AssemblerObj.OP_OR], expression, scope) = False Then Return false
+		if ProcessBinaryOperator(["&", AssemblerObj.BIT_AND], expression, scope) = False Then Return false
+		if ProcessBinaryOperator(["|", AssemblerObj.BIT_OR], expression, scope) = False Then Return false
 				
 		Print "And then it is:"
 		For local t:Token = EachIn expression
@@ -218,22 +219,22 @@ Class ExpressionCompiler
 						EndIf
 					EndIf
 					if operateNum = False then
-						compiler.generatedAsm.code.AddLast(pref + prefix1 + prefix2)
-						
-						compiler.generatedAsm.code.AddLast(Prev.text)
+						compiler.generatedAsm.AddInstruction(pref) '.code.AddLast(pref)
+						compiler.generatedAsm.AddParameter(prefix1)  '.code.AddLast(prefix1)  ' + prefix2)
+						compiler.generatedAsm.AddParameter(Prev.text)   '.code.AddLast(Prev.text)
 						if prefix1 = expKinds.BOOLVAR or prefix1 = expKinds.FLOATVAR or prefix1 = expKinds.INTVAR or prefix1 = expKinds.STRINGVAR Then
 							'TODO: Missing scope info!!! We asume scope level 0 by now...
-							compiler.generatedAsm.code.AddLast("0")
+							compiler.generatedAsm.AddParameter("0") '   .code.AddLast("0")
 						EndIf
-						'TODO: Missing scope info!!!
-						compiler.generatedAsm.code.AddLast(Post.text)
+						compiler.generatedAsm.AddParameter(prefix2)  '  .code.AddLast(prefix2)  ' + prefix2)						
+						compiler.generatedAsm.AddParameter(Post.text)  '.code.AddLast(Post.text)
 						if prefix2 = expKinds.BOOLVAR or prefix2 = expKinds.FLOATVAR or prefix2 = expKinds.INTVAR or prefix2 = expKinds.STRINGVAR Then
 							'TODO: Missing scope info!!! We asume scope level 0 by now...
-							compiler.generatedAsm.code.AddLast("0")
+							compiler.generatedAsm.AddParameter("0")   'code.AddLast("0")
 						EndIf
 		
-						'MIRAMOS EN QUE TIPO DE TEMP HAY QUE GUARDARLO: NECESITAMOS SCOPE!!
 						Local Store:String
+						
 						Select op
 						
 							'Returning Int or String:
@@ -241,6 +242,7 @@ Class ExpressionCompiler
 							if prefix1 = expKinds.STRINGLITERAL or prefix1 = expKinds.STRINGVAR or
 								prefix2 = expKinds.STRINGLITERAL or prefix2 = expKinds.STRINGVAR or
 								prefix1 = expKinds.TMPSTRING or prefix2 = expKinds.TMPSTRING								
+
 								'WE STORE IN A TMP STRING
 								Store = eTmpTokens.TMPSTRING + stringCounter
 								Self.stringCounter +=1
@@ -269,7 +271,11 @@ Class ExpressionCompiler
 								'Error("Operator unknown:" + op)
 								compiler.AddError("Uknown operator",curT)
 							End Select
-							If Store<> "" then compiler.generatedAsm.code.AddLast(Store) Else compiler.generatedAsm.code.AddLast("?")
+							If Store<> "" then 
+								compiler.generatedAsm.AddParameter(Store)  '.code.AddLast(Store)
+							Else
+								compiler.generatedAsm.AddParameter("?")  '.code.AddLast("?")
+							endif
 							node.PrevNode.Remove()
 							node.NextNode.Remove()
 							curT.Kind = eToken.IDENTIFIER 
@@ -397,6 +403,8 @@ Class eTmpTokens
 	Const TMPFLOAT:String = "!F"
 	Const TMPBOOL:String = "!B"
 End
+
+
 
 
 

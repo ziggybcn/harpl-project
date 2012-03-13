@@ -1,1 +1,1 @@
-Write 45+6;
+45+6-MyVariable&"Hello world!"&MyVariable;
