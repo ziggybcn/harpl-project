@@ -98,11 +98,11 @@ Class ExpressionCompiler
 			endif
 		Wend
 		
-		Print "Expression is:"
-		For local t:Token = EachIn expression
-			Print("." + t.text + ".")
-		Next
-		Print("--Done--")
+'		Print "Expression is:"
+'		For local t:Token = EachIn expression
+'			Print("." + t.text + ".")
+'		Next
+'		Print("--Done--")
 
 		local result:Bool = WriteAsm(expression, scope)
 
@@ -111,9 +111,15 @@ Class ExpressionCompiler
 		if compiler.generatedAsm.requiredFloatSize < floatCounter Then compiler.generatedAsm.requiredFloatSize = floatCounter
 		if compiler.generatedAsm.requiredStringSize < stringCounter Then compiler.generatedAsm.requiredStringSize = stringCounter
 		if compiler.generatedAsm.requiredIntSize < intCounter Then compiler.generatedAsm.requiredIntSize = intCounter
-
-		if result = True Then Return expression.First() Else Return null
-				
+		if expression.IsEmpty Then 
+			Return null 
+		Else
+			if result = True Then 
+				if expression.Count=1 Then 	Return expression.First() Else Return null
+			Else 
+				Return null	
+			endif
+		endif
 	End
 	
 	Private
@@ -149,18 +155,18 @@ Class ExpressionCompiler
 		if ProcessBinaryOperator(["&", AssemblerObj.BIT_AND], expression, scope) = False Then Return false
 		if ProcessBinaryOperator(["|", AssemblerObj.BIT_OR], expression, scope) = False Then Return false
 				
-		Print "And then it is:"
-		For local t:Token = EachIn expression
-			Print("." + t.text + ".")
-		Next
-		Print("--Done--")
-		
-		Print("")
-		Print("ASM:")
-		For Local s:String = EachIn compiler.generatedAsm.code
-			Print s
-		Next
-		Print ("---END---")
+'		Print "And then it is:"
+'		For local t:Token = EachIn expression
+'			Print("." + t.text + ".")
+'		Next
+'		Print("--Done--")
+'		
+'		Print("")
+'		Print("ASM:")
+'		For Local s:String = EachIn compiler.generatedAsm.code
+'			Print s
+'		Next
+'		Print ("---END---")
 		'return WriteAsm(expression, scope )
 		if expression.IsEmpty = True Then
 			if firstToken <> null then
@@ -271,10 +277,15 @@ Class ExpressionCompiler
 								'Error("Operator unknown:" + op)
 								compiler.AddError("Uknown operator",curT)
 							End Select
-							If Store<> "" then 
-								compiler.generatedAsm.AddParameter(Store)  '.code.AddLast(Store)
+							If Store<> "" then
+							
+								'curT.Kind = eToken.IDENTIFIER '--> There's no need to tell the result kind, as it is known by the operatos kind.
+								'curT.text = Store
+								'Local ResultPrefix:String = TellPrefix( curT,scope,compiler)
+								'compiler.generatedAsm.AddParameter(ResultPrefix) 
+								compiler.generatedAsm.AddParameter(Store)  
 							Else
-								compiler.generatedAsm.AddParameter("?")  '.code.AddLast("?")
+								compiler.generatedAsm.AddParameter("?") 
 							endif
 							node.PrevNode.Remove()
 							node.NextNode.Remove()

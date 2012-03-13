@@ -1,1 +1,2 @@
-45+6-MyVariable&"Hello world!"&MyVariable;
+var MyVariable as Integer = 34, Another as String = "Hello world", AndThis as Boolean = true
+var pepe as String = "Hello world!" & 45 + MyVariable

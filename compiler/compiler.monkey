@@ -43,12 +43,51 @@ Class Compiler
 	
 		Local EE:= New ExpressionCompiler
 		Local scope:= New CompilerDataScope
-		Local t:Token = new Token
-		t.Kind = eToken.IDENTIFIER 
-		t.text = "myvariable"
-		scope.AddVariable(Self,t,CompVariable.vINT )
-		EE.compiler = self
-		EE.CompileExpression(scope)
+		'Local t:Token = new Token
+		't.Kind = eToken.IDENTIFIER 
+		't.text = "myvariable"
+		'scope.AddVariable(Self,t,CompVariable.vINT )
+		'EE.compiler = self
+		'EE.CompileExpression(scope)
+		
+		Local tokenNode:list.Node<Token> = lexer.tokens.FirstNode()
+		
+		Local done:Bool = false
+		While Not done 'And tokenNode.Value <> null
+			Local token:Token = tokenNode.Value()
+			Select token.Kind 
+				Case eToken.CARRIER, eToken.EMPTY, eToken.ENDSENTENCE 
+					lexer.tokens.RemoveFirst()
+					if lexer.tokens.IsEmpty = true Then
+						tokenNode = null
+						done = true
+					else
+						tokenNode = lexer.tokens.FirstNode()
+					EndIf
+
+				Case eToken.IDENTIFIER 
+					Select token.text
+						case HarplKeywords.Var 	'Add a local variable
+							CompileVar(scope)
+							Print "Bug after compile vars"
+							if lexer.tokens.IsEmpty = false
+								tokenNode = lexer.tokens.FirstNode()
+								if tokenNode <> null Then
+									Print ">>>>>> TokenNode is then: " + tokenNode.Value.text
+								EndIf
+							Else
+								tokenNode = null
+								done = True 
+								Continue
+							endif
+					End select
+					
+				Case eToken.NUMBER, eToken.OPERATOR, eToken.STRINGLITERAL 
+					Self.AddError("Unexpected token: " + token.text, token)
+					done = true
+			End Select
+		Wend
+		
 		if lexer.tokens.IsEmpty = false then
 			Print "Next token:" + lexer.tokens.First().text
 		Else
@@ -61,6 +100,117 @@ Class Compiler
 		endif
 
 	End
+	
+	Method CompileVar:Bool(scope:CompilerDataScope)
+		'We eat the VAR token:
+		local varToken:Token = Self.lexer.tokens.RemoveFirst()
+		if varToken.text <> HarplKeywords.Var Then
+			Error "Var compilation requested without Var identifier. Found: " + varToken.text
+		EndIf
+		Local done:Bool = false
+		While (done=false and lexer.tokens.IsEmpty = false)
+			'We get the variable name:
+			if Self.lexer.tokens.IsEmpty Then 
+				AddError("Expecting variable name",varToken)
+				ConsumeSentence
+				Continue
+			endif
+			Local varname:Token = self.lexer.tokens.RemoveFirst()
+			'We get the AS clause:
+			if Self.lexer.tokens.IsEmpty Then 
+				AddError("Expecting As clause when declaring " + varname.text,varname)
+				ConsumeSentence
+				Continue
+			endif
+			Local as:Token = self.lexer.tokens.RemoveFirst()
+			if not(as.Kind=eToken.IDENTIFIER And as.text = HarplKeywords.As) Then
+				AddError("As clause was expected. Syntax error delcaring " + varname.text + "[" + varname.docX +", " + varname.docY,as)
+				ConsumeSentence()
+				Return false
+			EndIf
+			Local dataType:Token = self.lexer.tokens.RemoveFirst()
+			if not(as.Kind=eToken.IDENTIFIER)  Then
+				AddError("Data type expected. Syntax error",dataType)
+				ConsumeSentence()
+				Return False
+			EndIf
+			'ADD VAR PENDING:
+			Select dataType.text
+
+				Case HarplKeywords._Float 
+				
+				Case HarplKeywords._String 
+				
+				Case HarplKeywords.Boolean 
+				
+				Case HarplKeywords.Integer 
+				
+			End Select
+			if Self.lexer.tokens.IsEmpty Then Continue
+			Local nextToken:Token = self.lexer.tokens.RemoveFirst()
+			if nextToken.Kind <> eToken.OPERATOR Then
+				if nextToken.Kind = eToken.CARRIER or nextToken.Kind = eToken.ENDSENTENCE Then	done = true
+			EndIf
+			Print "Checking operator = "
+			Select nextToken.text
+				Case "="
+					Local EC:ExpressionCompiler = new ExpressionCompiler
+					EC.compiler = self
+					local resultToken:Token = EC.CompileExpression(scope)
+					if resultToken <> null Then
+						Print "Var " + varname.text + " has to be set to: " + resultToken.text 
+					EndIf
+					Local continueToken:Token 
+					if Self.lexer.tokens.IsEmpty = False then
+						continueToken = self.lexer.tokens.RemoveFirst()
+					Else
+						done =True
+						Continue
+					endif
+					Print "Continue token is " + continueToken.text
+					if continueToken.Kind = eToken.CARRIER or continueToken.Kind = eToken.ENDSENTENCE Then 
+						done = true
+						Print "Done true passed."
+						Continue
+					endif
+					
+					if continueToken.Kind <> eToken.OPERATOR or continueToken.text <> "," Then
+						Print "Done check next token kind."
+						AddError("Expected end of variable declaration",continueToken)
+						ConsumeSentence 
+						done = True
+						Continue 
+					endif
+					Print "Block A succeed."
+				Case ","
+					Print "Getting next var..."
+					Continue
+				Default
+					AddError("Unexpected operator: " + nextToken.text,nextToken)
+					ConsumeSentence 
+					done = True
+					Continue 
+			End Select
+		Wend
+	End
+	
+	Method ConsumeSentence()
+		Local done:Bool = false, prev:Token
+		While Not done And lexer.tokens.IsEmpty = false
+			Local t:Token = lexer.tokens.RemoveFirst()
+			if t.Kind = eToken.ENDSENTENCE Then
+				done = true
+			ElseIf t.Kind = eToken.CARRIER Then
+				IF prev = null Then 
+					done = True
+				ElseIf prev.Kind <> eToken.OPERATOR Then
+					done = True
+				EndIf
+			EndIf
+			prev = t
+		Wend		
+	End
+
 	
 	Field ErrorsCount:Int = 0
 	
@@ -87,7 +237,6 @@ Class Compiler
 	
 	Field generatedAsm:AssemblerObj 
 	
-
 End
 
 #rem
@@ -112,4 +261,18 @@ Class CompileError
 		This coordinate is the zero based line number of the error source in the document. If the error has been reported to happen on the fourth character of the fiveteenth line, this field will contain a 14 (first line of source code is 0, second is 1, third is 2, etc.)
 	#end
 	Field posY:Int 
+End
+
+Class HarplKeywords
+	'summary: Alocates a local variable.
+	Const Var:String = "var"
+	
+	'summary: "as" clause on the data definition of a variable
+	Const As:String = "as"
+	
+	Const Integer:String = "integer"
+	Const Boolean:String = "boolean"
+	Const _String:String = "string"
+	Const _Float:String = "float"
+	
 End
