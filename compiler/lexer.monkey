@@ -161,7 +161,6 @@ Class Lexer
 				While i<txtStream.Length And done = False
 					if (txtStream[i] = "~n"[0] or txtStream[i] = "~r"[0]) Then done = True else i+=1
 				wend
-
 			'Otherwise SYNTAX ERROR!!
 			Else
 				compiler.AddError("Syntax error. Unexpected character: " + String.FromChar(char),sourceFile,i-lastOffset,lineNum)
@@ -171,6 +170,13 @@ Class Lexer
 		Wend
 
 		'TOKEN MERGING UPSIDE DOWN:
+		if tokens.IsEmpty then 
+			if compiler.compileErrors.IsEmpty Then 
+				Return True
+			Else
+				Return False 
+			endif
+		endif
 		Local node:list.Node<Token> = tokens.FirstNode()
 		Repeat 
 			Local skipNext:Bool = false
@@ -223,6 +229,18 @@ Class Lexer
 
 						EndIf
 					EndIf
+				
+				'Avoid duplicate carriers, we do not need them for anything!
+				Case eToken.CARRIER
+						Local nextnode:list.Node<Token> = node.NextNode()
+						if nextnode<>null Then
+							if nextnode.Value.Kind = eToken.CARRIER 
+								nextnode.Remove
+								skipNext = true
+							EndIf
+						endif
+				Case eToken.EMPTY 
+					node.Remove()
 				Default
 			End
 			if Not skipNext Then node = node.NextNode()

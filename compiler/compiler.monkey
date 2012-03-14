@@ -39,6 +39,7 @@ Class Compiler
 		lexer=New Lexer
 		'If the lexing fails, can't make second compiler pass!
 		If lexer.Tokenize(txtStream, self, filename ) = False Then Return false
+		
 		generatedAsm = New AssemblerObj 
 	
 		Local EE:= New ExpressionCompiler
@@ -49,6 +50,11 @@ Class Compiler
 		'scope.AddVariable(Self,t,CompVariable.vINT )
 		'EE.compiler = self
 		'EE.CompileExpression(scope)
+		
+		if lexer.tokens.IsEmpty() Then
+			Print "Warining: source code did not contain any valid or Harpl source code, or source code was invalid."
+			Return true
+		EndIf
 		
 		Local tokenNode:list.Node<Token> = lexer.tokens.FirstNode()
 		
@@ -69,12 +75,8 @@ Class Compiler
 					Select token.text
 						case HarplKeywords.Var 	'Add a local variable
 							CompileVar(scope)
-							Print "Bug after compile vars"
 							if lexer.tokens.IsEmpty = false
 								tokenNode = lexer.tokens.FirstNode()
-								if tokenNode <> null Then
-									Print ">>>>>> TokenNode is then: " + tokenNode.Value.text
-								EndIf
 							Else
 								tokenNode = null
 								done = True 
@@ -89,16 +91,17 @@ Class Compiler
 		Wend
 		
 		if lexer.tokens.IsEmpty = false then
-			Print "Next token:" + lexer.tokens.First().text
-		Else
-			Print "There is no next token."
+			Print "Compilation process was not completed properly. There are pending tokens to be processed."
+			Return false
+		else
+			if Self.compileErrors.IsEmpty = False then
+				Print "There were " + self.compileErrors.Count() + " errors during compilation."
+				Return False
+			Else
+				Print "Compilation without errors"
+				Return True
+			endif
 		endif
-		if Self.compileErrors.IsEmpty = False then
-			Return False
-		Else
-			Return True
-		endif
-
 	End
 	
 	Method CompileVar:Bool(scope:CompilerDataScope)
@@ -151,14 +154,18 @@ Class Compiler
 			if nextToken.Kind <> eToken.OPERATOR Then
 				if nextToken.Kind = eToken.CARRIER or nextToken.Kind = eToken.ENDSENTENCE Then	done = true
 			EndIf
-			Print "Checking operator = "
 			Select nextToken.text
 				Case "="
 					Local EC:ExpressionCompiler = new ExpressionCompiler
 					EC.compiler = self
 					local resultToken:Token = EC.CompileExpression(scope)
 					if resultToken <> null Then
-						Print "Var " + varname.text + " has to be set to: " + resultToken.text 
+						'Print "Var " + varname.text + " has to be set to: " + resultToken.text 
+					Else
+						AddError("Error processing expression.", nextToken)
+						ConsumeSentence
+						done = True
+						Continue
 					EndIf
 					Local continueToken:Token 
 					if Self.lexer.tokens.IsEmpty = False then
@@ -167,23 +174,18 @@ Class Compiler
 						done =True
 						Continue
 					endif
-					Print "Continue token is " + continueToken.text
 					if continueToken.Kind = eToken.CARRIER or continueToken.Kind = eToken.ENDSENTENCE Then 
 						done = true
-						Print "Done true passed."
 						Continue
 					endif
 					
 					if continueToken.Kind <> eToken.OPERATOR or continueToken.text <> "," Then
-						Print "Done check next token kind."
 						AddError("Expected end of variable declaration",continueToken)
 						ConsumeSentence 
 						done = True
 						Continue 
 					endif
-					Print "Block A succeed."
 				Case ","
-					Print "Getting next var..."
 					Continue
 				Default
 					AddError("Unexpected operator: " + nextToken.text,nextToken)

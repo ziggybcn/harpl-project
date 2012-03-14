@@ -1,2 +1,2 @@
-var MyVariable as Integer = 34, Another as String = "Hello world", AndThis as Boolean = true
-var pepe as String = "Hello world!" & 45 + MyVariable
+var myvar as integer = 57, MyName as String = "Hello world " + myvar, Another as Boolean = True
+var super as Float = 45.56
