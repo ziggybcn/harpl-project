@@ -44,22 +44,22 @@ Class Compiler
 	
 		Local EE:= New ExpressionCompiler
 		Local scope:= New CompilerDataScope
-		'Local t:Token = new Token
-		't.Kind = eToken.IDENTIFIER 
-		't.text = "myvariable"
-		'scope.AddVariable(Self,t,CompVariable.vINT )
-		'EE.compiler = self
-		'EE.CompileExpression(scope)
 		
 		if lexer.tokens.IsEmpty() Then
-			Print "Warining: source code did not contain any valid or Harpl source code, or source code was invalid."
+			Print "Warining: source code did not contain any valid Harpl code, or source code was invalid."
 			Return true
 		EndIf
 		
 		Local tokenNode:list.Node<Token> = lexer.tokens.FirstNode()
 		
-		Local done:Bool = false
+		Local done:Bool = false, iterations:Int = 0
 		While Not done 'And tokenNode.Value <> null
+			if iterations>2000 Then
+				Print "Ended due possible infitite loop."
+				done = True
+				Continue
+			EndIf
+			iterations+=1
 			Local token:Token = tokenNode.Value()
 			Select token.Kind 
 				Case eToken.CARRIER, eToken.EMPTY, eToken.ENDSENTENCE 
@@ -81,6 +81,16 @@ Class Compiler
 								tokenNode = null
 								done = True 
 								Continue
+							endif
+						Default 
+
+							'check for methods or selft defined functinos, etc and if it fails:
+							AddError("Unknown identifier "+ token.text, token)
+							ConsumeSentence()
+							if lexer.tokens.IsEmpty = False then
+								tokenNode = lexer.tokens.FirstNode()
+							Else
+								done = true
 							endif
 					End select
 					
