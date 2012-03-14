@@ -54,12 +54,14 @@ Class Compiler
 		
 		Local done:Bool = false, iterations:Int = 0
 		While Not done 'And tokenNode.Value <> null
-			if iterations>2000 Then
+		
+			if iterations > 2000 Then
 				Print "Ended due possible infitite loop."
 				done = True
 				Continue
 			EndIf
 			iterations+=1
+			
 			Local token:Token = tokenNode.Value()
 			Select token.Kind 
 				Case eToken.CARRIER, eToken.EMPTY, eToken.ENDSENTENCE 
