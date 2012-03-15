@@ -1,5 +1,5 @@
-var myvar as integer = 57, MyName as String = "Hello world " + myvar, Another as Boolean = True
-var super as Float = 45.56
+var myvar as integer = 57, MyName as String = "Hello world " & myvar, Another as Boolean = True
+var super as Float = 45.56 & myvar, federico as Float = 0.4 & 5.6
 
 while myvar<100
 	myvar = myvar+1

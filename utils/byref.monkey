@@ -2,3 +2,7 @@
 Class BoolByRef
 	Field value:Bool 
 End
+
+Class ByRefInt
+	Field value:Int
+End

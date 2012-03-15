@@ -9,7 +9,7 @@ Class ExpressionCompiler
 	Field floatCounter:Int = 0
 	Field booleanCounter:Int = 0
 		
-	Method CompileExpression:Token(scope:CompilerDataScope)
+	Method CompileExpression:Token(scope:CompilerScopeStack )
 	
 		intCounter = 0
 		stringCounter = 0
@@ -127,7 +127,7 @@ Class ExpressionCompiler
 	Field result:Token
 		
 	
-	Method WriteAsm:Bool(expression:List < Token >, scope:CompilerDataScope)
+	Method WriteAsm:Bool(expression:List < Token >, compilerScopeStack:CompilerScopeStack)
 		
 	
 		Local firstToken:Token
@@ -142,18 +142,18 @@ Class ExpressionCompiler
 		'Binary operators:
 		if ProcessBinaryOperator(
 			["^", AssemblerObj.POW],
-			expression, scope) = False Then Return false
+			expression, compilerScopeStack) = False Then Return false
 
 		if ProcessBinaryOperator(
 			["*", AssemblerObj.MUL,
 			 "/", AssemblerObj.DIV,
-			 "%", AssemblerObj.MODULUS], expression, scope) = False Then Return false
+			 "%", AssemblerObj.MODULUS], expression, compilerScopeStack) = False Then Return false
 			
 		if ProcessBinaryOperator(
 			["+", AssemblerObj.SUM,
-			 "-", AssemblerObj.SUB], expression, scope) = False Then Return false
-		if ProcessBinaryOperator(["&", AssemblerObj.BIT_AND], expression, scope) = False Then Return false
-		if ProcessBinaryOperator(["|", AssemblerObj.BIT_OR], expression, scope) = False Then Return false
+			 "-", AssemblerObj.SUB], expression, compilerScopeStack) = False Then Return false
+		if ProcessBinaryOperator(["&", AssemblerObj.BIT_AND], expression, compilerScopeStack) = False Then Return false
+		if ProcessBinaryOperator(["|", AssemblerObj.BIT_OR], expression, compilerScopeStack) = False Then Return false
 				
 '		Print "And then it is:"
 '		For local t:Token = EachIn expression
@@ -185,7 +185,7 @@ Class ExpressionCompiler
 		
 	End
 	
-	Method ProcessBinaryOperator?(opItems:String[], expression:List<Token>, scope:CompilerDataScope)
+	Method ProcessBinaryOperator?(opItems:String[], expression:List<Token>, compilerScopeStack:CompilerScopeStack)
 		Local node:list.Node < Token >
 		node = expression.FirstNode()
 		While node <> null
@@ -214,8 +214,8 @@ Class ExpressionCompiler
 						Return false										
 					EndIf
 	
-					Local prefix1:String = TellPrefix(Prev, scope, compiler)
-					Local prefix2:String = TellPrefix(Post, scope, compiler)
+					Local prefix1:String = TellPrefix(Prev, compilerScopeStack, compiler)
+					Local prefix2:String = TellPrefix(Post, compilerScopeStack, compiler)
 					Local operateNum:Bool = false
 					if prefix1 = expKinds.INTPREFIX or prefix1 = expKinds.FLOATPREFIX then
 						If prefix2 = expKinds.INTPREFIX Then
@@ -228,15 +228,17 @@ Class ExpressionCompiler
 						compiler.generatedAsm.AddInstruction(pref) '.code.AddLast(pref)
 						compiler.generatedAsm.AddParameter(prefix1)  '.code.AddLast(prefix1)  ' + prefix2)
 						compiler.generatedAsm.AddParameter(Prev.text)   '.code.AddLast(Prev.text)
+						Local nestingLevel:ByRefInt = new ByRefInt
 						if prefix1 = expKinds.BOOLVAR or prefix1 = expKinds.FLOATVAR or prefix1 = expKinds.INTVAR or prefix1 = expKinds.STRINGVAR Then
-							'TODO: Missing scope info!!! We asume scope level 0 by now...
-							compiler.generatedAsm.AddParameter("0") '   .code.AddLast("0")
+							'We get nesting level for current var:
+							compiler.compilerScopeStack.FindVariable(Prev.text, nestingLevel)
+							compiler.generatedAsm.AddParameter(nestingLevel.value)
 						EndIf
 						compiler.generatedAsm.AddParameter(prefix2)  '  .code.AddLast(prefix2)  ' + prefix2)						
 						compiler.generatedAsm.AddParameter(Post.text)  '.code.AddLast(Post.text)
 						if prefix2 = expKinds.BOOLVAR or prefix2 = expKinds.FLOATVAR or prefix2 = expKinds.INTVAR or prefix2 = expKinds.STRINGVAR Then
-							'TODO: Missing scope info!!! We asume scope level 0 by now...
-							compiler.generatedAsm.AddParameter("0")   'code.AddLast("0")
+							compiler.compilerScopeStack.FindVariable(Post.text, nestingLevel)
+							compiler.generatedAsm.AddParameter(nestingLevel.value)
 						EndIf
 		
 						Local Store:String
@@ -344,7 +346,7 @@ Class ExpressionCompiler
 	
 End
 
-Function TellPrefix:String(t:Token, scope:CompilerDataScope, compiler:Compiler)
+Function TellPrefix:String(t:Token, compilerScopeStack:CompilerScopeStack, compiler:Compiler)
 	Select t.Kind
 		Case eToken.STRINGLITERAL
 			Return expKinds.STRINGLITERAL 	'STRINGLITERAL
@@ -363,14 +365,14 @@ Function TellPrefix:String(t:Token, scope:CompilerDataScope, compiler:Compiler)
 				Return expKinds.TMPBOOL 'TEMP BOOLEAN
 			Else
 				'TODO: ITERATE THROUG PARENT SCOPES, AND GET POSSIBLE HIDING WARNINGS. ALSO MARK USED/UNUSED VAR.
-				if scope.variables.Contains(t.text) = False Then
+				if compilerScopeStack.VariableExists(t.text) = False Then
 					compiler.AddError("Unknown identifier: " + t.text,t.sourceFile, t.docX, t.docY )
-					For local v:CompVariable = EachIn scope.variables.Values
-						Print "Available variable:" + v.Name
-					Next
+					'For local v:CompVariable = EachIn scope.variables.Values
+					'	Print "Available variable:" + v.Name
+					'Next
 					Return expKinds.ERRORUNKNOWNVAR 
 				Else
-					Local vari:CompVariable = scope.variables.ValueForKey(t.text)
+					Local vari:CompVariable = compilerScopeStack.FindVariable (t.text, null)
 					vari.isBeingUsed = true
 					Select vari.Kind
 						Case CompVariable.vINT 

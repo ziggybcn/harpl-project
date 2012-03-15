@@ -21,6 +21,8 @@ Class Compiler
 	#end
 	Field lexer:=New Lexer
 
+	Field compilerScopeStack:CompilerScopeStack 
+	
 	#rem
 	summary: This function gets a filename as a parameter and performs compilation. 
 	If the compilation process is completed properly and without errors, this function returns TRUE, otherwise returns FALSE
@@ -32,6 +34,7 @@ Class Compiler
 			Return False
 		EndIf
 		generatedAsm = New AssemblerObj
+		compilerScopeStack = New CompilerScopeStack(Self) 
 		Local txtStream:String = LoadString(filename)
 		
 		If txtStream = "" Then AddError("File " + filename + " is empty.", filename, 0, 0)
@@ -43,7 +46,7 @@ Class Compiler
 		generatedAsm = New AssemblerObj 
 	
 		Local EE:= New ExpressionCompiler
-		Local scope:= New CompilerDataScope
+		'Local scope:= New CompilerDataScope
 		
 		if lexer.tokens.IsEmpty() Then
 			Print "Warining: source code did not contain any valid Harpl code, or source code was invalid."
@@ -76,7 +79,7 @@ Class Compiler
 				Case eToken.IDENTIFIER 
 					Select token.text
 						case HarplKeywords.Var 	'Add a local variable
-							CompileVar(scope)
+							CompileVar()
 							if lexer.tokens.IsEmpty = false
 								tokenNode = lexer.tokens.FirstNode()
 							Else
@@ -101,6 +104,10 @@ Class Compiler
 					done = true
 			End Select
 		Wend
+
+		For local s:String = EachIn Self.generatedAsm.code
+			Print s
+		Next
 		
 		if lexer.tokens.IsEmpty = false then
 			Print "Compilation process was not completed properly. There are pending tokens to be processed."
@@ -114,9 +121,10 @@ Class Compiler
 				Return True
 			endif
 		endif
+		
 	End
 	
-	Method CompileVar:Bool(scope:CompilerDataScope)
+	Method CompileVar:Bool()
 		'We eat the VAR token:
 		local varToken:Token = Self.lexer.tokens.RemoveFirst()
 		if varToken.text <> HarplKeywords.Var Then
@@ -149,16 +157,23 @@ Class Compiler
 				ConsumeSentence()
 				Return False
 			EndIf
+
 			'ADD VAR PENDING:
 			Select dataType.text
 
 				Case HarplKeywords._Float 
-				
+					compilerScopeStack.AddVariable(Self, varname, CompVariable.vFLOAT)
+					
 				Case HarplKeywords._String 
+					compilerScopeStack.AddVariable(Self, varname, CompVariable.vSTRING )
 				
 				Case HarplKeywords.Boolean 
+					compilerScopeStack.AddVariable(Self, varname, CompVariable.vBOOL )
 				
 				Case HarplKeywords.Integer 
+					compilerScopeStack.AddVariable(Self, varname, CompVariable.vINT )
+				Default
+					Print "error data type for variable is not known."
 				
 			End Select
 			if Self.lexer.tokens.IsEmpty Then Continue
@@ -170,7 +185,7 @@ Class Compiler
 				Case "="
 					Local EC:ExpressionCompiler = new ExpressionCompiler
 					EC.compiler = self
-					local resultToken:Token = EC.CompileExpression(scope)
+					local resultToken:Token = EC.CompileExpression(compilerScopeStack)
 					if resultToken <> null Then
 						'Print "Var " + varname.text + " has to be set to: " + resultToken.text 
 					Else
