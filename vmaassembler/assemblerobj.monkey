@@ -31,9 +31,9 @@ Import Harpl
 
 'SENTENCES:
 #Rem
-	summary:This class represents an Harpl assembler executable. When the Harpl compiler is executed, an AssemblerObj is generated as an instance of this class.
-	This class instance can lateron be passed to the ByteCoder to generate the final executable for the Harpl Virtual Machine.
-	This class also contains all string contants that represent Harpl assembler instructions.
+	summary:This Class represents an Harpl assembler executable. When the Harpl compiler is executed, an AssemblerObj is generated as an instance of this Class.
+	This Class instance can lateron be passed to the ByteCoder to generate the final executable for the Harpl Virtual Machine.
+	This Class also contains all string contants that represent Harpl assembler instructions.
 #end
 Class AssemblerObj
  	Field code:List < String >= new List < String >

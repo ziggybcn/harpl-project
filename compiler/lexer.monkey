@@ -6,7 +6,7 @@ Import token
 #end
 
 #rem
-	summary: The Lexer class handles the lexing of Harpl source code.
+	summary: The Lexer Class handles the lexing of Harpl source code.
 #end
 Class Lexer
 	'summary: This field contains the list of tokens after a Lexing process

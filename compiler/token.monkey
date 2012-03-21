@@ -1,6 +1,6 @@
 
 #Rem
-	summary: This class represents a Token for the Harpl compiler
+	summary: This Class represents a Token for the Harpl compiler
 #End
 Class Token
 
@@ -19,7 +19,7 @@ Class Token
 	Field _kind:Int 
 	Public
 
-	'summary: This property indicates the kind of token. All token kinds are defined in the eToken enumertor-like class.
+	'summary: This property indicates the kind of token. All token kinds are defined in the eToken enumertor-like Class.
 	Method Kind:Int() property 
 		Return _kind
 	End
@@ -37,7 +37,7 @@ Class Token
 	End
 End
 
-'Summary: This class contains all available token kinds, in the form of constants.
+'Summary: This Class contains all available token kinds, in the form of constants.
 Class eToken abstract
 	'Summary: This represents an empty token. Reserved for future use.
 	Const EMPTY:Int = 0

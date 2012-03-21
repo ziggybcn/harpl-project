@@ -1,5 +1,5 @@
 #rem
-	header: This module provides a some classic basic-esque string manipualtion strings.
+	header: This module provides a some Classic basic-esque string manipualtion strings.
 #end
 
 'summary: Returns a given number of chars from the left of the string

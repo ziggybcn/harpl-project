@@ -5,11 +5,11 @@ Import compiler.expressioncompiler
 Import compiler.compilerdatascope 
 
 #Rem
-	header:The Harpl compiler module contains the classes that are required to perform and handle compilation of Harpl source code.
+	header:The Harpl compiler module contains the Classes that are required to perform and handle compilation of Harpl source code.
 #end
 
 #rem
-	summary: This is the compiler class. This class allows the compilation of Harpl source code.
+	summary: This is the compiler Class. This Class allows the compilation of Harpl source code.
 #end
 Class Compiler
 	'summary: This field contains a list of any compiletion errors that may have happened during the compilation process.
@@ -26,7 +26,7 @@ Class Compiler
 	#rem
 	summary: This function gets a filename as a parameter and performs compilation. 
 	If the compilation process is completed properly and without errors, this function returns TRUE, otherwise returns FALSE
-	To get the lsit of all compilation errors, you can access the field compileErrors of the class instance.
+	To get the lsit of all compilation errors, you can access the field compileErrors of the Class instance.
 	#end
 	Method CompileFile:Bool (filename:String)
 		If FileType(filename) <> 1 Then 'file does not exist
@@ -269,7 +269,7 @@ Class Compiler
 End
 
 #rem
-	summary: This class represents a compilation error
+	summary: This Class represents a compilation error
 #end
 Class CompileError
 	#rem
