@@ -226,20 +226,22 @@ Class ExpressionCompiler
 					EndIf
 					if operateNum = False then
 						compiler.generatedAsm.AddInstruction(pref) '.code.AddLast(pref)
-						compiler.generatedAsm.AddParameter(prefix1)  '.code.AddLast(prefix1)  ' + prefix2)
-						compiler.generatedAsm.AddParameter(Prev.text)   '.code.AddLast(Prev.text)
-						Local nestingLevel:ByRefInt = new ByRefInt
-						if prefix1 = expKinds.BOOLVAR or prefix1 = expKinds.FLOATVAR or prefix1 = expKinds.INTVAR or prefix1 = expKinds.STRINGVAR Then
-							'We get nesting level for current var:
-							compiler.compilerScopeStack.FindVariable(Prev.text, nestingLevel)
-							compiler.generatedAsm.AddParameter(nestingLevel.value)
-						EndIf
-						compiler.generatedAsm.AddParameter(prefix2)  '  .code.AddLast(prefix2)  ' + prefix2)						
-						compiler.generatedAsm.AddParameter(Post.text)  '.code.AddLast(Post.text)
-						if prefix2 = expKinds.BOOLVAR or prefix2 = expKinds.FLOATVAR or prefix2 = expKinds.INTVAR or prefix2 = expKinds.STRINGVAR Then
-							compiler.compilerScopeStack.FindVariable(Post.text, nestingLevel)
-							compiler.generatedAsm.AddParameter(nestingLevel.value)
-						EndIf
+'						compiler.generatedAsm.AddParameter(prefix1)  '.code.AddLast(prefix1)  ' + prefix2)
+'						compiler.generatedAsm.AddParameter(Prev.text)   '.code.AddLast(Prev.text)
+'						Local nestingLevel:ByRefInt = new ByRefInt
+'						if prefix1 = expKinds.BOOLVAR or prefix1 = expKinds.FLOATVAR or prefix1 = expKinds.INTVAR or prefix1 = expKinds.STRINGVAR Then
+'							'We get nesting level for current var:
+'							compiler.compilerScopeStack.FindVariable(Prev.text, nestingLevel)
+'							compiler.generatedAsm.AddParameter(nestingLevel.value)
+'						EndIf
+						compiler.WriteIdentParameter(Prev)
+'						compiler.generatedAsm.AddParameter(prefix2)  '  .code.AddLast(prefix2)  ' + prefix2)						
+'						compiler.generatedAsm.AddParameter(Post.text)  '.code.AddLast(Post.text)
+'						if prefix2 = expKinds.BOOLVAR or prefix2 = expKinds.FLOATVAR or prefix2 = expKinds.INTVAR or prefix2 = expKinds.STRINGVAR Then
+'							compiler.compilerScopeStack.FindVariable(Post.text, nestingLevel)
+'							compiler.generatedAsm.AddParameter(nestingLevel.value)
+'						EndIf
+						compiler.WriteIdentParameter(Post)
 		
 						Local Store:String
 						

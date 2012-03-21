@@ -72,6 +72,25 @@ Class AssemblerObj
 	'summary: bitwise OR instruction on the Harpl Assembler. 
 	Const BIT_OR:String = "BIT_OR"
 
+	
+	'DATA ALLOCATION:
+	#Rem
+	summary:This sentence indicates that a new variable's scope is being allocated at runtime.
+	A new scope syntax is:
+	[code] NEWSCOPE
+		var-type
+		var-name
+		...[/ code]
+	#end
+	Const SET_NEWSCOPE:String = "NEWSCOPE"
+	
+	'summary: This sentence indicates that a variable has to be set to its default value (it's being init)
+	Const SET_DEFVAR:String = "DEF_VAR"
+	
+	'summary: Assignation instruction on the Harpl Assembler. SET_VAR has the variable identification schema (kind/name/scope-level/kind/name[/scopelevel])
+	Const SET_VAR:String = "SET_VAR"
+	
+	'-------------------------------------------------------------
 	'summary: Required heap size for internal string operations.
 	Field requiredStringSize:Int
 	
@@ -83,6 +102,8 @@ Class AssemblerObj
 	
 	'summary: Required heap size for internal boolean operations.
 	Field requiredBoolSize:int
+	
+	
 	
 End
 

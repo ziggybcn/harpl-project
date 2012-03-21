@@ -45,7 +45,7 @@ Class RunTimeError
 	Field description:String = ""	
 End
 
-Class VM_InstructionSet abstract
+Class VM_InstructionSet Abstract
 	Const Sum = 1
 	Const Sub = 2
 	Const Mul = 3
@@ -56,7 +56,7 @@ Class VM_InstructionSet abstract
 	Const BitOr = 8
 End
 
-Class VM_DataId abstract
+Class VM_DataId Abstract
 	Const LiteralString = 1
 	Const LiteralInt = 2
 	Const LiteralFloat = 3

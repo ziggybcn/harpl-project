@@ -158,7 +158,10 @@ Class Compiler
 				Return False
 			EndIf
 
-			'ADD VAR PENDING:
+			'PENDING:
+			'1.- SET VALUE TO VAR
+			'2.- CLOSE DATA SCOPE SENTENCES
+			
 			Select dataType.text
 
 				Case HarplKeywords._Float 
@@ -178,9 +181,14 @@ Class Compiler
 			End Select
 			if Self.lexer.tokens.IsEmpty Then Continue
 			Local nextToken:Token = self.lexer.tokens.RemoveFirst()
+			'If the Var instruction ends:
 			if nextToken.Kind <> eToken.OPERATOR Then
-				if nextToken.Kind = eToken.CARRIER or nextToken.Kind = eToken.ENDSENTENCE Then	done = true
+				if nextToken.Kind = eToken.CARRIER or nextToken.Kind = eToken.ENDSENTENCE Then
+					SetDefaultValueVar(varname)
+					done = true
+				endif
 			EndIf
+			'If the Var instruction does not end:
 			Select nextToken.text
 				Case "="
 					Local EC:ExpressionCompiler = new ExpressionCompiler
@@ -188,6 +196,9 @@ Class Compiler
 					local resultToken:Token = EC.CompileExpression(compilerScopeStack)
 					if resultToken <> null Then
 						'Print "Var " + varname.text + " has to be set to: " + resultToken.text 
+						generatedAsm.AddInstruction(AssemblerObj.SET_VAR)
+						WriteIdentParameter(varname)
+						WriteIdentParameter(resultToken)
 					Else
 						AddError("Error processing expression.", nextToken)
 						ConsumeSentence
@@ -213,6 +224,7 @@ Class Compiler
 						Continue 
 					endif
 				Case ","
+					SetDefaultValueVar(varname)
 					Continue
 				Default
 					AddError("Unexpected operator: " + nextToken.text,nextToken)
@@ -221,6 +233,22 @@ Class Compiler
 					Continue 
 			End Select
 		Wend
+	End
+
+	Method SetDefaultValueVar(varname:Token)
+		generatedAsm.AddInstruction(AssemblerObj.SET_DEFVAR)
+		WriteIdentParameter(varname)
+	End
+	
+	Method WriteIdentParameter(token:Token)
+		local prefix1:String = TellPrefix(token, compilerScopeStack, self)
+		generatedAsm.AddParameter(prefix1)
+		generatedAsm.AddParameter(token.text)   '.code.AddLast(Prev.text)
+		Local nestingLevel:ByRefInt = new ByRefInt
+		if prefix1 = expKinds.BOOLVAR or prefix1 = expKinds.FLOATVAR or prefix1 = expKinds.INTVAR or prefix1 = expKinds.STRINGVAR Then
+			compilerScopeStack.FindVariable(token.text, nestingLevel)
+			generatedAsm.AddParameter(nestingLevel.value)
+		EndIf
 	End
 	
 	Method ConsumeSentence()
