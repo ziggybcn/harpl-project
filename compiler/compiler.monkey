@@ -241,10 +241,10 @@ Class Compiler
 	End
 	
 	Method WriteIdentParameter(token:Token)
-		local prefix1:String = TellPrefix(token, compilerScopeStack, self)
+		local prefix1:String = TellPrefix(token, self)
 		generatedAsm.AddParameter(prefix1)
 		generatedAsm.AddParameter(token.text)   '.code.AddLast(Prev.text)
-		Local nestingLevel:ByRefInt = new ByRefInt
+		Local nestingLevel:IntByRef = new IntByRef
 		if prefix1 = expKinds.BOOLVAR or prefix1 = expKinds.FLOATVAR or prefix1 = expKinds.INTVAR or prefix1 = expKinds.STRINGVAR Then
 			compilerScopeStack.FindVariable(token.text, nestingLevel)
 			generatedAsm.AddParameter(nestingLevel.value)

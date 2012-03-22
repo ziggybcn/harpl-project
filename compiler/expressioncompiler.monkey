@@ -142,18 +142,18 @@ Class ExpressionCompiler
 		'Binary operators:
 		if ProcessBinaryOperator(
 			["^", AssemblerObj.POW],
-			expression, compilerScopeStack) = False Then Return false
+			expression) = False Then Return false
 
 		if ProcessBinaryOperator(
 			["*", AssemblerObj.MUL,
 			 "/", AssemblerObj.DIV,
-			 "%", AssemblerObj.MODULUS], expression, compilerScopeStack) = False Then Return false
+			 "%", AssemblerObj.MODULUS], expression) = False Then Return false
 			
 		if ProcessBinaryOperator(
 			["+", AssemblerObj.SUM,
-			 "-", AssemblerObj.SUB], expression, compilerScopeStack) = False Then Return false
-		if ProcessBinaryOperator(["&", AssemblerObj.BIT_AND], expression, compilerScopeStack) = False Then Return false
-		if ProcessBinaryOperator(["|", AssemblerObj.BIT_OR], expression, compilerScopeStack) = False Then Return false
+			 "-", AssemblerObj.SUB], expression) = False Then Return false
+		if ProcessBinaryOperator(["&", AssemblerObj.BIT_AND], expression) = False Then Return false
+		if ProcessBinaryOperator(["|", AssemblerObj.BIT_OR], expression) = False Then Return false
 				
 '		Print "And then it is:"
 '		For local t:Token = EachIn expression
@@ -185,7 +185,7 @@ Class ExpressionCompiler
 		
 	End
 	
-	Method ProcessBinaryOperator?(opItems:String[], expression:List<Token>, compilerScopeStack:CompilerScopeStack)
+	Method ProcessBinaryOperator:Bool(opItems:String[], expression:List < Token >)', compilerScopeStack:CompilerScopeStack)
 		Local node:list.Node < Token >
 		node = expression.FirstNode()
 		While node <> null
@@ -214,8 +214,8 @@ Class ExpressionCompiler
 						Return false										
 					EndIf
 	
-					Local prefix1:String = TellPrefix(Prev, compilerScopeStack, compiler)
-					Local prefix2:String = TellPrefix(Post, compilerScopeStack, compiler)
+					Local prefix1:String = TellPrefix(Prev, compiler)
+					Local prefix2:String = TellPrefix(Post, compiler)
 					Local operateNum:Bool = false
 					if prefix1 = expKinds.INTPREFIX or prefix1 = expKinds.FLOATPREFIX then
 						If prefix2 = expKinds.INTPREFIX Then
@@ -348,7 +348,7 @@ Class ExpressionCompiler
 	
 End
 
-Function TellPrefix:String(t:Token, compilerScopeStack:CompilerScopeStack, compiler:Compiler)
+Function TellPrefix:String(t:Token, compiler:Compiler) 'compilerScopeStack:CompilerScopeStack) ', compiler:Compiler)
 	Select t.Kind
 		Case eToken.STRINGLITERAL
 			Return expKinds.STRINGLITERAL 	'STRINGLITERAL
@@ -367,14 +367,14 @@ Function TellPrefix:String(t:Token, compilerScopeStack:CompilerScopeStack, compi
 				Return expKinds.TMPBOOL 'TEMP BOOLEAN
 			Else
 				'TODO: ITERATE THROUG PARENT SCOPES, AND GET POSSIBLE HIDING WARNINGS. ALSO MARK USED/UNUSED VAR.
-				if compilerScopeStack.VariableExists(t.text) = False Then
+				if compiler.compilerScopeStack.VariableExists(t.text) = False Then
 					compiler.AddError("Unknown identifier: " + t.text,t.sourceFile, t.docX, t.docY )
 					'For local v:CompVariable = EachIn scope.variables.Values
 					'	Print "Available variable:" + v.Name
 					'Next
 					Return expKinds.ERRORUNKNOWNVAR 
 				Else
-					Local vari:CompVariable = compilerScopeStack.FindVariable (t.text, null)
+					Local vari:CompVariable = compiler.compilerScopeStack.FindVariable (t.text, null)
 					vari.isBeingUsed = true
 					Select vari.Kind
 						Case CompVariable.vINT 

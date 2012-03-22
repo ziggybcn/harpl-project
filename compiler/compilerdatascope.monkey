@@ -69,7 +69,7 @@ Class CompilerScopeStack
 		summary: This function finds a variable in the complete CompilerDataScopeStack and also returns the offset from current scope where the variable is found.
 		If the variable is found on the global scope (0), then the scope is marked as -1 to avoid problems on functions calling functions.
 	#end
-	Method FindVariable:CompVariable(name:String, nestNum:ByRefInt)
+	Method FindVariable:CompVariable(name:String, nestNum:IntByRef)
 		Local var:CompVariable, counter:Int = 0, lastIndex:Int = -1000
 		For Local s:CompilerDataScope = EachIn self.dataScopes 
 			if s.variables.Contains(name) Then 	
@@ -116,6 +116,7 @@ Class CompilerDataScope
 		variables.Add(name.text,variable)
 		
 	End
+	
 		
 End
 

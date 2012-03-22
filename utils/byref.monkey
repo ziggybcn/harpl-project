@@ -3,6 +3,6 @@ Class BoolByRef
 	Field value:Bool 
 End
 
-Class ByRefInt
+Class IntByRef
 	Field value:Int
 End
