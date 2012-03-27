@@ -22,29 +22,71 @@ Class CompilerScopeStack
 		Self.compiler = compiler
 		currentIndex = 0	'We're adding the GLOBAL scope!
 		dataScopes = New List<CompilerDataScope>
-		Local cds:=New CompilerDataScope
-		dataScopes.AddLast(cds)
 	End
 	
 	#rem
 		summary: Adds a new nest data scope, where variables can be created.
 	#end
-	Method AddDataScope(compiler:Compiler)
+	Method AddDataScope()'compiler:Compiler)
 		Local cds:=New CompilerDataScope
 		dataScopes.AddLast(cds)
 		currentIndex+=1
 		
 		'We add the required assembler here, and store the scope TOKEN so we can go back to it when closing the DataScope
+		cds.newScopeToToken = compiler.generatedAsm.AddInstruction(AssemblerObj.SET_NEWSCOPE)
 		
 	End
 	
 	#rem
 		summary: closes current compiler data scope, and writes the required assembler code. It also removes the scope from the stack.
 	#end
-	Method CloseDataScope:compilerDataScope()
-		'We should go back to the opener token (into the generated assembler) to add the variable names and types in the scope creation routine
-		currentIndex-=1	
-		Return dataScopes.RemoveLast()
+	Method CloseDataScope:CompilerDataScope()
+		Print "Getting node:"
+		Local currentDataScope:CompilerDataScope = dataScopes.RemoveLast()
+		Local currentNode:list.Node < String >= currentDataScope.newScopeToToken
+		
+		if currentDataScope.variables.IsEmpty and currentIndex > 0 Then
+			'We do not allocate empty scopes, to avoid extra allocation of data, except on empty global zone.
+			compiler.generatedAsm.AddInstruction (currentNode, AssemblerObj.SET_EMPTYSCOPE)
+			compiler.generatedAsm.AddInstruction(AssemblerObj.EXIT_SCOPE)
+			currentNode.Remove()
+			Return currentDataScope
+		else
+	
+			For Local v:CompVariable = eachin currentDataScope.variables.Values
+	
+				Local node:list.Node < String >
+				
+				Select v.Kind
+	
+					Case CompVariable.vARRAY
+						node = compiler.generatedAsm.AddParameter(currentNode, expKinds.ARRAYVAR)
+	
+					Case CompVariable.vBOOL
+						node = compiler.generatedAsm.AddParameter(currentNode, expKinds.BOOLVAR)
+	
+					Case CompVariable.vFLOAT
+						node = compiler.generatedAsm.AddParameter(currentNode, expKinds.FLOATVAR)
+	
+					Case CompVariable.vINT
+						node = compiler.generatedAsm.AddParameter(currentNode, expKinds.INTVAR)
+	
+					Case CompVariable.vOBJ
+						node = compiler.generatedAsm.AddParameter(currentNode, expKinds.OBJVAR)
+	
+					Case CompVariable.vSTRING				
+						node = compiler.generatedAsm.AddParameter(currentNode, expKinds.STRINGVAR)
+	
+				End Select
+	
+				node = compiler.generatedAsm.AddParameter(node, v.Name)
+	
+			Next
+			compiler.generatedAsm.AddInstruction(AssemblerObj.EXIT_SCOPE)
+			currentIndex -= 1
+			Return currentDataScope
+		EndIf
+		
 	End
 	
 	#rem
@@ -95,7 +137,9 @@ Class CompilerDataScope
 	#Rem
 		summary: This is the list of generated variables. 
 	#End
-	Field variables:=New StringMap< CompVariable>
+	Field variables := New StringMap < CompVariable >
+	
+	Field newScopeToToken:list.Node < String >
 	
 	#Rem
 		summary: This method allows you to add a variable to the CompilerDataScope. 
@@ -117,7 +161,7 @@ Class CompilerDataScope
 		
 	End
 	
-		
+	
 End
 
 #Rem

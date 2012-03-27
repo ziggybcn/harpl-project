@@ -38,12 +38,28 @@ Import Harpl
 Class AssemblerObj
  	Field code:List < String >= new List < String >
 	
-	Method AddInstruction:Bool(instruction:String)
-		return code.AddLast(instruction) <> null
+	Method AddInstruction:list.Node < String > (instruction:String)
+		return code.AddLast(instruction)
 	End
 	
-	Method AddParameter:Bool(parameter:String)
-		return code.AddLast("~t" + parameter) <> null
+	Method AddInstruction:list.Node < String > (prevNode:list.Node < String >, instruction:String)
+		if prevNode.NextNode = null Then
+			code.AddLast(instruction)
+		else
+		
+			Return New list.Node < String > (prevNode.NextNode, prevNode, instruction)
+		endif
+	End
+	Method AddParameter:list.Node < String > (parameter:String)
+		return code.AddLast("~t" + parameter)
+	End
+	
+	Method AddParameter:list.Node < String > (parentNode:list.Node < String >, parameter:String)
+		if parentNode.NextNode = null Then
+			code.AddLast("~t" + parameter)
+		else
+			Return New list.Node < String > (parentNode.NextNode, parentNode, "~t" + parameter)
+		endif
 	End
 	
 	#Rem
@@ -71,8 +87,8 @@ Class AssemblerObj
 
 	'summary: bitwise OR instruction on the Harpl Assembler. 
 	Const BIT_OR:String = "BIT_OR"
-
 	
+	'------------------------------------------------------
 	'DATA ALLOCATION:
 	#Rem
 	summary:This sentence indicates that a new variable's scope is being allocated at runtime.
@@ -84,6 +100,10 @@ Class AssemblerObj
 	#end
 	Const SET_NEWSCOPE:String = "NEWSCOPE"
 	
+	Const EXIT_SCOPE:String = "EXITSCOPE"
+
+	Const SET_EMPTYSCOPE:String = "EMPTYSCOPE"
+
 	'summary: This sentence indicates that a variable has to be set to its default value (it's being init)
 	Const SET_DEFVAR:String = "DEF_VAR"
 	

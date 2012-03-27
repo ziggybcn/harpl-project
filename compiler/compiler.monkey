@@ -45,13 +45,15 @@ Class Compiler
 		
 		generatedAsm = New AssemblerObj 
 	
-		Local EE:= New ExpressionCompiler
-		'Local scope:= New CompilerDataScope
+		Local EE := New ExpressionCompiler
 		
 		if lexer.tokens.IsEmpty() Then
 			Print "Warining: source code did not contain any valid Harpl code, or source code was invalid."
 			Return true
 		EndIf
+		
+		'We add the global data scope:
+		compilerScopeStack.AddDataScope()
 		
 		Local tokenNode:list.Node<Token> = lexer.tokens.FirstNode()
 		
@@ -90,7 +92,12 @@ Class Compiler
 						Default 
 
 							'check for methods or selft defined functinos, etc and if it fails:
-							AddError("Unknown identifier "+ token.text, token)
+							AddError("Unknown identifier " + token.text, token)
+							Print "Adding scope"
+							compilerScopeStack.AddDataScope()
+							Print "removing scope"
+							compilerScopeStack.CloseDataScope()
+							Print "removed scope"
 							ConsumeSentence()
 							if lexer.tokens.IsEmpty = False then
 								tokenNode = lexer.tokens.FirstNode()
@@ -105,6 +112,9 @@ Class Compiler
 			End Select
 		Wend
 
+		'We close the global data scope:
+		compilerScopeStack.CloseDataScope()
+		
 		For local s:String = EachIn Self.generatedAsm.code
 			Print s
 		Next
@@ -121,7 +131,6 @@ Class Compiler
 				Return True
 			endif
 		endif
-		
 	End
 	
 	Method CompileVar:Bool()
