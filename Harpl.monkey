@@ -5,11 +5,11 @@ Import utils.stdio
 Import utils.retro
 Import utils.stringutils 
 Import reflection
-Import compiler.compiler  
-Import vmaassembler.assemblerobj 
+Import compiler
+Import vmaassembler.assemblerobj
 Import harplvm.hvm
-
 Import os
+
 'summary: This const contains the name of this application
 Const APPNAME:String = "Harpl compiler"
 'summary: This const contains the string representation of current version
@@ -21,7 +21,7 @@ Const APPEXTRA:String = ""
 Function AppString:String()
 	if APPEXTRA = "" Then 	Return APPNAME + " " + APPVERSION  Else Return APPNAME + " " + APPVERSION + " " + APPEXTRA;
 End
-
+ 
 #rem
 	summary:This is the entry point of the Harpl compiler
 #end

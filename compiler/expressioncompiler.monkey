@@ -1,7 +1,7 @@
 Import Harpl
 Import reflection
-Import etmptokens
-
+Import lexer.etmptokens
+ 
 Class ExpressionCompiler
 
 	Field compiler:Compiler

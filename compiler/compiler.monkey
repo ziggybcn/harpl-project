@@ -1,7 +1,7 @@
 Import Harpl
 Import lexer
 Import expressioncompiler
-Import compilerscopestack
+Import datascopes.compilerscopestack
 Import compileerror
 Import harplkeywords
 Import expkinds
