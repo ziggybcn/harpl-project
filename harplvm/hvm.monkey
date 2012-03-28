@@ -1,8 +1,8 @@
 Import Harpl
-Import harplvm.bytecodeobj
-Import harplvm.harplfunction
-Import harplvm.harplbytecoder
-Import harplvm.runtimescope
+Import bytecodeobj
+Import harplfunction
+Import harplbytecoder
+Import scopestack
 
 #Rem
 	summary: This is the Harpl Virtual Machine Class.

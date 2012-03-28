@@ -152,7 +152,9 @@ Class Lexer
 			
 			'valid separators:
 			ElseIf char = " "[0] or char = "~t"[0]
-			
+				Local token := New Token(sourceFile, i - lastOffset, lineNum, " ", eToken.EMPTY)
+				tokens.AddLast(token)
+				
 			'If it is a Comment
 			ElseIf char = "!"[0]
 				Local done:Bool 
@@ -205,8 +207,16 @@ Class Lexer
 								nextnode.Remove()
 							EndIf
 						endif
-					
+					ElseIf token.text = "+" Then
+						Local nextnode:list.Node < Token >= node.NextNode()
+						if nextnode <> null Then
+							if (nextnode.Value.text = "+") And nextnode.Value.Kind = eToken.OPERATOR then
+								token.text = token.text + nextnode.Value.text
+								nextnode.Remove()
+							endif
+						endif
 					EndIf
+					
 				Case eToken.NUMBER 
 					Local prevNode:list.Node<Token> = node.PrevNode()
 					if prevNode <> null And prevNode.Value.Kind = eToken.OPERATOR Then
@@ -241,6 +251,7 @@ Class Lexer
 						endif
 				Case eToken.EMPTY 
 					node.Remove()
+					skipNext = true
 				Default
 			End
 			if Not skipNext Then node = node.NextNode()

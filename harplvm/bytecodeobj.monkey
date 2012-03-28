@@ -13,5 +13,4 @@ Class ByteCodeObj
 	Field requiredBooleanSize:Int
 	Field RequiredIntegerSize:Int
 	Field RequiredFloatSize:Int
-	
 End

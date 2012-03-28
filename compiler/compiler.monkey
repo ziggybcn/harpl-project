@@ -1,8 +1,10 @@
 Import Harpl
 Import lexer
-'Import reflection 
-Import compiler.expressioncompiler 
-Import compiler.compilerdatascope 
+Import expressioncompiler
+Import compilerscopestack
+Import compileerror
+Import harplkeywords
+Import expkinds
 
 #Rem
 	header:The Harpl compiler module contains the Classes that are required to perform and handle compilation of Harpl source code.
@@ -93,11 +95,6 @@ Class Compiler
 
 							'check for methods or selft defined functinos, etc and if it fails:
 							AddError("Unknown identifier " + token.text, token)
-							Print "Adding scope"
-							compilerScopeStack.AddDataScope()
-							Print "removing scope"
-							compilerScopeStack.CloseDataScope()
-							Print "removed scope"
 							ConsumeSentence()
 							if lexer.tokens.IsEmpty = False then
 								tokenNode = lexer.tokens.FirstNode()
@@ -305,40 +302,3 @@ Class Compiler
 	
 End
 
-#rem
-	summary: This Class represents a compilation error
-#end
-Class CompileError
-	#rem
-		summary: This field contains a string with information about the compiler error. Typical contents are "Syntax error" and the like.
-	#end
-	Field description:String 
-	#rem
-		summary: This field contains the filename in disk of the source of the compilation error
-	#end
-	Field file:String
-	#rem
-		summary: This field contains the X location of the error in the given file
-		This coordinate is the zero based char offset of the error source in the document. If the error has been reported to happen on the fourth character of the fiveteenth line, this field will contain a 4 (first character of the line is 0, second is 1, third is 2, etc.)
-	#end
-	Field posX:Int
-	#rem
-		summary: This field contains the Y location of the error in the given file
-		This coordinate is the zero based line number of the error source in the document. If the error has been reported to happen on the fourth character of the fiveteenth line, this field will contain a 14 (first line of source code is 0, second is 1, third is 2, etc.)
-	#end
-	Field posY:Int 
-End
-
-Class HarplKeywords
-	'summary: Alocates a local variable.
-	Const Var:String = "var"
-	
-	'summary: "as" clause on the data definition of a variable
-	Const As:String = "as"
-	
-	Const Integer:String = "integer"
-	Const Boolean:String = "boolean"
-	Const _String:String = "string"
-	Const _Float:String = "float"
-	
-End
