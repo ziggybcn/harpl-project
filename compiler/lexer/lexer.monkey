@@ -146,7 +146,8 @@ Class Lexer
 				
 			'If it is an operator:
 			ElseIf char = "+"[0] or char = "-"[0] or char = "*"[0] or char = "/"[0] or char = "%"[0] or char = "^"[0] or char = "&"[0] or char = "|"[0] or 
-				char = ">"[0] or char = "<"[0] or char = "="[0] or char = "("[0] or char = ")"[0] or char = "["[0] or char = "]"[0] or char="."[0] or char=","[0] then
+				char = ">"[0] or char = "<"[0] or char = "="[0] or char = "("[0] or char = ")"[0] or char = "["[0] or char = "]"[0] or char="."[0] or 
+				char=","[0] or char="~"[0] then
 				Local token:=New Token(sourceFile, i-lastOffset, lineNum,txtStream[i..i+1],eToken.OPERATOR)
 				tokens.AddLast(token)
 			
@@ -284,7 +285,7 @@ End
 
 Function IsATextualOperator:Bool(token:Token)
 	Select token.text
-		Case "and", "or", "not"
+		Case "and", "or", "not", "shr", "shl"
 			token.Kind = eToken.OPERATOR 
 			Return true
 		default

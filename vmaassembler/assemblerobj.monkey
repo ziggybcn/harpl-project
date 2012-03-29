@@ -100,6 +100,18 @@ Class AssemblerObj
 	Const CONCAT:String = "CONCAT"
 	Const BC_CONCAT:Int = 108
 
+	'summary: bitwise OR instruction on the Harpl Assembler. 
+	Const BIT_XOR:String = "BIT_XOR"
+	Const BC_BIT_XOR:Int = 109
+
+	'summary: bitwise OR instruction on the Harpl Assembler. 
+	Const BIT_SHL:String = "BIT_SHL"
+	Const BC_BIT_SHL:Int = 110
+
+	'summary: bitwise OR instruction on the Harpl Assembler. 
+	Const BIT_SHR:String = "BIT_SHR"
+	Const BC_BIT_SHR:Int = 110
+	
 	'------------------------------------------------------
 	'DATA ALLOCATION:
 	#Rem
