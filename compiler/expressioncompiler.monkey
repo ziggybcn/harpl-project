@@ -160,7 +160,8 @@ Class ExpressionCompiler
 			  expression) = False Then Return false
 
 		if ProcessBinaryOperator(["&", AssemblerObj.BIT_AND], expression) = False Then Return false
-		if ProcessBinaryOperator(["|", AssemblerObj.BIT_OR], expression) = False Then Return false
+		if ProcessBinaryOperator(["|", AssemblerObj.BIT_OR, "~", AssemblerObj.BC_BIT_XOR,
+		 "shl",AssemblerObj.BC_BIT_SHL, "shr",AssemblerObj.BC_BIT_SHR ], expression) = False Then Return false
 				
 '		Print "And then it is:"
 '		For local t:Token = EachIn expression
@@ -255,23 +256,23 @@ Class ExpressionCompiler
 						Select op
 						
 							'Returning Int or String:
-							Case "&"
-							if prefix1 = expKinds.STRINGLITERAL or prefix1 = expKinds.STRINGVAR or
-								prefix2 = expKinds.STRINGLITERAL or prefix2 = expKinds.STRINGVAR or
-								prefix1 = expKinds.TMPSTRING or prefix2 = expKinds.TMPSTRING								
-
-								'WE STORE IN A TMP STRING
-								Store = eTmpTokens.TMPSTRING + stringCounter
-								Self.stringCounter +=1
-
-							Else
-								'WE STORE IN AN INTEGER
-								Store = eTmpTokens.TMPINT + intCounter 
-								Self.intCounter +=1
+'							Case "&"
+'							if prefix1 = expKinds.STRINGLITERAL or prefix1 = expKinds.STRINGVAR or
+'								prefix2 = expKinds.STRINGLITERAL or prefix2 = expKinds.STRINGVAR or
+'								prefix1 = expKinds.TMPSTRING or prefix2 = expKinds.TMPSTRING								
+'
+'								'WE STORE IN A TMP STRING
+'								Store = eTmpTokens.TMPSTRING + stringCounter
+'								Self.stringCounter +=1
+'
+'							Else
+'								'WE STORE IN AN INTEGER
+'								Store = eTmpTokens.TMPINT + intCounter 
+'								Self.intCounter +=1
 								
-							endif
+'							endif
 							'Returning Int:
-							Case "|", "%"
+							Case "|", "%", "&", "~", "shr", "shl"
 								Store = eTmpTokens.TMPINT + intCounter 
 								Self.intCounter +=1
 							
@@ -316,6 +317,9 @@ Class ExpressionCompiler
 							Case "%"; result = float(Prev.text) mod float(Post.text)
 							Case "&"; result = Int(Prev.text) & Int(Post.text)
 							Case "|"; result = Int(Prev.text) | Int(Post.text)
+							Case "~"; result = Int(Prev.text) ~ Int(Post.text)
+							Case "shl"; result = Int(Prev.text) shl Int(Post.text)
+							Case "shr"; result = Int(Prev.text) shr Int(Post.text)
 						End
 						if result="" Then
 							compiler.AddError("Error evaluating expression",curT.sourceFile, curT.docX, curT.docY)
