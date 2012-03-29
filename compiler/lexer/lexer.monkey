@@ -152,7 +152,7 @@ Class Lexer
 			
 			'valid separators:
 			ElseIf char = " "[0] or char = "~t"[0]
-				Local token := New Token(sourceFile, i - lastOffset, lineNum, " ", eToken.EMPTY)
+				Local token := New Token(sourceFile, i - lastOffset, lineNum, "_WHITESPACE_", eToken.EMPTY)
 				tokens.AddLast(token)
 				
 			'If it is a Comment
@@ -181,7 +181,7 @@ Class Lexer
 		endif
 		Local node:list.Node<Token> = tokens.FirstNode()
 		Repeat 
-			Local skipNext:Bool = false
+			Local readNext:Bool = True;
 			Local token:Token = node.Value()
 			Select token.Kind
 				Case eToken.OPERATOR 
@@ -229,12 +229,10 @@ Class Lexer
 									token.text = Mid(token.text,2)
 								EndIf
 								prevNode.Remove()
-								'node = node.PrevNode()	'Just to chain iterations properly!
-								skipNext = True;
+								readNext = False;	'Chain possible unnary operators.
 							ElseIf prevNode.Value.text = "+" then 'We can just ignore expresions of kind a = 45 * +7, and considere them 45 * 7
 								prevNode.Remove()
-								'node = node.PrevNode()	'Just to chain iterations properly!							
-								skipNext = True;
+								readNext = False;	'Chain possible unnary operators.
 							endif
 
 						EndIf
@@ -246,15 +244,19 @@ Class Lexer
 						if nextnode<>null Then
 							if nextnode.Value.Kind = eToken.CARRIER 
 								nextnode.Remove
-								skipNext = true
+								readNext = False	'Chain possible carriers, so we only store one.
 							EndIf
 						endif
+						
 				Case eToken.EMPTY 
-					node.Remove()
-					skipNext = true
+					node = node.NextNode 
+					node.PrevNode.Remove()
+					readNext = False
 				Default
+				readNext = true
 			End
-			if Not skipNext Then node = node.NextNode()
+			if readNext Then node = node.NextNode()
+			
 		Until node = null 
 '
 		For Local t:Token = EachIn tokens
