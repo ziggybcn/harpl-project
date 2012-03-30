@@ -1,3 +1,5 @@
+
+
 Import etoken
 #Rem
 	summary: This Class represents a Token for the Harpl compiler

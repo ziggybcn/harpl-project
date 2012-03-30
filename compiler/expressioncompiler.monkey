@@ -146,7 +146,7 @@ Class ExpressionCompiler
 				EndIf
 			else
 				compiler.generatedAsm.AddInstruction(AssemblerObj.UNNARY_SUB)
-				compiler.WriteIdentParameter(Item)
+				compiler.WriteIdentParameter(Item.Value)
 				Item.PrevNode.Remove
 				Local store:String = eTmpTokens.TMPINT + intCounter
 				intCounter+=1
@@ -162,7 +162,7 @@ Class ExpressionCompiler
 				Item.Value.text = newval
 			else
 				compiler.generatedAsm.AddInstruction(AssemblerObj.UNNARY_COMPLEMENT )
-				compiler.WriteIdentParameter(Item)
+				compiler.WriteIdentParameter(Item.Value)
 				Item.PrevNode.Remove
 				Local store:String = eTmpTokens.TMPINT + intCounter
 				intCounter+=1
@@ -174,6 +174,30 @@ Class ExpressionCompiler
 	End method
 	
 	
+	Method CompileUnaries(expression:List < Token >, compiler:Compiler)
+		'We iterate the expression looking for potential unaries
+		Local done:Bool = False
+		Local tokenNode:list.Node<Token> = expression.FirstNode()
+		While Not done
+			Select tokenNode.Value.Kind
+				Case eToken.IDENTIFIER, eToken.NUMBER 
+					Local Prev:list.Node<Token> = tokenNode.PrevNode 
+					'There is a Prev node that is an operator that can be a unnary operator:
+					if Prev <> Null And  Prev.Value.Kind = eToken.OPERATOR And (Prev.Value.text = "-" or Prev.Value.text = "~")
+						'we check if it is a "initial" unary operation:
+						Local GrandPa:list.Node<Token> = Prev.PrevNode()
+						'We have a starting unary operation:
+						if GrandPa = Null or GrandPa.Value.Kind = eToken.OPERATOR Then
+							CompileUnnary(expression,compiler,tokenNode)
+						EndIf
+					EndIf
+				Default
+			End
+			tokenNode = tokenNode.NextNode()
+			if tokenNode = null Then done = true
+		Wend
+	End
+	
 	Method WriteAsm:Bool(expression:List < Token >, compilerScopeStack:CompilerScopeStack)
 		
 	
@@ -184,7 +208,8 @@ Class ExpressionCompiler
 		
 		
 		'Unnary operators
-	
+		CompileUnaries(expression,compilerScopeStack.compiler)
+		
 		
 		'Binary operators:
 		if ProcessBinaryOperator(
@@ -200,26 +225,21 @@ Class ExpressionCompiler
 			["+", AssemblerObj.SUM,
 			 "-", AssemblerObj.SUB], expression) = False Then Return false
 		
+		if ProcessBinaryOperator([
+		"shl",AssemblerObj.BC_BIT_SHL, "shr",AssemblerObj.BC_BIT_SHR ], expression) = False Then Return false
+		
+			  
+		if ProcessBinaryOperator(["&", AssemblerObj.BIT_AND], expression) = False Then Return false
+		if ProcessBinaryOperator(["~", AssemblerObj.BC_BIT_XOR], expression) = False Then Return false
+		
+		if ProcessBinaryOperator(["|", AssemblerObj.BIT_OR], expression) = False Then Return false
+				
 		if ProcessBinaryOperator(
 			["++", AssemblerObj.CONCAT],
 			  expression) = False Then Return false
+			  
+		'COMPARISON OPERATORS PENDING:
 
-		if ProcessBinaryOperator(["&", AssemblerObj.BIT_AND], expression) = False Then Return false
-		if ProcessBinaryOperator(["|", AssemblerObj.BIT_OR, "~", AssemblerObj.BC_BIT_XOR,
-		 "shl",AssemblerObj.BC_BIT_SHL, "shr",AssemblerObj.BC_BIT_SHR ], expression) = False Then Return false
-				
-'		Print "And then it is:"
-'		For local t:Token = EachIn expression
-'			Print("." + t.text + ".")
-'		Next
-'		Print("--Done--")
-'		
-'		Print("")
-'		Print("ASM:")
-'		For Local s:String = EachIn compiler.generatedAsm.code
-'			Print s
-'		Next
-'		Print ("---END---")
 		'return WriteAsm(expression, scope )
 		if expression.IsEmpty = True Then
 			if firstToken <> null then

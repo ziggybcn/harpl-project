@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<JiProj xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" EntryPoint=".\Harpl.monkey" Name="Harpl Compiler" OriginalLocation="C:\MonkeyPro56b\harpl-project\">
+<JiProj xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" EntryPoint=".\Harpl.monkey" Name="Harpl Compiler" OriginalLocation="C:\Monkey Compiler\Harpl\">
   <Files>
     <Document Filename=".\compiler\datascopes\compilerdatascope.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />

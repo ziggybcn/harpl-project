@@ -147,7 +147,7 @@ Class Compiler
 			Local varname:Token = self.lexer.tokens.RemoveFirst()
 			'We get the AS clause:
 			if Self.lexer.tokens.IsEmpty Then 
-				AddError("Expecting As clause when declaring " + varname.text,varname)
+				AddError("Expecting As clause when declaring " + varname.text, varname)
 				ConsumeSentence
 				Continue
 			endif
