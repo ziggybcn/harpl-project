@@ -136,7 +136,7 @@ Class Compiler
 		if varToken.text <> HarplKeywords.Var Then
 			Error "Var compilation requested without Var identifier. Found: " + varToken.text
 		EndIf
-		Local done:Bool = false
+		Local done:Bool = false, firstRound:bool = true
 		While (done=false and lexer.tokens.IsEmpty = false)
 			'We get the variable name:
 			if Self.lexer.tokens.IsEmpty Then 
@@ -145,6 +145,18 @@ Class Compiler
 				Continue
 			endif
 			Local varname:Token = self.lexer.tokens.RemoveFirst()
+			if varname.Kind <> eToken.IDENTIFIER and varname.Kind <> eToken.CARRIER Then
+				AddError("Expecting a valid variable name when declaring " + varname.text, varname)
+				ConsumeSentence
+				Continue				
+			EndIf
+			if Not firstRound then
+				While varname <>null And varname.Kind = eToken.CARRIER 'We allow carrier after a coma
+					varname = self.lexer.tokens.RemoveFirst()
+				Wend
+			else
+				firstRound = false
+			endif
 			'We get the AS clause:
 			if Self.lexer.tokens.IsEmpty Then 
 				AddError("Expecting As clause when declaring " + varname.text, varname)
@@ -190,8 +202,10 @@ Class Compiler
 			'If the Var instruction ends:
 			if nextToken.Kind <> eToken.OPERATOR Then
 				if nextToken.Kind = eToken.CARRIER or nextToken.Kind = eToken.ENDSENTENCE Then
+					Print "End sentence!"
 					SetDefaultValueVar(varname)
 					done = true
+					Continue
 				endif
 			EndIf
 			'If the Var instruction does not end:
@@ -232,6 +246,7 @@ Class Compiler
 				Case ","
 					SetDefaultValueVar(varname)
 					Continue
+				
 				Default
 					AddError("Unexpected operator: " + nextToken.text,nextToken)
 					ConsumeSentence 

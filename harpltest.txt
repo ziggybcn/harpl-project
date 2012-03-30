@@ -1,5 +1,9 @@
-var myvar as Integer , MyName as String = "Hello world " ++ myvar, Another as Boolean = True
-var super as Float = 45.534 * + ~5 , federico as Integer = 454~5 shr 3 shl 2 + 1000
+Var myvar as Integer ,
+	MyName as String = "Hello world " ++ myvar,
+	Another as Boolean = True;
+
+Var	super as Float = 45.534 * + ~5 ,
+	federico as Integer = 454~5 shr 3 shl 2 + 1000
 
 while myvar<100
 	myvar = myvar+1
