@@ -110,8 +110,14 @@ Class AssemblerObj
 
 	'summary: bitwise OR instruction on the Harpl Assembler. 
 	Const BIT_SHR:String = "BIT_SHR"
-	Const BC_BIT_SHR:Int = 110
+	Const BC_BIT_SHR:Int = 111
 	
+	Const UNNARY_SUB:String = "UNNARY_SUBSTRACTION"
+	Const BC_UNNARY_SUB:Int = 112
+	
+	Const UNNARY_COMPLEMENT:String = "UNNARY_COMPLEMENT"
+	Const BC_UNNARY_COMPLEMENT:Int = 113
+
 	'------------------------------------------------------
 	'DATA ALLOCATION:
 	#Rem

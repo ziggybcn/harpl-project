@@ -127,7 +127,52 @@ Class ExpressionCompiler
 	Private
 	
 	Field result:Token
+	
+	Method CompileUnnary(expression:List < Token >, compiler:Compiler, Item:list.Node<Token>)
+		if Item.PrevNode = null Then Return 	'No unnary operator!!!
+		Local operator:Token = Item.PrevNode.Value()
+		If operator.Kind <> eToken.OPERATOR Then Return 'No valid operator
+		If operator.text = "+" Then
+			'This unnary operator is neutral, no need to compile anything
+		ElseIf operator.text = "-"
+			if Item.Value.Kind = eToken.NUMBER Then
+				Item.PrevNode.Remove()
+				if Item.Value.text.Contains(".") Then
+					Local newval:Int = -int(Item.Value.text)
+					Item.Value.text = newval
+				Else
+					Local newval:Float = -Float(Item.Value.text)
+					Item.Value.text = newval
+				EndIf
+			else
+				compiler.generatedAsm.AddInstruction(AssemblerObj.UNNARY_SUB)
+				compiler.WriteIdentParameter(Item)
+				Item.PrevNode.Remove
+				Local store:String = eTmpTokens.TMPINT + intCounter
+				intCounter+=1
+				Item.Value.text = store
+				Item.Value.Kind = eToken.IDENTIFIER 
+				compiler.generatedAsm.AddParameter(store)
+			EndIf
 		
+		ElseIf operator.text = "~"
+			if Item.Value.Kind = eToken.NUMBER Then
+				Item.PrevNode.Remove()
+				Local newval:Int = -int(Item.Value.text)
+				Item.Value.text = newval
+			else
+				compiler.generatedAsm.AddInstruction(AssemblerObj.UNNARY_COMPLEMENT )
+				compiler.WriteIdentParameter(Item)
+				Item.PrevNode.Remove
+				Local store:String = eTmpTokens.TMPINT + intCounter
+				intCounter+=1
+				Item.Value.text = store
+				Item.Value.Kind = eToken.IDENTIFIER 
+				compiler.generatedAsm.AddParameter(store)
+			endif
+		EndIf
+	End method
+	
 	
 	Method WriteAsm:Bool(expression:List < Token >, compilerScopeStack:CompilerScopeStack)
 		
