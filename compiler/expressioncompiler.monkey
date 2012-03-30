@@ -128,12 +128,14 @@ Class ExpressionCompiler
 	
 	Field result:Token
 	
-	Method CompileUnnary(expression:List < Token >, compiler:Compiler, Item:list.Node<Token>)
+	Method CompileUnary(expression:List < Token >, compiler:Compiler, Item:list.Node<Token>)
 		if Item.PrevNode = null Then Return 	'No unnary operator!!!
 		Local operator:Token = Item.PrevNode.Value()
 		If operator.Kind <> eToken.OPERATOR Then Return 'No valid operator
 		If operator.text = "+" Then
 			'This unnary operator is neutral, no need to compile anything
+			Item.PrevNode.Remove
+			
 		ElseIf operator.text = "-"
 			if Item.Value.Kind = eToken.NUMBER Then
 				Item.PrevNode.Remove()
@@ -178,22 +180,25 @@ Class ExpressionCompiler
 		'We iterate the expression looking for potential unaries
 		Local done:Bool = False
 		Local tokenNode:list.Node<Token> = expression.FirstNode()
+		
 		While Not done
+			Local readNext:Bool = True
 			Select tokenNode.Value.Kind
 				Case eToken.IDENTIFIER, eToken.NUMBER 
 					Local Prev:list.Node<Token> = tokenNode.PrevNode 
 					'There is a Prev node that is an operator that can be a unnary operator:
-					if Prev <> Null And  Prev.Value.Kind = eToken.OPERATOR And (Prev.Value.text = "-" or Prev.Value.text = "~")
+					if Prev <> Null And  Prev.Value.Kind = eToken.OPERATOR And (Prev.Value.text = "-" or Prev.Value.text = "~" or Prev.Value.text = "+")
 						'we check if it is a "initial" unary operation:
 						Local GrandPa:list.Node<Token> = Prev.PrevNode()
 						'We have a starting unary operation:
 						if GrandPa = Null or GrandPa.Value.Kind = eToken.OPERATOR Then
-							CompileUnnary(expression,compiler,tokenNode)
+							CompileUnary(expression,compiler,tokenNode)
+							readNext = false	'We want to process chained unary operators.
 						EndIf
 					EndIf
 				Default
 			End
-			tokenNode = tokenNode.NextNode()
+			if readNext then tokenNode = tokenNode.NextNode( )
 			if tokenNode = null Then done = true
 		Wend
 	End
@@ -204,12 +209,10 @@ Class ExpressionCompiler
 		Local firstToken:Token
 		if expression.FirstNode() <> null Then firstToken = expression.FirstNode().Value()
 
-		'Pending Braces!!
-		
+		'TODO: Pending Braces!!
 		
 		'Unnary operators
 		CompileUnaries(expression,compilerScopeStack.compiler)
-		
 		
 		'Binary operators:
 		if ProcessBinaryOperator(
