@@ -1,5 +1,5 @@
 Var myvar as Integer ,
-	MyName as String = "Hello world " ++ myvar,
+	MyName as String = "Hello world~nThat's me~nhi!" ++ myvar,
 	Another as Boolean = True;
 
 Var	super as Float = 45.534 * + ~5 ,

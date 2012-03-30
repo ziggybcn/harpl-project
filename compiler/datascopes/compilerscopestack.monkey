@@ -121,8 +121,9 @@ Class CompilerScopeStack
 		Next
 		if nestNum <>null Then 
 			
-			nestNum.value = currentIndex - lastIndex
-			if nestNum.value =0 Then nestNum.value = -1 'GLOBAL SCOPE.
+			nestNum.value = currentIndex - lastIndex 
+			'If we rest as many items ans available, we're in the global scope:
+			if nestNum.value = currentIndex then nestNum.value = -1
 		endif
 		Return var
 	End
