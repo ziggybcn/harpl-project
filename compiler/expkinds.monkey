@@ -1,16 +1,30 @@
 Class expKinds abstract
 	Const INTPREFIX:String = "INTEGER_LITERAL"	'Integer literak
+	Const BC_INTPREFIX:Int = 20011	'Integer literak
 	Const FLOATPREFIX:String = "FLOAT_LITERAL"	'Float literal
+	Const BC_FLOATPREFIX:int = 20012	'Float literal
 	Const INTVAR:String = "INTEGER_VAR"	'Integer variable
+	Const BC_INTVAR:int = 20013	'Integer variable
 	Const BOOLVAR:String = "BOOLEAN_VAR"	'Bool variable
+	Const BC_BOOLVAR:int = 20014	'Bool variable
 	Const FLOATVAR:String = "FLOAT_VAR"	'Float variable
+	Const BC_FLOATVAR:int = 20015	'Float variable
 	Const STRINGVAR:String = "STRING_VAR"	'String variable
+	Const BC_STRINGVAR:int = 20016	'String variable
 	Const ERRORUNKNOWNVAR:String = "ERROR_UNKNOWN_DATA_KIND"	'ERROR
+	Const BC_ERRORUNKNOWNVAR:int = 20017	'ERROR
 	Const STRINGLITERAL:String = "STRING_LITERAL"	'String literal
+	Const BC_STRINGLITERAL:int = 20018	'String literal
 	Const TMPINTEGER:String = "TMP_INTEGER"	'TEMP integer
+	Const BC_TMPINTEGER:int = 20019	'TEMP integer
 	Const TMPFLOAT:String = "TMP_FLOAT"	'TMP float
+	Const BC_TMPFLOAT:int = 20020	'TMP float
 	Const TMPSTRING:String = "TMP_STRING"	'TMP String
+	Const BC_TMPSTRING:int = 20021	'TMP String
 	Const TMPBOOL:String = "TMP_BOOL"		'TMPBool
+	Const BC_TMPBOOL:int = 20022		'TMPBool
 	Const ARRAYVAR:String = "ARRAY_VAR"	'Array variable
+	Const BC_ARRAYVAR:int = 20023	'Array variable
 	Const OBJVAR:String = "OBJ_VAR"	'Object variable
+	Const BC_OBJVAR:int = 20024	'Object variable
 End

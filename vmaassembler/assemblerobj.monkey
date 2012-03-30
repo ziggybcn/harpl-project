@@ -132,7 +132,7 @@ Class AssemblerObj
 	Const BC_SET_NEWSCOPE:Int = 1
 	
 	Const EXIT_SCOPE:String = "EXITSCOPE"
-	Const BC_EXIT_NEWSCOPE:Int = 2
+	Const BC_EXIT_SCOPE:Int = 2
 
 	Const SET_EMPTYSCOPE:String = "EMPTYSCOPE"
 	Const BC_SET_EMPTYSCOPE:Int = 3

@@ -50,9 +50,13 @@ Function Main()
 	'Else
 		Local harplByteCoder := New HarplByteCoder 
 		local bco:ByteCodeObj = harplByteCoder.GenerateByteCode(lCompiler.generatedAsm)
-		For Local i:Int = eachin bco.code
-			Print "Bytecode: " + i
-		Next
+		if bco = null Then
+			Print "Bytecode generator failed."
+		else
+			For Local i:Int = eachin bco.code
+				Print "Bytecode: " + i
+			Next
+		EndIf
 		Local virtualMachine:Hvm = new Hvm
 		if bco <> null then
 			'virtualMachine.Run(bco)
