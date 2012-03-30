@@ -1,5 +1,7 @@
 Class ByteCodeObj
 	
+	Field tmpCode:List<Int> = new List<Int>
+
 	Field code:Int[]
 	
 	'ininlinded literal data values:

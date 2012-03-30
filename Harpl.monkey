@@ -38,7 +38,8 @@ Function Main()
 	endif
 	
 	Local lCompiler := New Compiler
-	If lCompiler.CompileFile (AppArgs[1]) = False Then
+	'If lCompiler.CompileFile (AppArgs[1]) = False Then
+	lCompiler.CompileFile(AppArgs[1])
 		For Local err:CompileError = eachin lCompiler.compileErrors
 			Print "Error: " + err.description
 			if err.file <>"" Then
@@ -46,15 +47,19 @@ Function Main()
 			EndIf
 			Print ""
 		Next
-	Else
-		local bco:ByteCodeObj = HarplByteCoder.GenerateByteCode(lCompiler.generatedAsm)
+	'Else
+		Local harplByteCoder := New HarplByteCoder 
+		local bco:ByteCodeObj = harplByteCoder.GenerateByteCode(lCompiler.generatedAsm)
+		For Local i:Int = eachin bco.code
+			Print "Bytecode: " + i
+		Next
 		Local virtualMachine:Hvm = new Hvm
 		if bco <> null then
-			virtualMachine.Run(bco)
+			'virtualMachine.Run(bco)
 		Else
 			Print "The Byte Code Generator could not generate a valid bytecode object."
 		endif
-	EndIf
+	'EndIf
 	
 End
 
