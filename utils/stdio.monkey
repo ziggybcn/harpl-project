@@ -4,7 +4,7 @@
 #end
 
 'We don't want the reflection module to break everythinc C based here, so, we add a filter:
-#REFLECTION_FILTER="stdio"  
+'#REFLECTION_FILTER="stdio"  
 
 #if TARGET="stdcpp" Or TARGET="glfw"
 	'Private

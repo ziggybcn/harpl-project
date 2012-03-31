@@ -251,9 +251,15 @@ Class Lexer
 						endif
 						
 				Case eToken.EMPTY 
-					node = node.NextNode 
-					node.PrevNode.Remove()
-					readNext = False
+					if node.NextNode() <> null then
+						node = node.NextNode 
+						node.PrevNode.Remove()
+						readNext = False
+					Else
+						node.Remove()		
+						readNext = false	
+						node = null		
+					endif
 				Default
 				readNext = true
 			End

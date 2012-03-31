@@ -4,7 +4,7 @@
 Import utils.stdio
 Import utils.retro
 Import utils.stringutils 
-Import reflection
+'Import reflection
 Import compiler
 Import vmaassembler.assemblerobj
 Import harplvm.hvm
