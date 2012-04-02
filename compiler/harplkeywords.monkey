@@ -1,6 +1,6 @@
 Class HarplKeywords
 	'summary: Alocates a local variable.
-	Const Var:String = "var"
+	Const Var:String = "define"
 	
 	'summary: "as" clause on the data definition of a variable
 	Const As:String = "as"

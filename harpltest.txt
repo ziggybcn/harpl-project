@@ -1,11 +1,1 @@
-Var myvar as Integer = -#FFF,
-	MyName as String = "Hello world That's me hi!" ++ myvar,
-	Another as Boolean = True;
-
-Var	super as Float = 45.534 * + ~5 ,
-	federico as Integer = 454~5 shr 3 shl 2 + 10
-
-while myvar<100
-	myvar = myvar+1
-end while
- 
+Define MyAge as Integer = 33, MyName as String = "Manel"
