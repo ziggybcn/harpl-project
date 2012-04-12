@@ -24,14 +24,24 @@ Class HarplByteCoder
 		node = harplAsm.code.FirstNode()
 		Local done:Bool = false
 		While (node <>null) and not done
+			Local consumeNext:Bool = True
 			local Sentence:String = node.Value()
+			Print "Processing : " + Sentence
 			Select Sentence
 				'Add/Remove half-dynamic scopes:
 				Case AssemblerObj.SET_NEWSCOPE 
 					compileNewScope( result)
+					'consumeNext = false
 				Case AssemblerObj.EXIT_SCOPE 
 					CompileExitScope(result)
 				
+				'VAR ALOCATION:
+				Case AssemblerObj.SET_DEFVAR 
+					CompileDefVar(result)
+				Case AssemblerObj.SET_VAR 
+					CompileSetVar(result)
+				
+				'ARITHMETICS:
 				Case AssemblerObj.BIT_AND, AssemblerObj.BIT_OR, 
 					AssemblerObj.BIT_SHL , AssemblerObj.BIT_SHR , 
 					AssemblerObj.BIT_XOR , AssemblerObj.CONCAT , 
@@ -41,9 +51,9 @@ Class HarplByteCoder
 					CompileBynaryOp(result)
 			Default
 				Print "Unknown sentence in the Assembler object: " + node.Value
-				Return null
+				'Return null
 			End
-			node = node.NextNode()
+			if consumeNext then node = node.NextNode()
 		Wend
 		result.code = result.tmpCode.ToArray()
 		result.tmpCode = null
@@ -51,6 +61,16 @@ Class HarplByteCoder
 		
 	End Method
 	
+	Method CompileDefVar(result:ByteCodeObj)
+		
+	End
+	
+	Method CompileSetVar(result:ByteCodeObj)
+		result.tmpCode.AddLast(AssemblerObj.BC_SET_VAR)
+		node = node.NextNode
+		CompileVarAccess(result)
+		CompileVarAccess(result)
+	End
 	Method CompileBynaryOp:Bool(result:ByteCodeObj)
 		Local Instruct:Int
 		Select node.Value
@@ -95,17 +115,123 @@ Class HarplByteCoder
 	End
 	Method CompileVarAccess:Bool(result:ByteCodeObj)
 		Local dataType:String = node.Value
+		'Local itIsAVar:Bool = False
+		Local scope:AssemblerScope 
 		Select dataType
 			Case expKinds.BOOLVAR 
 				result.tmpCode.AddLast(expKinds.BC_BOOLVAR)
+				Local varName:String = node.NextNode().Value
+				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value())
+				
+				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).booleanVars.ValueForKey(varName)
+				
+				result.tmpCode.AddLast(varNumber.value )
+				result.tmpCode.AddLast(scopeIndex)
+				node = node.NextNode.NextNode()
+				return true				
 			Case expKinds.FLOATVAR  
 				result.tmpCode.AddLast(expKinds.BC_FLOATVAR )
+				Local varName:String = node.NextNode().Value
+				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value())
+				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).floatVars.ValueForKey(varName)
+				result.tmpCode.AddLast(varNumber.value )
+				result.tmpCode.AddLast(scopeIndex)
+				node = node.NextNode.NextNode()
+				return true				
+				
 			Case expKinds.INTVAR  
 				result.tmpCode.AddLast(expKinds.BC_INTVAR)
+				Local varName:String = node.NextNode().Value
+				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value())
+				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).intVars.ValueForKey(varName)
+				result.tmpCode.AddLast(varNumber.value )
+				result.tmpCode.AddLast(scopeIndex)
+				node = node.NextNode.NextNode()
+				return true				
+				
 			Case expKinds.STRINGVAR 
 				result.tmpCode.AddLast(expKinds.BC_STRINGVAR)
+				Local varName:String = node.NextNode().Value
+				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value())
+				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).stringVars.ValueForKey(varName)
+				result.tmpCode.AddLast(varNumber.value )
+				result.tmpCode.AddLast(scopeIndex)
+				node = node.NextNode.NextNode()
+				return true
+				
+			Case expKinds.ARRAYVAR 
+				result.tmpCode.AddLast(expKinds.BC_ARRAYVAR )
+				Local varName:String = node.NextNode().Value
+				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value())
+				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).arrayVars.ValueForKey(varName)
+				result.tmpCode.AddLast(varNumber.value )
+				result.tmpCode.AddLast(scopeIndex)
+				node = node.NextNode.NextNode()
+				return true
+
+			Case expKinds.OBJVAR 
+				result.tmpCode.AddLast(expKinds.BC_OBJVAR )
+				Local varName:String = node.NextNode().Value
+				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value())
+				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).objVars.ValueForKey(varName)
+				result.tmpCode.AddLast(varNumber.value )
+				result.tmpCode.AddLast(scopeIndex)
+				node = node.NextNode.NextNode()
+				return true
+
+			Case expKinds.ERRORUNKNOWNVAR 
+				Print ("Error var was sent to the bytecoder generator!!!!")
+				Return false
+				
+			Case expKinds.FLOATPREFIX 
+				result.tmpCode.AddLast(expKinds.BC_FLOATPREFIX  )
+				Local text:String = node.NextNode.Value()
+				result.tmpFloats.AddLast(float(text))
+				result.tmpCode.AddLast(result.tmpFloatCount)
+				result.tmpFloatCount +=1
+				node = node.NextNode()
+				Return true
+			Case expKinds.INTPREFIX  
+				result.tmpCode.AddLast(expKinds.BC_INTPREFIX )
+				Local text:String = node.NextNode.Value()
+				result.tmpCode.AddLast(int(text))
+				node = node.NextNode()
+				Return true
+			Case expKinds.STRINGLITERAL 
+				result.tmpCode.AddLast(expKinds.BC_STRINGLITERAL)
+				Local text:String = node.NextNode.Value()
+				result.tmpLiterals.AddLast(text)
+				result.tmpCode.AddLast(result.tmpLiteralsCount )
+				result.tmpLiteralsCount +=1
+				node = node.NextNode()
+				Return true
+
+			Case expKinds.TMPBOOL 
+				result.tmpCode.AddLast(expKinds.BC_TMPBOOL)
+				Local index:Int = Int(Mid(node.NextNode.Value , eTmpTokens.TMPBOOL.Length))
+				result.tmpCode.AddLast(index)
+				node = node.NextNode()
+				Return true
+			Case expKinds.TMPFLOAT 
+				result.tmpCode.AddLast(expKinds.BC_TMPFLOAT )
+				Local index:Int = Int(Mid(node.NextNode.Value , eTmpTokens.TMPFLOAT.Length))
+				result.tmpCode.AddLast(index)
+				node = node.NextNode()
+				Return true
+			Case expKinds.TMPINTEGER  
+				result.tmpCode.AddLast(expKinds.BC_TMPINTEGER )
+				Local index:Int = Int(Mid(node.NextNode.Value , eTmpTokens.TMPINT.Length))
+				result.tmpCode.AddLast(index)
+				node = node.NextNode()
+				Return true
+
+			Case expKinds.TMPSTRING 
+				result.tmpCode.AddLast(expKinds.BC_TMPSTRING )
+				Local index:Int = Int(Mid(node.NextNode.Value , eTmpTokens.TMPSTRING.Length))
+				result.tmpCode.AddLast(index)
+				node = node.NextNode()
+				Return true
 		End
-		Return true
 	end
 	
 	Method compileNewScope:Bool(result:ByteCodeObj)
