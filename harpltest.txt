@@ -1,1 +1,1 @@
-Define MyAge as Integer = 33 !, Other as Integer = MyAge+5+MyAge;
+Define MyAge as Integer = 33, Other as Integer = MyAge+5+MyAge;
