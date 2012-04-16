@@ -34,6 +34,7 @@ Class AssemblerScopeStack
 	End
 	
 	Method GetIndexedScope:AssemblerScope(index:Int)
+		Print "Entering GetIndexedScope"
 		if index = -1 Then Return dataScopes.First()
 		Local node:list.Node<AssemblerScope>= dataScopes.LastNode()
 		For local i = 0 to index

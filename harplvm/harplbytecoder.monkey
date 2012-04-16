@@ -145,10 +145,16 @@ Class HarplByteCoder
 				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value().Trim())
 				Print "Getting scope: " + scopeIndex + " for var: " + varName
 				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).intVars.ValueForKey(varName)
-				result.tmpCode.AddLast(varNumber.value)
-				result.tmpCode.AddLast(scopeIndex)
-				node = node.NextNode.NextNode.NextNode()
-				return true				
+				Print "Scope was found."
+				if varNumber = Null Then
+					Print "Varnumber is not valid!"
+					Return False
+				Else
+					result.tmpCode.AddLast(varNumber.value)
+					result.tmpCode.AddLast(scopeIndex)
+					node = node.NextNode.NextNode.NextNode()
+					return true							
+				EndIf
 				
 			Case expKinds.STRINGVAR 
 				result.tmpCode.AddLast(expKinds.BC_STRINGVAR)
@@ -245,7 +251,7 @@ Class HarplByteCoder
 	Method compileNewScope:Bool(result:ByteCodeObj)
 		result.tmpCode.AddLast(AssemblerObj.BC_SET_NEWSCOPE )
 		local scope:Int = assemblerScopeStack.AddDataScope()
-
+		Print "Scope created and has " + assemblerScopeStack.GetIndexedScope(-1).intVars.Count() + " integer variables"
 		node = node.NextNode() 
 		Local intCounter:Int = 0, strCounter:Int = 0, boolCounter:Int = 0, floatCounter:Int = 0
 		While node <> null and IsParameter()
@@ -256,24 +262,24 @@ Class HarplByteCoder
 			Select varKind
 				Case AssemblerObj.ParameterPrefix + expKinds.INTVAR 
 					integer.value = intCounter
-					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value,integer)
+					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value.Trim(),integer)
 					intCounter+=1
 					node = node.NextNode
 
 				Case AssemblerObj.ParameterPrefix + expKinds.STRINGVAR  
 					integer.value = strCounter
-					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value,integer)
+					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value.Trim(),integer)
 					strCounter+=1
 					node = node.NextNode
 
 				Case AssemblerObj.ParameterPrefix + expKinds.BOOLVAR 
 					integer.value = boolCounter
-					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value,integer)
+					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value.Trim(),integer)
 					boolCounter+=1
 					node = node.NextNode
 				Case AssemblerObj.ParameterPrefix + expKinds.FLOATVAR 
 					integer.value = floatCounter
-					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value,integer)
+					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value.Trim(),integer)
 					floatCounter+=1
 					node = node.NextNode
 				Default
