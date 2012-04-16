@@ -128,8 +128,14 @@ Class ExpressionCompiler
 	Field result:Token
 	
 	Method CompileUnary(expression:List < Token >, compiler:Compiler, Item:list.Node<Token>)
+		
+		'"Item" es el TOKEN sobre el que se aplicará la operación unaria.
+		
 		if Item.PrevNode = null Then Return 	'No unnary operator!!!
+
+		'"Operator" es el operador que precede a Item:
 		Local operator:Token = Item.PrevNode.Value()
+
 		If operator.Kind <> eToken.OPERATOR Then Return 'No valid operator
 		If operator.text = "+" Then
 			'This unnary operator is neutral, no need to compile anything
@@ -138,7 +144,7 @@ Class ExpressionCompiler
 		ElseIf operator.text = "-"
 			if Item.Value.Kind = eToken.NUMBER Then
 				Item.PrevNode.Remove()
-				if Item.Value.text.Contains(".") Then
+				if Item.Value.text.Contains(".") = False Then
 					Local newval:Int = -int(Item.Value.text)
 					Item.Value.text = newval
 				Else
@@ -153,7 +159,12 @@ Class ExpressionCompiler
 				intCounter+=1
 				Item.Value.text = store
 				Item.Value.Kind = eToken.IDENTIFIER 
-				compiler.generatedAsm.AddParameter(store)
+				'compiler.generatedAsm.AddParameter(store)
+				Local tmpToken:Token = new Token
+				tmpToken.Kind = eToken.IDENTIFIER 
+				tmpToken.text  = store
+				compiler.WriteIdentParameter(tmpToken)
+
 			EndIf
 		
 		ElseIf operator.text = "~"
@@ -169,7 +180,10 @@ Class ExpressionCompiler
 				intCounter+=1
 				Item.Value.text = store
 				Item.Value.Kind = eToken.IDENTIFIER 
-				compiler.generatedAsm.AddParameter(store)
+				Local tmpToken:Token = new Token
+				tmpToken.Kind = eToken.IDENTIFIER 
+				tmpToken.text  = store
+				compiler.WriteIdentParameter(tmpToken)
 			endif
 		EndIf
 	End method
@@ -339,7 +353,13 @@ Class ExpressionCompiler
 								'compiler.generatedAsm.AddParameter(ResultPrefix) 
 
 								'PROPER RESULT COMPILATION REQUIRED HERE!!!!!
-								compiler.generatedAsm.AddParameter(Store)  
+								'compiler.generatedAsm.AddParameter(Store)  
+								Local tmpToken:Token = new Token
+								tmpToken.Kind = eToken.IDENTIFIER 
+								tmpToken.text  = Store
+								compiler.WriteIdentParameter(tmpToken)
+
+								
 							Else
 								compiler.generatedAsm.AddParameter("?") 
 							endif
