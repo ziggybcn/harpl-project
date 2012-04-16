@@ -40,7 +40,7 @@ Class HarplByteCoder
 					CompileDefVar(result)
 				Case AssemblerObj.SET_VAR 
 					CompileSetVar(result)
-				
+					Print "Node value after SET VAR = " + node.Value
 				'ARITHMETICS:
 				Case AssemblerObj.BIT_AND, AssemblerObj.BIT_OR, 
 					AssemblerObj.BIT_SHL , AssemblerObj.BIT_SHR , 
@@ -70,6 +70,7 @@ Class HarplByteCoder
 		node = node.NextNode
 		CompileVarAccess(result)
 		CompileVarAccess(result)
+		Print "Node value just before leaving Set Var= " + node.Value()
 	End
 	Method CompileBynaryOp:Bool(result:ByteCodeObj)
 		Local Instruct:Int
@@ -114,69 +115,69 @@ Class HarplByteCoder
 		Return true		
 	End
 	Method CompileVarAccess:Bool(result:ByteCodeObj)
-		Local dataType:String = node.Value
-		'Local itIsAVar:Bool = False
-		Local scope:AssemblerScope 
+		Local dataType:String = node.Value.Trim()
+		'Local scope:AssemblerScope 
+		Print "Data type for Compile Var Access: " + dataType
 		Select dataType
 			Case expKinds.BOOLVAR 
 				result.tmpCode.AddLast(expKinds.BC_BOOLVAR)
-				Local varName:String = node.NextNode().Value
-				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value())
-				
-				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).booleanVars.ValueForKey(varName)
-				
+				Local varName:String = node.NextNode().Value.Trim()
+				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value().Trim())
+				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).booleanVars.ValueForKey(varName)				
 				result.tmpCode.AddLast(varNumber.value )
 				result.tmpCode.AddLast(scopeIndex)
-				node = node.NextNode.NextNode()
+				node = node.NextNode.NextNode.NextNode()
 				return true				
+				
 			Case expKinds.FLOATVAR  
 				result.tmpCode.AddLast(expKinds.BC_FLOATVAR )
-				Local varName:String = node.NextNode().Value
-				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value())
+				Local varName:String = node.NextNode().Value().Trim()
+				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value().Trim())
 				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).floatVars.ValueForKey(varName)
 				result.tmpCode.AddLast(varNumber.value )
 				result.tmpCode.AddLast(scopeIndex)
-				node = node.NextNode.NextNode()
+				node = node.NextNode.NextNode.NextNode()
 				return true				
 				
 			Case expKinds.INTVAR  
 				result.tmpCode.AddLast(expKinds.BC_INTVAR)
-				Local varName:String = node.NextNode().Value
-				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value())
+				Local varName:String = node.NextNode().Value.Trim()
+				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value().Trim())
+				Print "Getting scope: " + scopeIndex + " for var: " + varName
 				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).intVars.ValueForKey(varName)
-				result.tmpCode.AddLast(varNumber.value )
+				result.tmpCode.AddLast(varNumber.value)
 				result.tmpCode.AddLast(scopeIndex)
-				node = node.NextNode.NextNode()
+				node = node.NextNode.NextNode.NextNode()
 				return true				
 				
 			Case expKinds.STRINGVAR 
 				result.tmpCode.AddLast(expKinds.BC_STRINGVAR)
-				Local varName:String = node.NextNode().Value
-				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value())
+				Local varName:String = node.NextNode().Value.Trim()
+				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value().Trim())
 				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).stringVars.ValueForKey(varName)
 				result.tmpCode.AddLast(varNumber.value )
 				result.tmpCode.AddLast(scopeIndex)
-				node = node.NextNode.NextNode()
+				node = node.NextNode.NextNode.NextNode()
 				return true
 				
 			Case expKinds.ARRAYVAR 
 				result.tmpCode.AddLast(expKinds.BC_ARRAYVAR )
-				Local varName:String = node.NextNode().Value
-				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value())
+				Local varName:String = node.NextNode().Value.Trim()
+				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value().Trim())
 				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).arrayVars.ValueForKey(varName)
-				result.tmpCode.AddLast(varNumber.value )
+				result.tmpCode.AddLast(varNumber.value)
 				result.tmpCode.AddLast(scopeIndex)
-				node = node.NextNode.NextNode()
+				node = node.NextNode.NextNode.NextNode()
 				return true
 
 			Case expKinds.OBJVAR 
 				result.tmpCode.AddLast(expKinds.BC_OBJVAR )
-				Local varName:String = node.NextNode().Value
-				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value())
+				Local varName:String = node.NextNode().Value.Trim()
+				Local scopeIndex:Int = Int(node.NextNode.NextNode.Value().Trim())
 				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).objVars.ValueForKey(varName)
 				result.tmpCode.AddLast(varNumber.value )
 				result.tmpCode.AddLast(scopeIndex)
-				node = node.NextNode.NextNode()
+				node = node.NextNode.NextNode.NextNode()
 				return true
 
 			Case expKinds.ERRORUNKNOWNVAR 
@@ -185,52 +186,59 @@ Class HarplByteCoder
 				
 			Case expKinds.FLOATPREFIX 
 				result.tmpCode.AddLast(expKinds.BC_FLOATPREFIX  )
-				Local text:String = node.NextNode.Value()
+				Local text:String = node.NextNode.Value().Trim()
 				result.tmpFloats.AddLast(float(text))
 				result.tmpCode.AddLast(result.tmpFloatCount)
 				result.tmpFloatCount +=1
-				node = node.NextNode()
+				node = node.NextNode.NextNode()
 				Return true
+				
 			Case expKinds.INTPREFIX  
 				result.tmpCode.AddLast(expKinds.BC_INTPREFIX )
-				Local text:String = node.NextNode.Value()
+				Local text:String = node.NextNode.Value().Trim()
 				result.tmpCode.AddLast(int(text))
-				node = node.NextNode()
+				node = node.NextNode.NextNode()
 				Return true
+				
 			Case expKinds.STRINGLITERAL 
 				result.tmpCode.AddLast(expKinds.BC_STRINGLITERAL)
-				Local text:String = node.NextNode.Value()
+				Local text:String = Mid(node.NextNode.Value(), AssemblerObj.ParameterPrefix.Length() + 1 )
 				result.tmpLiterals.AddLast(text)
 				result.tmpCode.AddLast(result.tmpLiteralsCount )
 				result.tmpLiteralsCount +=1
-				node = node.NextNode()
+				node = node.NextNode.NextNode()
 				Return true
 
 			Case expKinds.TMPBOOL 
 				result.tmpCode.AddLast(expKinds.BC_TMPBOOL)
-				Local index:Int = Int(Mid(node.NextNode.Value , eTmpTokens.TMPBOOL.Length))
+				Local index:Int = Int(Mid(node.NextNode.Value.Trim() , eTmpTokens.TMPBOOL.Length+1))
 				result.tmpCode.AddLast(index)
-				node = node.NextNode()
+				node = node.NextNode.NextNode()
 				Return true
+				
 			Case expKinds.TMPFLOAT 
 				result.tmpCode.AddLast(expKinds.BC_TMPFLOAT )
-				Local index:Int = Int(Mid(node.NextNode.Value , eTmpTokens.TMPFLOAT.Length))
+				Local index:Int = Int(Mid(node.NextNode.Value.Trim() , eTmpTokens.TMPFLOAT.Length+1))
 				result.tmpCode.AddLast(index)
-				node = node.NextNode()
+				node = node.NextNode.NextNode()
 				Return true
+				
 			Case expKinds.TMPINTEGER  
 				result.tmpCode.AddLast(expKinds.BC_TMPINTEGER )
-				Local index:Int = Int(Mid(node.NextNode.Value , eTmpTokens.TMPINT.Length))
+				Local index:Int = Int(Mid(node.NextNode.Value.Trim() , eTmpTokens.TMPINT.Length+1))
 				result.tmpCode.AddLast(index)
-				node = node.NextNode()
+				node = node.NextNode.NextNode()
 				Return true
 
 			Case expKinds.TMPSTRING 
 				result.tmpCode.AddLast(expKinds.BC_TMPSTRING )
-				Local index:Int = Int(Mid(node.NextNode.Value , eTmpTokens.TMPSTRING.Length))
+				Local index:Int = Int(Mid(node.NextNode.Value.Trim() , eTmpTokens.TMPSTRING.Length + 1))
 				result.tmpCode.AddLast(index)
-				node = node.NextNode()
+				node = node.NextNode.NextNode()
 				Return true
+				
+			Default
+				Print "Error variable kind!!! " + node.Value()
 		End
 	end
 	
@@ -246,24 +254,24 @@ Class HarplByteCoder
 			Local integer:IntByRef = new IntByRef
 			Local varKind:String = node.Value
 			Select varKind
-				Case "~t" + expKinds.INTVAR 
+				Case AssemblerObj.ParameterPrefix + expKinds.INTVAR 
 					integer.value = intCounter
 					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value,integer)
 					intCounter+=1
 					node = node.NextNode
 
-				Case "~t" + expKinds.STRINGVAR  
+				Case AssemblerObj.ParameterPrefix + expKinds.STRINGVAR  
 					integer.value = strCounter
 					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value,integer)
 					strCounter+=1
 					node = node.NextNode
 
-				Case "~t" + expKinds.BOOLVAR 
+				Case AssemblerObj.ParameterPrefix + expKinds.BOOLVAR 
 					integer.value = boolCounter
 					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value,integer)
 					boolCounter+=1
 					node = node.NextNode
-				Case "~t" + expKinds.FLOATVAR 
+				Case AssemblerObj.ParameterPrefix + expKinds.FLOATVAR 
 					integer.value = floatCounter
 					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value,integer)
 					floatCounter+=1
@@ -288,6 +296,6 @@ Class HarplByteCoder
 	End
 	
 	Method IsParameter:Bool()
-		return node.Value.StartsWith("~t")
+		return node.Value.StartsWith(AssemblerObj.ParameterPrefix)
 	end
 End

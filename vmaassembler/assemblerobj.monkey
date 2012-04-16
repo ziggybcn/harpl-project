@@ -37,7 +37,7 @@ Import Harpl
 #end
 Class AssemblerObj
  	Field code:List < String >= new List < String >
-	
+	Const ParameterPrefix:String = "~t"
 	Method AddInstruction:list.Node < String > (instruction:String)
 		return code.AddLast(instruction)
 	End
@@ -51,14 +51,14 @@ Class AssemblerObj
 		endif
 	End
 	Method AddParameter:list.Node < String > (parameter:String)
-		return code.AddLast("~t" + parameter)
+		return code.AddLast(ParameterPrefix + parameter)
 	End
 	
 	Method AddParameter:list.Node < String > (parentNode:list.Node < String >, parameter:String)
 		if parentNode.NextNode = null Then
-			code.AddLast("~t" + parameter)
+			code.AddLast(ParameterPrefix + parameter)
 		else
-			Return New list.Node < String > (parentNode.NextNode, parentNode, "~t" + parameter)
+			Return New list.Node < String > (parentNode.NextNode, parentNode, ParameterPrefix + parameter)
 		endif
 	End
 	

@@ -15,17 +15,25 @@ Class AssemblerScope
 	End
 	
 	Method AddStringVar(Name:String)
-		stringVars.Add(Name,stringVars.Count-1)
+		Local ibr:IntByRef = New IntByRef
+		ibr.value = stringVars.Count-1
+		stringVars.Add(Name,ibr)
 	End
 
 	Method AddIntVar(Name:String)
-		intVars.Add(Name,intVars.Count-1)
+		Local ibr:IntByRef = New IntByRef
+		ibr.value = intVars.Count-1
+		intVars.Add(Name,ibr)
 	End
 	Method AddFloatVar(Name:String)
-		floatVars.Add(Name,floatVars.Count-1)
+		Local ibr:IntByRef = New IntByRef
+		ibr.value = floatVars.Count-1
+		floatVars.Add(Name,ibr)
 	End
 	Method AddBooleanVar(Name:String)
-		booleanVars.Add(Name,booleanVars.Count-1)
+		Local ibr:IntByRef = New IntByRef
+		ibr.value = intVars.Count-1
+		intVars.Add(Name,ibr)
 	End
 
 	Method AddArrayVar(Name:String)
