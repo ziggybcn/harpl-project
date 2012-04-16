@@ -31,4 +31,9 @@ Class ByteCodeObj
 	Field requiredBooleanSize:Int
 	Field RequiredIntegerSize:Int
 	Field RequiredFloatSize:Int
+	
+	Method New()
+		tmpLiterals = New List<String>
+		tmpFloats = New List<Float>
+	End
 End

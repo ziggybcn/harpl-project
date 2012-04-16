@@ -337,6 +337,8 @@ Class ExpressionCompiler
 								'curT.text = Store
 								'Local ResultPrefix:String = TellPrefix( curT,scope,compiler)
 								'compiler.generatedAsm.AddParameter(ResultPrefix) 
+
+								'PROPER RESULT COMPILATION REQUIRED HERE!!!!!
 								compiler.generatedAsm.AddParameter(Store)  
 							Else
 								compiler.generatedAsm.AddParameter("?") 

@@ -186,7 +186,8 @@ Class HarplByteCoder
 				
 			Case expKinds.FLOATPREFIX 
 				result.tmpCode.AddLast(expKinds.BC_FLOATPREFIX  )
-				Local text:String = GetNextSentence 'node.NextNode.Value().Trim()
+				Local text:String = GetNextSentence() 'node.NextNode.Value().Trim()
+				Print "Text is: " + text
 				result.tmpFloats.AddLast(float(text))
 				result.tmpCode.AddLast(result.tmpFloatCount)
 				result.tmpFloatCount +=1
