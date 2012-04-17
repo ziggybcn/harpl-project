@@ -1,2 +1,2 @@
-Define value1 as Integer;Define MyThing as String = "This is the end of the world.", Another as Integer = MyThing ++ -value1;
-
+	Define Number as Integer = Rand(0,100), Guess as Integer, Done as Boolean = False
+	Define Points as Integer = 10
