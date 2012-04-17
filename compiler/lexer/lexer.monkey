@@ -53,7 +53,7 @@ Class Lexer
 				done = False
 				Local tokenInit:Int = i
 				While i<txtStream.Length And done = False
-					if (txtStream[i]>="0"[0] And txtStream[i]<="9") Then 
+					if (txtStream[i]>="0"[0] And txtStream[i]<="9"[0]) Then 
 						i+=1
 					ElseIf txtStream[i] = "."[0]
 						if hasdot = False Then 
@@ -137,12 +137,7 @@ Class Lexer
 			
 			elseif char = ";"[0]
 				Local token := New Token(sourceFile, i - lastOffset, lineNum, txtStream[i..i + 1], eToken.ENDSENTENCE)
-				tokens.AddLast(token)
-				if char = "~n"[0] then
-					lastOffset = i+1	'we have to add the CR in the offset
-					lineNum+= 1
-				endif
-			
+				tokens.AddLast(token)			
 				
 			'If it is an operator:
 			ElseIf char = "+"[0] or char = "-"[0] or char = "*"[0] or char = "/"[0] or char = "%"[0] or char = "^"[0] or char = "&"[0] or char = "|"[0] or 

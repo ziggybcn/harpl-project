@@ -1,1 +1,1 @@
-Output "Hello world! "; Output "This is my first Harpl program."; Output 545; Output 45.66
+Output 465*5-6;
