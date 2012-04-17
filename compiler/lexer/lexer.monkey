@@ -78,7 +78,7 @@ Class Lexer
 				Local tokenInit:Int = i
 				i=i+1
 				While i<txtStream.Length And done = False
-					if (txtStream[i]>="0"[0] And txtStream[i]<="9") or (txtStream[i]>="A" And txtStream[i]<="Z") or (txtStream[i]>="a" And txtStream[i]<="z") Then 
+					if (txtStream[i]>="0"[0] And txtStream[i]<="9"[0]) or (txtStream[i]>="A"[0] And txtStream[i]<="Z"[0]) or (txtStream[i]>="a"[0] And txtStream[i]<="z"[0]) Then 
 						i+=1
 					Else
 						done = true
