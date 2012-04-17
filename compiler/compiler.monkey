@@ -91,6 +91,15 @@ Class Compiler
 								done = True 
 								Continue
 							endif
+						Case HarplKeywords.Output
+							CompileOutput()
+							if lexer.tokens.IsEmpty = false
+								tokenNode = lexer.tokens.FirstNode()
+							Else
+								tokenNode = null
+								done = True 
+								Continue
+							endif
 						Default 
 
 							'check for methods or selft defined functinos, etc and if it fails:
@@ -128,6 +137,27 @@ Class Compiler
 				Return True
 			endif
 		endif
+	End
+	
+	Method CompileOutput:Bool()
+		local outputToken:Token = Self.lexer.tokens.RemoveFirst()
+		
+		If outputToken.text <> HarplKeywords.Output Then
+			Error "Output compilation requested without Output identifier. Found: " + outputToken.text
+		EndIf
+		Local EC:ExpressionCompiler = new ExpressionCompiler
+		EC.compiler = self
+		local resultToken:Token = EC.CompileExpression(compilerScopeStack)
+		if resultToken <> null Then
+			generatedAsm.AddInstruction(AssemblerObj.IO_OUTPUT)			
+			WriteIdentParameter(resultToken)
+		Else
+			'Error already added on the expression compiler. No need to put it twice!
+			'AddError("Error processing expression.", nextToken)
+			ConsumeSentence
+		EndIf
+
+		
 	End
 	
 	Method CompileVar:Bool()

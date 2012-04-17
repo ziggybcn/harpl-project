@@ -61,13 +61,15 @@ Function Main()
 		if bco = null Then
 			Print "Bytecode generator failed."
 		else
+			Local count:Int = 0
 			For Local i:Int = eachin bco.code
-				Print "Bytecode: " + i
+				Print "Bytecode (" + count + ") : " + i
+				count += 1
 			Next
 		EndIf
 		Local virtualMachine:Hvm = new Hvm
 		if bco <> null then
-			'virtualMachine.Run(bco)
+			virtualMachine.Run(bco)
 		Else
 			Print "The Byte Code Generator could not generate a valid bytecode object."
 		endif

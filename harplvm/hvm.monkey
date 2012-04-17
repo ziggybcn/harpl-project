@@ -3,6 +3,7 @@ Import bytecodeobj
 Import harplfunction
 Import harplbytecoder
 Import scopestack
+Import harplvm.runtime.builtinruntime 
 
 #Rem
 	summary: This is the Harpl Virtual Machine Class.
@@ -17,6 +18,7 @@ Class Hvm
 	
 	Field runTimeErrors := new List < RunTimeError >
 	
+	  
 	Method Run(byteCodeObj:ByteCodeObj)
 
 		If byteCodeObj = null Then Error "Tried to run a null program."
@@ -29,48 +31,79 @@ Class Hvm
 		tmpInt = tmpInt[..byteCodeObj.RequiredIntegerSize]
 		tmpBool = tmpBool[..byteCodeObj.requiredBooleanSize]
 		tmpFloat = tmpFloat[..byteCodeObj.RequiredFloatSize]
+		byteCodeObj.pos = 2
 		
-		Local pos:Int = 0, done:Bool = false;
+		local done:Bool = false;
 		Local execlimit:Int = byteCodeObj.code.Length() - 1
 		While Not done And byteCodeObj.pos < execlimit
-			
+			'instructionSet[byteCodeObj.pos].Run(self,byteCodeObj)
+			Local value:Int 
+			value = byteCodeObj.code[byteCodeObj.pos]
+			if value<instructionSet.Length() And value>=0
+				instructionSet[value].Run(Self,byteCodeObj)
+			Else
+				byteCodeObj.pos+=1
+			endif
 		Wend
 	End
 	
 	Method RegisterBuiltIn()
+		
+		Const MaxInstructions:Int = 1000
+		instructionSet = New HarplFunction[MaxInstructions]
+
+		instructionSet[AssemblerObj.BC_IO_OUTPUT] = New IO_Output 
+		Local BaseNOP := New NOP
+		For Local i:Int = 0 until MaxInstructions 
+			if instructionSet[i] = null then instructionSet[i] = BaseNOP
+		end
 	End
+	
 End
 
 Class RunTimeError
 	Field description:String = ""	
 End
 
-Class VM_InstructionSet Abstract
-	Const Sum = 1
-	Const Sub = 2
-	Const Mul = 3
-	Const Div = 4
-	Const Pow = 5
-	Const Modulus = 6
-	Const BitAnd = 7
-	Const BitOr = 8
-End
 
-Class VM_DataId Abstract
-	Const LiteralString = 1
-	Const LiteralInt = 2
-	Const LiteralFloat = 3
-	Const LiteralTrue = 4
-	Const LiteralFalse = 5
-	Const VarString = 6
-	Const VarInt = 7
-	Const VarFloat = 8
-	Const VarBool = 9
-	Const TmpString = 10
-	Const TmpInt = 11
-	Const TmpFloat= 12
-	Const TmpBool = 13
+Class NOP extends HarplFunction 
+	Method Run:void(vm:Hvm,bco:ByteCodeObj)
+		Print "NOP RAISED AT INDEX " + bco.pos
+		bco.pos+=1
+		if bco.pos>= bco.code.Length Then return
+		while bco.code[bco.pos]>= vm.instructionSet.Length 
+			bco.pos+=1
+			if bco.pos>= bco.code.Length Then return
+		Wend
+		
+	End
 End
+'Class VM_InstructionSet Abstract
+'	Const Sum = 1
+'	Const Sub = 2
+'	Const Mul = 3
+'	Const Div = 4
+'	Const Pow = 5
+'	Const Modulus = 6
+'	Const BitAnd = 7
+'	Const BitOr = 8
+'End
+
+'Class VM_DataId Abstract
+	'Const LiteralString = 1
+	'Const LiteralInt = 2
+	'Const LiteralFloat = 3
+	'Const LiteralTrue = 4
+	'Const LiteralFalse = 5
+	'Const VarString = 6
+	'Const VarInt = 7
+	'Const VarFloat = 8
+	'Const VarBool = 9
+	'Const TmpString = 10
+	'Const TmpInt = 11
+	'Const TmpFloat= 12
+	'Const TmpBool = 13
+'End
 
 
 

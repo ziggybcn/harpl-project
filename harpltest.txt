@@ -1,2 +1,1 @@
-	Define Number as Integer = Rand(0,100), Guess as Integer, Done as Boolean = False
-	Define Points as Integer = 10
+Output "Hello world! "; Output "This is my first Harpl program."; Output 545; Output 45.66

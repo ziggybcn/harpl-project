@@ -42,6 +42,9 @@ Class HarplByteCoder
 				Case AssemblerObj.SET_VAR 
 					CompileSetVar(result)
 					
+				Case AssemblerObj.IO_OUTPUT 
+					CompileIoOutput(result)
+					
 				'ARITHMETICS:
 				
 				Case AssemblerObj.UNNARY_COMPLEMENT, AssemblerObj.UNNARY_SUB
@@ -65,6 +68,8 @@ Class HarplByteCoder
 			endif
 		Wend
 		result.code = result.tmpCode.ToArray()
+		result.literals = result.tmpLiterals.ToArray()
+		result.floats = result.tmpFloats.ToArray()
 		result.tmpCode = null
 		Return result
 		
@@ -80,6 +85,11 @@ Class HarplByteCoder
 		result.tmpCode.AddLast(AssemblerObj.BC_SET_VAR)
 		'node = node.NextNode
 		CompileVarAccess(result)
+		CompileVarAccess(result)
+	End
+	
+	Method CompileIoOutput(result:ByteCodeObj)
+		result.tmpCode.AddLast(AssemblerObj.BC_IO_OUTPUT )
 		CompileVarAccess(result)
 	End
 	

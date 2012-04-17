@@ -1,9 +1,7 @@
 Import Harpl
 
-Class HarplFunction
-	Method Run(vm:Hvm)
-		
-	End
+Class HarplFunction abstract
+	Method Run:Void(vm:Hvm, bto:ByteCodeObj) abstract
 End
 
 Class Sum_INIV extends HarplFunction

@@ -145,6 +145,12 @@ Class AssemblerObj
 	Const SET_VAR:String = "SET_VAR"
 	Const BC_SET_VAR:Int = 5
 	
+	
+	'------------------------------------------------------------------
+	'I/O
+	Const IO_OUTPUT:String = "IO_OUTPUT"
+	Const BC_IO_OUTPUT:Int = 30
+	
 	'-------------------------------------------------------------
 	'summary: Required heap size for internal string operations.
 	Field requiredStringSize:Int

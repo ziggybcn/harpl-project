@@ -10,4 +10,6 @@ Class HarplKeywords
 	Const _String:String = "string"
 	Const _Float:String = "float"
 	
+	Const Output:String = "output"
+	
 End
