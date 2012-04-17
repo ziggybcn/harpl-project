@@ -1,4 +1,2 @@
-! This is a sample program written in the Harpl programming language.
-!Define Variable1 as Integer = "hello world!"
-Define MyThing as String = "This is the end of the world."
-!Print MyThing + Variable1
+Define value1 as Integer;Define MyThing as String = "This is the end of the world.", Another as Integer = MyThing ++ -value1;
+

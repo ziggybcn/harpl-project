@@ -43,6 +43,10 @@ Class HarplByteCoder
 					CompileSetVar(result)
 					
 				'ARITHMETICS:
+				
+				Case AssemblerObj.UNNARY_COMPLEMENT, AssemblerObj.UNNARY_SUB
+					CompileUnaryOp(result)
+				
 				Case AssemblerObj.BIT_AND, AssemblerObj.BIT_OR, 
 					AssemblerObj.BIT_SHL , AssemblerObj.BIT_SHR , 
 					AssemblerObj.BIT_XOR , AssemblerObj.CONCAT , 
@@ -78,45 +82,68 @@ Class HarplByteCoder
 		CompileVarAccess(result)
 		CompileVarAccess(result)
 	End
+	
+	Method CompileUnaryOp:Bool(result:ByteCodeObj )
+		Local instruct:Int = 0
+		Select node.Value
+			Case AssemblerObj.UNNARY_COMPLEMENT 
+				instruct = AssemblerObj.BC_UNNARY_COMPLEMENT 
+			Case AssemblerObj.UNNARY_SUB 
+				instruct = AssemblerObj.BC_UNNARY_SUB 
+			Default
+				Error("Unknown unary operator was found.")
+				Return false
+		End Select
+		result.tmpCode.AddLast(instruct)
+		CompileVarAccess(result) 'The target of the operation
+		CompileVarAccess(result) 'The place to store the result
+		
+	End
+	
+	
 	Method CompileBynaryOp:Bool(result:ByteCodeObj)
-		Local Instruct:Int
+		Local instruct:Int
 		Select node.Value
 			Case AssemblerObj.BIT_AND
-				Instruct = AssemblerObj.BC_BIT_AND 
+				instruct = AssemblerObj.BC_BIT_AND 
 			case AssemblerObj.BIT_OR 
-				Instruct = AssemblerObj.BC_BIT_OR
+				instruct = AssemblerObj.BC_BIT_OR
 			case AssemblerObj.BIT_SHL 
-				Instruct = AssemblerObj.BC_BIT_SHL
+				instruct = AssemblerObj.BC_BIT_SHL
 			case AssemblerObj.BIT_SHR  
-				Instruct = AssemblerObj.BC_BIT_SHR  
+				instruct = AssemblerObj.BC_BIT_SHR  
 			case AssemblerObj.BIT_XOR 
-				Instruct = AssemblerObj.BC_BIT_XOR 
+				instruct = AssemblerObj.BC_BIT_XOR 
 			case AssemblerObj.CONCAT  
-				Instruct = AssemblerObj.BC_CONCAT
+				instruct = AssemblerObj.BC_CONCAT
 			case AssemblerObj.DIV 
-				Instruct = AssemblerObj.BC_DIV 
+				instruct = AssemblerObj.BC_DIV 
 			case AssemblerObj.MODULUS  
-				Instruct = AssemblerObj.BC_MODULUS  
+				instruct = AssemblerObj.BC_MODULUS  
 			case AssemblerObj.MUL 
-				Instruct = AssemblerObj.BC_MUL 
+				instruct = AssemblerObj.BC_MUL 
 			case AssemblerObj.POW   
-				Instruct = AssemblerObj.BC_POW   
+				instruct = AssemblerObj.BC_POW   
 			case AssemblerObj.SUB 
-				Instruct = AssemblerObj.BC_SUB 
+				instruct = AssemblerObj.BC_SUB 
 			case AssemblerObj.SUM   
-				Instruct = AssemblerObj.BC_SUM
+				instruct = AssemblerObj.BC_SUM
 			Default
 				Print "Unknown bynary operator found!"
 		End
-		if Instruct = 0 Then Return false
+		if instruct = 0 Then Return false
 
 		if node = null Then Return false
+		
+		result.tmpCode.AddLast(instruct)
+		
 		'Compile first operator:
 		CompileVarAccess(result)
 		'Compile second operator:
 		CompileVarAccess(result)
 		'Compie result TMP:
-		'PENDING
+		CompileVarAccess(result)
+		
 		Return true		
 	End
 	Method CompileVarAccess:Bool(result:ByteCodeObj)
