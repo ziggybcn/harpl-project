@@ -67,6 +67,8 @@ Class HarplByteCoder
 	End Method
 	
 	Method CompileDefVar(result:ByteCodeObj)
+		result.tmpCode.AddLast(AssemblerObj.BC_SET_DEFVAR )
+		CompileVarAccess(result)
 		
 	End
 	
@@ -155,7 +157,7 @@ Class HarplByteCoder
 				Local varName:String = GetNextSentence 'node.NextNode().Value.Trim()
 				Local scopeIndex:Int = Int(GetNextSentence())  'node.NextNode.NextNode.Value().Trim())
 				Local varNumber:IntByRef = assemblerScopeStack.GetIndexedScope(scopeIndex).stringVars.ValueForKey(varName)
-				result.tmpCode.AddLast(varNumber.value )
+				result.tmpCode.AddLast(varNumber.value)
 				result.tmpCode.AddLast(scopeIndex)
 				'node = node.NextNode.NextNode.NextNode()
 				return true
@@ -202,11 +204,13 @@ Class HarplByteCoder
 				Return true
 				
 			Case expKinds.STRINGLITERAL 
+				Print "Accessing string literal..."
 				result.tmpCode.AddLast(expKinds.BC_STRINGLITERAL)
 				Local text:String = GetNextSentence 'Mid(node.NextNode.Value(), AssemblerObj.ParameterPrefix.Length() + 1 )
 				result.tmpLiterals.AddLast(text)
 				result.tmpCode.AddLast(result.tmpLiteralsCount )
 				result.tmpLiteralsCount +=1
+				Print "String literals done..."
 				'node = node.NextNode.NextNode()
 				Return true
 
@@ -264,18 +268,18 @@ Class HarplByteCoder
 
 				Case AssemblerObj.ParameterPrefix + expKinds.STRINGVAR  
 					integer.value = strCounter
-					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value.Trim(),integer)
+					assemblerScopeStack.dataScopes.Last().stringVars.Add(node.NextNode.Value.Trim(),integer)
 					strCounter+=1
 					node = node.NextNode
 
 				Case AssemblerObj.ParameterPrefix + expKinds.BOOLVAR 
 					integer.value = boolCounter
-					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value.Trim(),integer)
+					assemblerScopeStack.dataScopes.Last().booleanVars.Add(node.NextNode.Value.Trim(),integer)
 					boolCounter+=1
 					node = node.NextNode
 				Case AssemblerObj.ParameterPrefix + expKinds.FLOATVAR 
 					integer.value = floatCounter
-					assemblerScopeStack.dataScopes.Last().intVars.Add(node.NextNode.Value.Trim(),integer)
+					assemblerScopeStack.dataScopes.Last().floatVars.Add(node.NextNode.Value.Trim(),integer)
 					floatCounter+=1
 					node = node.NextNode
 				Default

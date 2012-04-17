@@ -13,7 +13,7 @@ Import os
 'summary: This const contains the name of this application
 Const APPNAME:String = "Harpl compiler"
 'summary: This const contains the string representation of current version
-Const APPVERSION:String = "00.00.00-A"
+Const APPVERSION:String = "00.00.01-A"
 'summary: This const contains any additional version information (such as BETA, RC, whatever) to the current version
 Const APPEXTRA:String = ""
 
@@ -26,9 +26,17 @@ End
 	summary:This is the entry point of the Harpl compiler
 #end
 Function Main()
-	Print "======================================================"
+	Print "                        _ " 
+	Print "  /\  /\__ _ _ __ _ __ | |" 
+	Print " / /_/ / _` | '__| '_ \| |" 
+	Print "/ __  / (_| | |  | |_) | |" 
+	Print "\/ /_/ \__,_|_|  | .__/|_|" 
+	Print "                 |_|      " 
+	Print ""
 	Print AppString
-	Print "======================================================"
+	Print "(C) Manel Ibanez. 2011-2012"
+	Print "This compiler is open source and released under the MIT license"
+	Print ""
 	If AppArgs.Length<2 Then 
 		ShowCommandLineArgs()
 		AbortExecution("No command-line parameters were found.", 0)
