@@ -39,7 +39,7 @@ Class Hvm
 		
 		local done:Bool = false;
 		Local execlimit:Int = byteCodeObj.code.Length() - 1
-		While Not done And byteCodeObj.pos < execlimit
+		While Not done And byteCodeObj.pos <= execlimit
 			'instructionSet[byteCodeObj.pos].Run(self,byteCodeObj)
 			Local value:Int 
 			value = byteCodeObj.code[byteCodeObj.pos]

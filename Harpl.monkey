@@ -69,6 +69,7 @@ Function Main()
 		EndIf
 		Local virtualMachine:Hvm = new Hvm
 		if bco <> null then
+			Input("Press ENTER to run the compiled script>")
 			virtualMachine.Run(bco)
 		Else
 			Print "The Byte Code Generator could not generate a valid bytecode object."
