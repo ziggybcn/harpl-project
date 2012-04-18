@@ -332,6 +332,9 @@ Class HarplByteCoder
 		result.tmpCode.AddLast(strCounter)
 		result.tmpCode.AddLast(boolCounter)
 		result.tmpCode.AddLast(floatCounter)
+		result.tmpCode.AddLast(0) ' Arrays
+		result.tmpCode.AddLast(0) ' Objects
+		
 		Return true
 	end
 	

@@ -4,6 +4,7 @@ Import harplfunction
 Import harplbytecoder
 Import scopestack
 Import harplvm.runtime.builtinruntime 
+Import harplvm.runtime.dynamicscopestack 
 
 #Rem
 	summary: This is the Harpl Virtual Machine Class.
@@ -16,11 +17,14 @@ Class Hvm
 	Field tmpBool:Bool[]
 	Field tmpFloat:Float[]
 	
+	Field dataScope:DynamicScopeStack 
+	
 	Field runTimeErrors := new List < RunTimeError >
 	
-	  
+	
 	Method Run(byteCodeObj:ByteCodeObj)
-
+		if dataScope = null Then dataScope = New DynamicScopeStack 
+		
 		If byteCodeObj = null Then Error "Tried to run a null program."
 
 		'We initialize the VM speciffic built-in functions:
@@ -53,6 +57,8 @@ Class Hvm
 		instructionSet = New HarplFunction[MaxInstructions]
 
 		instructionSet[AssemblerObj.BC_IO_OUTPUT] = New IO_Output 
+		instructionSet[AssemblerObj.BC_SET_NEWSCOPE] = New Set_NewScope
+		instructionSet[AssemblerObj.BC_SET_VAR] = New Set_SetVar 
 		Local BaseNOP := New NOP
 		For Local i:Int = 0 until MaxInstructions 
 			if instructionSet[i] = null then instructionSet[i] = BaseNOP

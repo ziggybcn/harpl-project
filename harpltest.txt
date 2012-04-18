@@ -1,2 +1,2 @@
-Output #aFEE34
-!Define MyVar as String = "hello!"
+Define MyText as String = "Hello world!"
+Output MyText
