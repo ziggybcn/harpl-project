@@ -1,4 +1,6 @@
 Import Harpl
+
+
 Class IO_Output Extends HarplFunction 
 	Method Run:Void(vm:Hvm,bco:ByteCodeObj )
 		bco.pos+=1	'We get the Variable KIND
@@ -47,18 +49,47 @@ Class IO_Output Extends HarplFunction
 
 			Case expKinds.BC_BOOLVAR
 				'Var number:
-				bco.pos+=1;	Local varNum:Int = bco.code[bco.pos]
+				'bco.pos+=1;	Local varNum:Int = bco.code[bco.pos]
 				'Var scope:
-				bco.pos+=1; Local scopeIndex:Int = bco.code[bco.pos]
-				Local dynamicScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeIndex)
-				Local value:Bool = dynamicScope.Booleans[varNum];
-				if value
-					Print "True"
-				else
-					Print "False"
-				EndIf
-				bco.pos +=1	'We end in the next sentence.
+				'bco.pos+=1; Local scopeIndex:Int = bco.code[bco.pos]
+				'Local dynamicScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeIndex)
+				'Local value:Bool = dynamicScope.Booleans[varNum];
+				'if value Print "True" Else Print "False"
+				'bco.pos +=1	'We end in the next sentence.
+				Error("Can't convert from Boolean to string")
 				
+			Case expKinds.BC_ARRAYVAR 
+				Error("Can't output an array")
+
+			Case expKinds.BC_ERRORUNKNOWNVAR 
+				Error("Unknown bar reached bytecode!")
+
+			Case expKinds.BC_OBJVAR 
+				Error("Objects not implemented by I'm pretty sure they won't be compatible with output without a string conversion or the like.")
+
+			Case expKinds.BC_TMPBOOL 
+				'Var number:
+				'bco.pos+=1;	Local varNum:Int = bco.code[bco.pos]
+				'Local value:Bool = vm.tmpBool[varNum];
+				'if value Print "True" else Print "False"
+				'bco.pos +=1	'We end in the next sentence.
+				Error("Can't convert from Boolean to String")
+				
+			Case expKinds.BC_TMPFLOAT 
+				bco.pos+=1;	Print vm.tmpFloat[bco.code[bco.pos]]
+				bco.pos +=1	'We end in the next sentence.
+			
+			Case expKinds.BC_TMPINTEGER 
+				bco.pos+=1;	Print vm.tmpInt[bco.code[bco.pos]]
+				bco.pos +=1	'We end in the next sentence.
+
+			Case expKinds.TMPSTRING 
+				bco.pos+=1;	Print vm.tmpStrings[bco.code[bco.pos]]
+				bco.pos +=1	'We end in the next sentence.
+
+			Default
+				Error("Unknown output data kind requested.")
+
 		End select 
 	End  	
 End
