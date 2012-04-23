@@ -96,7 +96,7 @@ End
 
 Class Set_NewScope extends HarplFunction
 	Method Run:void(vm:Hvm, bco:ByteCodeObj)
-		Print "allocating new scope!"
+		WriteInConsole "allocating new scope!"
 		bco.pos+=1; Local ints:Int = bco.code[bco.pos];
 		bco.pos+=1; local strings:Int = bco.code[bco.pos];
 		bco.pos+=1; local booleans:Int = bco.code[bco.pos];

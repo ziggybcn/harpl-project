@@ -40,7 +40,7 @@ Class CompilerScopeStack
 		summary: closes current compiler data scope, and writes the required assembler code. It also removes the scope from the stack.
 	#end
 	Method CloseDataScope:CompilerDataScope()
-		Print "Getting node:"
+		WriteInConsole "Getting node:"
 		Local currentDataScope:CompilerDataScope = dataScopes.RemoveLast()
 		Local currentNode:list.Node < String >= currentDataScope.newScopeToToken
 		

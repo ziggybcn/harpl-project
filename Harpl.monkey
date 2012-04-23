@@ -3,7 +3,8 @@
 #end
 Import utils.stdio
 Import utils.retro
-Import utils.stringutils 
+Import utils.stringutils
+Import utils.writeinconsole  
 'Import reflection
 Import compiler
 Import vmaassembler.assemblerobj
@@ -22,6 +23,8 @@ Function AppString:String()
 	if APPEXTRA = "" Then 	Return APPNAME + " " + APPVERSION  Else Return APPNAME + " " + APPVERSION + " " + APPEXTRA;
 End
  
+Global HarplShowDebug:Bool = False
+
 #rem
 	summary:This is the entry point of the Harpl compiler
 #end
@@ -40,14 +43,28 @@ Function Main()
 	If AppArgs.Length<2 Then 
 		ShowCommandLineArgs()
 		AbortExecution("No command-line parameters were found.", 0)
-	ElseIf AppArgs.Length > 2 Then 
-		ShowCommandLineArgs()
-		AbortExecution("Too many parameters.", -1)
+	'ElseIf AppArgs.Length > 2 Then 
+	'	ShowCommandLineArgs()
+	'	AbortExecution("Too many parameters.", -1)
 	endif
 	
+	Local fileToCompile:String = AppArgs[AppArgs.Length-1]
+	
+	
+	
 	Local lCompiler := New Compiler
-	'If lCompiler.CompileFile (AppArgs[1]) = False Then
-	lCompiler.CompileFile(AppArgs[1])
+	
+	For Local i:Int = 1 until AppArgs.Length-1
+		Select AppArgs[i].ToLower()
+			Case "-verbose"
+				HarplShowDebug = True
+			Default
+				ShowCommandLineArgs()
+				AbortExecution("Unknown parameter: " + AppArgs[i])
+		End
+	next
+	
+	lCompiler.CompileFile(fileToCompile)
 		For Local err:CompileError = eachin lCompiler.compileErrors
 			Print "Error: " + err.description
 			if err.file <>"" Then
@@ -63,7 +80,7 @@ Function Main()
 		else
 			Local count:Int = 0
 			For Local i:Int = eachin bco.code
-				Print "Bytecode (" + count + ") : " + i
+				WriteInConsole ("Bytecode (" + count + ") : " + i)
 				count += 1
 			Next
 		EndIf
@@ -80,7 +97,11 @@ End
 
 'summary: This function should show the compiler syntax in the command line window
 Function ShowCommandLineArgs()
-	Print "Syntax: HARPL [filename]"
+	Print ""
+	Print "Syntax: HARPL [options] filename"
+	Print "Valid options:"
+	Print "~t-verbose Shows internal compile time information."
+	Print ""
 	Return True
 End
 

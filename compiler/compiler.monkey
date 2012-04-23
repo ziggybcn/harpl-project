@@ -54,6 +54,7 @@ Class Compiler
 			Return true
 		EndIf
 		
+		Print "Compiling..."
 		'We add the global data scope:
 		compilerScopeStack.AddDataScope()
 		
@@ -122,7 +123,7 @@ Class Compiler
 		compilerScopeStack.CloseDataScope()
 		
 		For local s:String = EachIn Self.generatedAsm.code
-			Print s
+			WriteInConsole( s)
 		Next
 		
 		if lexer.tokens.IsEmpty = false then
@@ -232,7 +233,7 @@ Class Compiler
 			'If the Var instruction ends:
 			if nextToken.Kind <> eToken.OPERATOR Then
 				if nextToken.Kind = eToken.CARRIER or nextToken.Kind = eToken.ENDSENTENCE Then
-					Print "End sentence!"
+					'Print "End sentence!"
 					SetDefaultValueVar(varname)
 					done = true
 					Continue

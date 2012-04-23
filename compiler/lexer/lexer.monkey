@@ -263,7 +263,7 @@ Class Lexer
 		Until node = null 
 '
 		For Local t:Token = EachIn tokens
-			Print t.Kind + " at (" + t.docX + "," + t.docY + ") = ~q" + t.text + "~q"
+			WriteInConsole( t.Kind + " at (" + t.docX + "," + t.docY + ") = ~q" + t.text + "~q")
 		Next
 
 		'returns TRUE if there are no compiler errors after the whole thing.

@@ -1,4 +1,4 @@
-Define MyText as Float = 5.0, another as Integer = MyText  !asign a float to a float, and ten this to an integer
+Define MyText as Float = 3545.4986, another as Integer = MyText  !asign a float to a float, and ten this to an integer
 define value1 as String = "Hello world!"	!Assign a string literal to a string var.
 define value2 as String = #FF	!Assign an integer Hex value to a string variable, it performs int-to-string conversion
 Output value1

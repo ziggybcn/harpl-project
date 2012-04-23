@@ -26,7 +26,7 @@ Class HarplByteCoder
 		While (node <>null) and not done
 			'Local consumeNext:Bool = True
 			local Sentence:String = node.Value()
-			Print "Processing : " + Sentence
+			WriteInConsole  "Processing : " + Sentence
 			Select Sentence
 				'Add/Remove half-dynamic scopes:
 				Case AssemblerObj.SET_NEWSCOPE 
@@ -226,7 +226,7 @@ Class HarplByteCoder
 			Case expKinds.FLOATPREFIX 
 				result.tmpCode.AddLast(expKinds.BC_FLOATPREFIX  )
 				Local text:String = GetNextSentence() 'node.NextNode.Value().Trim()
-				Print "Text is: " + text
+				'Print "Text is: " + text
 				result.tmpFloats.AddLast(float(text))
 				result.tmpCode.AddLast(result.tmpFloatCount)
 				result.tmpFloatCount +=1
@@ -241,13 +241,13 @@ Class HarplByteCoder
 				Return true
 				
 			Case expKinds.STRINGLITERAL 
-				Print "Accessing string literal..."
+				'Print "Accessing string literal..."
 				result.tmpCode.AddLast(expKinds.BC_STRINGLITERAL)
 				Local text:String = GetNextSentence 'Mid(node.NextNode.Value(), AssemblerObj.ParameterPrefix.Length() + 1 )
 				result.tmpLiterals.AddLast(text)
 				result.tmpCode.AddLast(result.tmpLiteralsCount )
 				result.tmpLiteralsCount +=1
-				Print "String literals done..."
+				'Print "String literals done..."
 				'node = node.NextNode.NextNode()
 				Return true
 
