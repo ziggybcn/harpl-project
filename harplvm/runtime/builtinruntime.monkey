@@ -280,3 +280,29 @@ Class Set_SetVar extends HarplFunction
 		bco.pos+=1 'We end in the next sentence.
 	End
 End
+
+Class Set_DefVar extends HarplFunction 
+	Method Run:void(vm:Hvm, bco:ByteCodeObj)
+			bco.pos+=1; Local varType:int = bco.code[bco.pos]
+			bco.pos+=1; Local varNum:int = bco.code[bco.pos]
+			bco.pos+=1; Local varScope:int = bco.code[bco.pos]
+			Local dynamicScope:DynamicDataScope = vm.dataScope.GetdynamicScope(varScope)
+			Select varType
+				Case expKinds.BC_ARRAYVAR 
+					Error("Arrays not implemented!")
+				Case expKinds.BC_BOOLVAR 
+					dynamicScope.Booleans[varNum] = False;
+				Case expKinds.BC_FLOATVAR 
+					dynamicScope.Floats[varNum] = 0.0
+				Case expKinds.BC_INTVAR 
+					dynamicScope.Floats[varNum] = 0
+				Case expKinds.BC_OBJVAR 
+					dynamicScope.Floats[varNum] = 0 'This is the Null object
+				Case expKinds.BC_STRINGVAR 
+					dynamicScope.Strings[varNum] = ""
+				Default
+					Error("Unkown variable kind on DEF_VAR");
+			End
+			bco.pos+=1; 'We leave it in the next sentece
+	End	
+End
