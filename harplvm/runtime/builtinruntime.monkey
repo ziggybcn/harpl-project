@@ -1,5 +1,5 @@
 Import Harpl
-
+Import binaryops
 
 Class IO_Output Extends HarplFunction 
 	Method Run:Void(vm:Hvm,bco:ByteCodeObj )
@@ -193,6 +193,7 @@ Class Set_SetVar extends HarplFunction
 					
 					Case expKinds.ARRAYVAR 
 						Error("Arrays not implemented.")
+						
 				End
 				
 			Case expKinds.BC_INTPREFIX 

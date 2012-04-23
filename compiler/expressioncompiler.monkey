@@ -184,6 +184,7 @@ Class ExpressionCompiler
 				tmpToken.Kind = eToken.IDENTIFIER 
 				tmpToken.text  = store
 				compiler.WriteIdentParameter(tmpToken)
+				
 			endif
 		EndIf
 	End method
