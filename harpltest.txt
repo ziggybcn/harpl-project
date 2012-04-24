@@ -1,1 +1,1 @@
-Define MyText as Float = 3545.4986, another as Integer = MyText +45 !* MyText 
+Define MyText as Float = 3545.4986, another as Integer = MyText -45 !* MyText 

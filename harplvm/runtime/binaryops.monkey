@@ -3,6 +3,8 @@ Import Harpl
 Class SUB extends HarplFunction 
 
 	Method Run:Void(vm:Hvm,bco:ByteCodeObj)
+	
+	Print "substraction!!!"
 		
 	Local Bool1:Bool, Int1:Int, Float1:Float, String1:String, opKind1:Int
 	Local Bool2:Bool, Int2:Int, Float2:Float, String2:String, opKind2:Int
@@ -38,7 +40,7 @@ Class SUB extends HarplFunction
 				opKind1 = expKinds.BC_FLOATVAR
 				'endtemplate
 			Case expKinds.BC_INTPREFIX
-				bco.pos+=1; Int1 = bco.code[bco.pos];			
+				bco.pos+=1; Int1 = bco.code[bco.pos];		
 			Case expKinds.BC_INTVAR 
 				Local Result:Int 
 				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=Bool1, datasource=Booleans, opkind = opKind1, opvalue = expKinds.BC_INTVAR
@@ -84,6 +86,8 @@ Class SUB extends HarplFunction
 				String1 = vm.tmpStrings[varNum]
 				opKind1 = expKinds.BC_STRINGVAR
 				'endtemplate
+			Default 
+				Error("Unknown operator!!")
 		End
 	EndIf
 	'#End Region
@@ -120,7 +124,7 @@ Class SUB extends HarplFunction
 				opKind2 = expKinds.BC_FLOATVAR
 				'endtemplate
 			Case expKinds.BC_INTPREFIX
-				bco.pos+=1; Int2 = bco.code[bco.pos];			
+				bco.pos+=1; Int2 = bco.code[bco.pos];		
 			Case expKinds.BC_INTVAR 
 				Local Result:Int 
 				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=Bool2, datasource=Booleans, opkind = opKind2, opvalue = expKinds.BC_INTVAR
@@ -166,6 +170,8 @@ Class SUB extends HarplFunction
 				String2 = vm.tmpStrings[varNum]
 				opKind2 = expKinds.BC_STRINGVAR
 				'endtemplate
+			Default 
+				Error("Unknown operator!!")
 		End
 	EndIf
 	'#End Region
@@ -174,6 +180,7 @@ Class SUB extends HarplFunction
 	'PERFORM OPERATION:
 	
 	'SET RESULT TO TARGET:
+	
 	End
 
 End

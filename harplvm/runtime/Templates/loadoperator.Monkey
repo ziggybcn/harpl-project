@@ -16,7 +16,7 @@ If true	'Scope generated to avoid LOCALs clash.
 			'LOADTEMPLATE ./accessvar.Monkey,bytecode={%bytecodeobj%}, virtualmachine = {%virtualmachine%}, result={%boolean%}, datasource=Booleans, opkind = {%opkind%}, opvalue = expKinds.BC_FLOATVAR
 			'endtemplate
 		Case expKinds.BC_INTPREFIX
-			{%bytecodeobj%}.pos+=1; {%integer%} = {%bytecodeobj%}.code[{%bytecodeobj%}.pos];			
+			{%bytecodeobj%}.pos+=1; {%integer%} = {%bytecodeobj%}.code[{%bytecodeobj%}.pos];		
 		Case expKinds.BC_INTVAR 
 			Local Result:Int 
 			'LOADTEMPLATE ./accessvar.Monkey,bytecode={%bytecodeobj%}, virtualmachine = {%virtualmachine%}, result={%boolean%}, datasource=Booleans, opkind = {%opkind%}, opvalue = expKinds.BC_INTVAR
@@ -40,5 +40,7 @@ If true	'Scope generated to avoid LOCALs clash.
 		Case expKinds.BC_TMPSTRING 
 			'LoadTemplate ./accestmp.Monkey, bytecode={%bytecodeobj%}, virtualmachine = {%virtualmachine%}, result = {%string%}, source=tmpStrings, opkind = {%opkind%}, opvalue = expKinds.BC_STRINGVAR
 			'endtemplate
+		Default 
+			Error("Unknown operator!!")
 	End
 EndIf
