@@ -1,0 +1,1 @@
+@.\template_parser.build\stdcpp\main_winnt testfile1.monkey
