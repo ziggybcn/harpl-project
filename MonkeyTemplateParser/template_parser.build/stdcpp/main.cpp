@@ -1692,13 +1692,13 @@ class bb_list_Enumerator2 : public Object{
 	virtual String m_NextObject();
 	void mark();
 };
-String bb_template_parser_ParseDoc2(String,Array<bb_template_parser_Replacer* >,String);
+String bb_template_parser_ParseDoc2(String,Array<bb_template_parser_Replacer* >,String,String,int);
 int bbMain();
 int bb_template_parser_PrintInfoHeader(){
 	pushErr();
-	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<33>";
-	Print(String(L"Monkey template parser for the Harpl source code."));
 	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<34>";
+	Print(String(L"Monkey template parser for the Harpl source code."));
+	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<35>";
 	Print(String(L"This is a simple parser app, pass the file to be pre-compiled as the first paramter, and you're good to go!"));
 	popErr();
 	return 0;
@@ -1747,11 +1747,11 @@ String bb_os_StripAll(String t_path){
 }
 String bb_template_parser_GetDir(String t_filename){
 	pushErr();
-	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<42>";
-	t_filename=t_filename.Replace(String(L"/"),String(L"\\"));
 	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<43>";
-	int t_lastIndex=t_filename.FindLast(String(L"\\"));
+	t_filename=t_filename.Replace(String(L"/"),String(L"\\"));
 	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<44>";
+	int t_lastIndex=t_filename.FindLast(String(L"\\"));
+	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<45>";
 	String t_=t_filename.Slice(0,t_lastIndex+1);
 	popErr();
 	return t_;
@@ -1762,7 +1762,7 @@ bb_template_parser_Replacer::bb_template_parser_Replacer(){
 }
 bb_template_parser_Replacer* bb_template_parser_Replacer::g_new(){
 	pushErr();
-	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<90>";
+	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<102>";
 	popErr();
 	return this;
 }
@@ -2041,8 +2041,8 @@ void bb_list_Enumerator::mark(){
 }
 String bb_template_parser_ParseDoc(String t_text,String t_fileLocation){
 	pushErr();
-	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<96>";
-	String t_=bb_template_parser_ParseDoc2(t_text,Array<bb_template_parser_Replacer* >(),t_fileLocation);
+	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<108>";
+	String t_=bb_template_parser_ParseDoc2(t_text,Array<bb_template_parser_Replacer* >(),t_fileLocation,String(),0);
 	popErr();
 	return t_;
 }
@@ -2092,96 +2092,121 @@ void bb_list_Enumerator2::mark(){
 	gc_mark_q(f__list);
 	gc_mark_q(f__curr);
 }
-String bb_template_parser_ParseDoc2(String t_text,Array<bb_template_parser_Replacer* > t_replaces,String t_fileLocation){
+String bb_template_parser_ParseDoc2(String t_text,Array<bb_template_parser_Replacer* > t_replaces,String t_fileLocation,String t_prefix,int t_level){
 	pushErr();
-	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<48>";
-	Array<String > t_lines=t_text.Split(String(L"\n"));
 	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<49>";
-	bb_list_List* t_lines2=(new bb_list_List)->g_new();
+	Array<String > t_lines=t_text.Split(String(L"\n"));
 	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<50>";
-	int t_ignore=0;
+	bb_list_List* t_lines2=(new bb_list_List)->g_new();
 	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<51>";
+	int t_ignore=0;
+	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<52>";
 	for(int t_i=0;t_i<t_lines.Length();t_i=t_i+1){
-		errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<52>";
-		String t_teststring=t_lines.At(t_i).Trim();
 		errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<53>";
-		if(t_teststring.ToLower().StartsWith(String(L"'loadtemplate ")) && t_ignore==0){
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<54>";
-			Print(String(L"Template load requested!"));
+		String t_teststring=t_lines.At(t_i).Trim();
+		errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<54>";
+		if(t_teststring.ToLower().StartsWith(String(L"'loadtemplate "))){
 			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<55>";
-			t_lines2->m_AddLast(t_lines.At(t_i));
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<56>";
-			Array<String > t_data=t_teststring.Split(String(L","));
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<57>";
-			bb_list_List2* t_repList=(new bb_list_List2)->g_new();
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<58>";
-			for(int t_i2=1;t_i2<t_data.Length();t_i2=t_i2+1){
+			if(t_ignore==0){
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<56>";
+				Print(String(L"Template load requested!"));
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<57>";
+				t_lines2->m_AddLast(t_lines.At(t_i));
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<58>";
+				String t_prefix2=t_prefix+t_lines.At(t_i).Slice(0,t_lines.At(t_i).Find(String(L"'"),0));
 				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<59>";
-				Array<String > t_repData=t_data.At(t_i2).Split(String(L"="));
+				Array<String > t_data=t_teststring.Split(String(L","));
 				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<60>";
-				bb_template_parser_Replacer* t_rep=(new bb_template_parser_Replacer)->g_new();
+				bb_list_List2* t_repList=(new bb_list_List2)->g_new();
 				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<61>";
-				if(t_repData.Length()==2){
+				for(int t_i2=1;t_i2<t_data.Length();t_i2=t_i2+1){
 					errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<62>";
-					t_rep->f_find=t_repData.At(0);
+					Array<String > t_repData=t_data.At(t_i2).Split(String(L"="));
 					errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<63>";
-					t_rep->f_replace=t_repData.At(1);
+					bb_template_parser_Replacer* t_rep=(new bb_template_parser_Replacer)->g_new();
 					errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<64>";
-					t_repList->m_AddLast2(t_rep);
+					if(t_repData.Length()==2){
+						errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<65>";
+						t_rep->f_find=t_repData.At(0);
+						errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<66>";
+						t_rep->f_replace=t_repData.At(1);
+						errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<67>";
+						t_repList->m_AddLast2(t_rep);
+					}
+				}
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<70>";
+				Array<bb_template_parser_Replacer* > t_repArray=t_repList->m_ToArray();
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<71>";
+				String t_filelocation=RealPath(t_fileLocation+t_data.At(0).Slice(14).Trim()).Replace(String(L"/"),String(L"\\"));
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<72>";
+				Print(String(L"Requesting template located at: ")+t_filelocation);
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<73>";
+				if(t_level==0){
+					errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<73>";
+					t_lines2->m_AddLast(t_prefix2+String(L"'#Region Code generated by the Harpl-Monkey template. Loaded from: ")+t_data.At(0).Slice(14).Trim());
+				}
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<74>";
+				t_lines2->m_AddLast(bb_template_parser_ParseDoc2(LoadString(t_filelocation),t_repArray,bb_template_parser_GetDir(t_filelocation),t_prefix2,t_level+1));
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<75>";
+				if(t_level==0){
+					errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<75>";
+					t_lines2->m_AddLast(t_prefix2+String(L"'#End Region"));
 				}
 			}
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<67>";
-			Array<bb_template_parser_Replacer* > t_repArray=t_repList->m_ToArray();
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<68>";
-			String t_filelocation=RealPath(t_fileLocation+t_data.At(0).Slice(14).Trim());
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<69>";
-			Print(String(L"Requesting template located at: ")+t_filelocation);
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<70>";
-			t_lines2->m_AddLast(bb_template_parser_ParseDoc2(LoadString(t_filelocation),t_repArray,bb_template_parser_GetDir(t_filelocation)));
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<71>";
+			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<77>";
 			t_ignore+=1;
 		}else{
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<72>";
+			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<79>";
 			if(t_lines.At(t_i).Trim().ToLower()==String(L"'endtemplate")){
-				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<73>";
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<80>";
 				t_ignore-=1;
 			}
 		}
-		errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<75>";
+		errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<82>";
 		if(t_ignore==0){
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<76>";
-			String t_line=t_lines.At(t_i);
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<77>";
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<77>";
+			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<83>";
+			String t_line=t_prefix+t_lines.At(t_i);
+			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<84>";
+			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<84>";
 			Array<bb_template_parser_Replacer* > t_=t_replaces;
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<77>";
+			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<84>";
 			int t_2=0;
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<77>";
+			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<84>";
 			while(t_2<t_.Length()){
-				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<77>";
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<84>";
 				bb_template_parser_Replacer* t_rep2=t_.At(t_2);
-				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<77>";
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<84>";
 				t_2=t_2+1;
-				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<78>";
+				errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<85>";
 				t_line=t_line.Replace(String(L"{%")+t_rep2->f_find.Trim()+String(L"%}"),t_rep2->f_replace.Trim());
 			}
-			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<80>";
+			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<87>";
 			t_lines2->m_AddLast(t_line);
 		}
 	}
-	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<83>";
+	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<90>";
 	String t_result=String();
-	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<84>";
-	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<84>";
+	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<90>";
+	bool t_first=true;
+	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<91>";
+	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<91>";
 	bb_list_Enumerator2* t_3=t_lines2->m_ObjectEnumerator();
-	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<84>";
+	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<91>";
 	while(t_3->m_HasNext()){
-		errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<84>";
+		errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<91>";
 		String t_s=t_3->m_NextObject();
-		errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<85>";
-		t_result=t_result+t_s+String(L"\n");
+		errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<92>";
+		if(t_first){
+			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<93>";
+			t_result=t_s;
+			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<94>";
+			t_first=false;
+		}else{
+			errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<96>";
+			t_result=t_result+String(L"\n")+t_s;
+		}
 	}
-	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<87>";
+	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<99>";
 	popErr();
 	return t_result;
 }
@@ -2233,8 +2258,10 @@ int bbMain(){
 	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<27>";
 	t_text=bb_template_parser_ParseDoc(t_text,bb_template_parser_GetDir(t_filePath));
 	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<28>";
-	Print(t_text);
+	SaveString(t_text,t_filePath);
 	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<29>";
+	Print(t_text);
+	errInfo="C:/harpl-project/MonkeyTemplateParser/template_parser.monkey<30>";
 	popErr();
 	return 0;
 }

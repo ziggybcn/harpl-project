@@ -1,6 +1,6 @@
-Class Myclass
-	Method Draw()
-		'LoadTemplate template2.monkey,name=Manel
+While<4 Myclass
+	For Local Draw:Int = 0 to 100
+		'LoadTemplate template2.monkey,name=Float
 		'endtemplate
-	End
-End
+	Next
+End Wend
