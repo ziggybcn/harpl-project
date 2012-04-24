@@ -1,5 +1,5 @@
-{%bytecodeobj%}.pos+=1; 
 If true	'Scope generated to avoid LOCALs clash.
+	{%bytecodeobj%}.pos+=1; 
 	Local varKind:Int = {%bytecodeobj%}.code[{%bytecodeobj%}.pos]
 	Select varKind
 		Case expKinds.BC_ARRAYVAR

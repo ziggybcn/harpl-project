@@ -31,11 +31,15 @@ Class Hvm
 		If instructionSet.Length = 0 Then RegisterBuiltIn
 		
 		'We initialite the HEAP space:
-		tmpStrings = tmpStrings[..byteCodeObj.requiredStringsSize]
-		tmpInt = tmpInt[..byteCodeObj.RequiredIntegerSize]
-		tmpBool = tmpBool[..byteCodeObj.requiredBooleanSize]
-		tmpFloat = tmpFloat[..byteCodeObj.RequiredFloatSize]
+		tmpStrings = tmpStrings[..byteCodeObj.requiredStringsSize+1]
+		tmpInt = tmpInt[..byteCodeObj.RequiredIntegerSize+1]
+		tmpBool = tmpBool[..byteCodeObj.requiredBooleanSize+1]
+		tmpFloat = tmpFloat[..byteCodeObj.RequiredFloatSize+1]
 		byteCodeObj.pos = 2
+		
+		WriteInConsole("Required float size: " + byteCodeObj.RequiredFloatSize )
+		WriteInConsole("Allocated float size: " + tmpFloat.Length )
+		
 		
 		local done:Bool = false;
 		Local execlimit:Int = byteCodeObj.code.Length() - 1
