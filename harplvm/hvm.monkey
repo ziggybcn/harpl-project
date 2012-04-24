@@ -14,8 +14,8 @@ Class Hvm
 	Field instructionSet:HarplFunction[]
 	Field tmpStrings:String[]
 	Field tmpInt:Int[]
-	Field tmpBool:Bool[]
-	Field tmpFloat:Float[]
+	Field tmpBool:Bool[] 
+	Field tmpFloat:Float[] '= new Float[0]
 	
 	Field dataScope:DynamicScopeStack 
 	
@@ -31,10 +31,10 @@ Class Hvm
 		If instructionSet.Length = 0 Then RegisterBuiltIn
 		
 		'We initialite the HEAP space:
-		tmpStrings = tmpStrings[..byteCodeObj.requiredStringsSize+1]
-		tmpInt = tmpInt[..byteCodeObj.RequiredIntegerSize+1]
-		tmpBool = tmpBool[..byteCodeObj.requiredBooleanSize+1]
-		tmpFloat = tmpFloat[..byteCodeObj.RequiredFloatSize+1]
+		tmpStrings = New String[byteCodeObj.requiredStringsSize+1]
+		tmpInt = New Int[byteCodeObj.RequiredIntegerSize+1]
+		tmpBool = New Bool[byteCodeObj.requiredBooleanSize+1]
+		tmpFloat = New Float[byteCodeObj.RequiredFloatSize+1]
 		byteCodeObj.pos = 2
 		
 		WriteInConsole("Required float size: " + byteCodeObj.RequiredFloatSize )

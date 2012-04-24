@@ -272,10 +272,96 @@ Class Set_SetVar extends HarplFunction
 						Error("Arrays not implemented.")
 				End
 			
-			Case expKinds.BC_TMPBOOL 
+			Case expKinds.BC_TMPBOOL
+				bco.pos+=1; Local index:int = bco.code[bco.pos]
+				Select varType
+				
+					Case expKinds.BC_FLOATVAR 'Asignar una TMP Bool  a una float
+						Error("Can't convert from Boolean to float")
+						
+					Case expKinds.BC_INTVAR   'Asignar una TMP BOOL a una variable int
+						Error("Can't convert from Boolean to float")
+						
+					Case expKinds.BC_STRINGVAR 'Asignar una TMP BOOL a una variable String
+						Error("Can't convert from Boolean to String")
+
+					Case expKinds.BC_OBJVAR 
+						Error("Can't convert from Boolean to object")
+						
+					Case expKinds.BC_BOOLVAR 'Asignar una variable TMP BOOL a una variable Bool
+						dynamicScope.Booleans [varNum] = vm.tmpBool[index]
+						
+					Case expKinds.ARRAYVAR 
+						Error("Arrays not implemented.")
+				End
+				
 			Case expKinds.BC_TMPFLOAT 
+				bco.pos+=1; Local index:int = bco.code[bco.pos]
+				Select varType
+				
+					Case expKinds.BC_FLOATVAR 'Asignar una TMP Float  a una float
+						dynamicScope.Floats[varNum] = vm.tmpFloat[index]
+						
+					Case expKinds.BC_INTVAR   'Asignar una TMP FLOAT a una variable Int
+						dynamicScope.Ints[varNum] = vm.tmpFloat[index]
+						
+					Case expKinds.BC_STRINGVAR 'Asignar una TMP String a una variable Float
+						Error("Can't convert from String to Float")
+
+					Case expKinds.BC_OBJVAR 
+						Error("Can't convert from Float to object")
+						
+					Case expKinds.BC_BOOLVAR 'Asignar una variable TMP FLOAT a una variable Bool
+						Error("Can't convert from Float to Boolean")
+						
+					Case expKinds.ARRAYVAR 
+						Error("Arrays not implemented.")
+				End
 			Case expKinds.BC_TMPINTEGER 
+				bco.pos+=1; Local index:int = bco.code[bco.pos]
+				Select varType
+				
+					Case expKinds.BC_FLOATVAR 'Asignar una TMP Float  a una float
+						dynamicScope.Floats[varNum] = vm.tmpInt[index]
+						
+					Case expKinds.BC_INTVAR   'Asignar una TMP FLOAT a una variable Int
+						dynamicScope.Ints[varNum] = vm.tmpInt[index]
+						
+					Case expKinds.BC_STRINGVAR 'Asignar una TMP String a una variable Float
+						Error("Can't convert from String to Integer")
+
+					Case expKinds.BC_OBJVAR 
+						Error("Can't convert from Integer to object")
+						
+					Case expKinds.BC_BOOLVAR 'Asignar una variable TMP FLOAT a una variable Bool
+						Error("Can't convert from Integer to Boolean")
+						
+					Case expKinds.ARRAYVAR 
+						Error("Arrays not implemented.")
+				End
 			Case expKinds.BC_TMPSTRING 
+				bco.pos+=1; Local index:int = bco.code[bco.pos]
+				Select varType
+				
+					Case expKinds.BC_FLOATVAR 'Asignar una TMP STRING  a una float
+						'dynamicScope.Floats[varNum] = vm.tmpInt[index]
+						Error("Can't convert from String to Float")
+					Case expKinds.BC_INTVAR   'Asignar una TMP STRING a una variable Int
+						'dynamicScope.Ints[varNum] = vm.tmpInt[index]
+						Error("Can't convert from String to Integer")
+						
+					Case expKinds.BC_STRINGVAR 'Asignar una TMP String a una variable Float
+						'Error("Can't convert from String to Integer")
+						dynamicScope.Strings[varNum] = vm.tmpStrings[index]
+					Case expKinds.BC_OBJVAR 
+						Error("Can't convert from String to Object")
+						
+					Case expKinds.BC_BOOLVAR 'Asignar una variable TMP FLOAT a una variable Bool
+						Error("Can't convert from String to Boolean")
+						
+					Case expKinds.ARRAYVAR 
+						Error("Arrays not implemented.")
+				End
 
 		End
 		bco.pos+=1 'We end in the next sentence.

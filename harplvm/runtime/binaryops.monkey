@@ -32,22 +32,22 @@ Class SUB extends HarplFunction
 				bco.pos+=1; Float1 = bco.floats[bco.code[bco.pos]];
 				opKind1 = expKinds.BC_FLOATVAR 
 			Case expKinds.BC_FLOATVAR 
-				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=Bool1, datasource=Booleans, opkind = opKind1, opvalue = expKinds.BC_FLOATVAR
+				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=Float1, datasource=Floats, opkind = opKind1, opvalue = expKinds.BC_FLOATVAR
 				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
 				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
-				Bool1 = localScope.Booleans[varNum]
+				Float1 = localScope.Floats[varNum]
 				opKind1 = expKinds.BC_FLOATVAR
 				'endtemplate
 			Case expKinds.BC_INTPREFIX
 				bco.pos+=1; Int1 = bco.code[bco.pos];		
 			Case expKinds.BC_INTVAR 
 				Local Result:Int 
-				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=Bool1, datasource=Booleans, opkind = opKind1, opvalue = expKinds.BC_INTVAR
+				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=Int1, datasource=Ints, opkind = opKind1, opvalue = expKinds.BC_INTVAR
 				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
 				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
-				Bool1 = localScope.Booleans[varNum]
+				Int1 = localScope.Ints[varNum]
 				opKind1 = expKinds.BC_INTVAR
 				'endtemplate
 			Case expKinds.BC_OBJVAR 
@@ -55,11 +55,11 @@ Class SUB extends HarplFunction
 			Case expKinds.BC_STRINGLITERAL 
 				bco.pos+=1; String1 = bco.literals[bco.code[bco.pos]];
 			Case expKinds.BC_STRINGVAR 
-				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=Bool1, datasource=Booleans, opkind = opKind1, opvalue = expKinds.BC_STRINGVAR
+				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=String1, datasource=Strings, opkind = opKind1, opvalue = expKinds.BC_STRINGVAR
 				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
 				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
-				Bool1 = localScope.Booleans[varNum]
+				String1 = localScope.Strings[varNum]
 				opKind1 = expKinds.BC_STRINGVAR
 	 			'endtemplate 
 			Case expKinds.BC_TMPBOOL
@@ -116,22 +116,22 @@ Class SUB extends HarplFunction
 				bco.pos+=1; Float2 = bco.floats[bco.code[bco.pos]];
 				opKind2 = expKinds.BC_FLOATVAR 
 			Case expKinds.BC_FLOATVAR 
-				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=Bool2, datasource=Booleans, opkind = opKind2, opvalue = expKinds.BC_FLOATVAR
+				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=Float2, datasource=Floats, opkind = opKind2, opvalue = expKinds.BC_FLOATVAR
 				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
 				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
-				Bool2 = localScope.Booleans[varNum]
+				Float2 = localScope.Floats[varNum]
 				opKind2 = expKinds.BC_FLOATVAR
 				'endtemplate
 			Case expKinds.BC_INTPREFIX
 				bco.pos+=1; Int2 = bco.code[bco.pos];		
 			Case expKinds.BC_INTVAR 
 				Local Result:Int 
-				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=Bool2, datasource=Booleans, opkind = opKind2, opvalue = expKinds.BC_INTVAR
+				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=Int2, datasource=Ints, opkind = opKind2, opvalue = expKinds.BC_INTVAR
 				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
 				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
-				Bool2 = localScope.Booleans[varNum]
+				Int2 = localScope.Ints[varNum]
 				opKind2 = expKinds.BC_INTVAR
 				'endtemplate
 			Case expKinds.BC_OBJVAR 
@@ -139,11 +139,11 @@ Class SUB extends HarplFunction
 			Case expKinds.BC_STRINGLITERAL 
 				bco.pos+=1; String2 = bco.literals[bco.code[bco.pos]];
 			Case expKinds.BC_STRINGVAR 
-				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=Bool2, datasource=Booleans, opkind = opKind2, opvalue = expKinds.BC_STRINGVAR
+				'LOADTEMPLATE ./accessvar.Monkey,bytecode=bco, virtualmachine = vm, result=String2, datasource=Strings, opkind = opKind2, opvalue = expKinds.BC_STRINGVAR
 				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
 				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
-				Bool2 = localScope.Booleans[varNum]
+				String2 = localScope.Strings[varNum]
 				opKind2 = expKinds.BC_STRINGVAR
 	 			'endtemplate 
 			Case expKinds.BC_TMPBOOL
@@ -179,68 +179,8 @@ Class SUB extends HarplFunction
 	
 	'PERFORM OPERATION:
 	if opKind1 = expKinds.BC_FLOATVAR And opKind2 = expKinds.BC_FLOATVAR 
-		local result:Float = Float1 - Float2
-		bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
-		Select varKind
-			Case expKinds.BC_ARRAYVAR 
-				Error("Can't convert from Array to Float")
-			Case expKinds.BC_BOOLVAR 
-				Error("Can't convert from Bool to Float")
-			Case expKinds.BC_FLOATVAR 
-				'LoadTemplate ./Templates/settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Floats
-				'#Region Code generated by the Harpl-Monkey template. Loaded from: ./Templates/settovar.monkey
-				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
-				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
-				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
-				localScope.Floats[varNum] = result 
-				'#End Region
-				'endtemplate
-			Case expKinds.BC_INTVAR 
-				'LoadTemplate ./Templates/settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Ints
-				'#Region Code generated by the Harpl-Monkey template. Loaded from: ./Templates/settovar.monkey
-				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
-				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
-				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
-				localScope.Ints[varNum] = result 
-				'#End Region
-				'endtemplate
-			Case expKinds.BC_OBJVAR 
-				Error("Can't set from Float to Object")
-			Case expKinds.BC_STRINGVAR 
-				'LoadTemplate ./Templates/settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Strings
-				'#Region Code generated by the Harpl-Monkey template. Loaded from: ./Templates/settovar.monkey
-				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
-				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
-				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
-				localScope.Strings[varNum] = result 
-				'#End Region
-				'endtemplate
-			Case expKinds.BC_TMPBOOL
-				Error("Can't convert from Bool to Float")
-			Case expKinds.BC_TMPFLOAT 
-				 'LoadTemplate ./Templates/settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpFloat
-				 '#Region Code generated by the Harpl-Monkey template. Loaded from: ./Templates/settotmp.monkey
-				 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
-				Print "setting to tmp float:" + varNum + " and array has " + vm.tmpFloat.Length()
-				 vm.tmpFloat[varNum] = result
-				 '#End Region
-				 'endtemplate
-			Case expKinds.BC_TMPINTEGER 
-				 'LoadTemplate ./Templates/settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpInt
-				 '#Region Code generated by the Harpl-Monkey template. Loaded from: ./Templates/settotmp.monkey
-				 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
-				 vm.tmpInt[varNum] = result
-				 '#End Region
-				 'endtemplate
-			Case expKinds.TMPSTRING 
-				 'LoadTemplate ./Templates/settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
-				 '#Region Code generated by the Harpl-Monkey template. Loaded from: ./Templates/settotmp.monkey
-				 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
-				 vm.tmpStrings[varNum] = result
-				 '#End Region
-				 'endtemplate
-		End select
-	
+		'loadtemplate ./Templates/numericperformoperation.Monkey, resultkind = Float, operator1=Float1, operator2=Float2, Operation=-, bytecodeobj=bco, virtualmachine=vm
+		'endtemplate
 	EndIf
 	bco.pos+=1
 	
