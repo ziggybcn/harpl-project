@@ -1,2 +1,6 @@
-Define MyText as Float = 3545.4986, another as Float = MyText - 45.0 !* MyText O
+!This is a very first Harpl sample:
+Define MyText as Float = 16, another as Float = MyText *2 + 56 / -8.0-9
+Output "Welcome to Harpl!"
+Output "The contents of the another var is:"
 Output another
+Output "Done!"

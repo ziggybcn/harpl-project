@@ -16,7 +16,9 @@ If true	'Scope generated to avoid LOCALs clash.
 			'LOADTEMPLATE ./accessvar.Monkey,bytecode={%bytecodeobj%}, virtualmachine = {%virtualmachine%}, result={%float%}, datasource=Floats, opkind = {%opkind%}, opvalue = expKinds.BC_FLOATVAR
 			'endtemplate
 		Case expKinds.BC_INTPREFIX
-			{%bytecodeobj%}.pos+=1; {%integer%} = {%bytecodeobj%}.code[{%bytecodeobj%}.pos];		
+			{%bytecodeobj%}.pos+=1; {%integer%} = {%bytecodeobj%}.code[{%bytecodeobj%}.pos];
+			{%opkind%} = expKinds.BC_INTVAR
+	
 		Case expKinds.BC_INTVAR 
 			Local Result:Int 
 			'LOADTEMPLATE ./accessvar.Monkey,bytecode={%bytecodeobj%}, virtualmachine = {%virtualmachine%}, result={%integer%}, datasource=Ints, opkind = {%opkind%}, opvalue = expKinds.BC_INTVAR
@@ -25,6 +27,8 @@ If true	'Scope generated to avoid LOCALs clash.
 			Error("Object address can't be used as part of an arithmetic expression.")
 		Case expKinds.BC_STRINGLITERAL 
 			{%bytecodeobj%}.pos+=1; {%string%} = {%bytecodeobj%}.literals[{%bytecodeobj%}.code[{%bytecodeobj%}.pos]];
+			{%opkind%} = expKinds.BC_STRINGVAR
+			
 		Case expKinds.BC_STRINGVAR 
 			'LOADTEMPLATE ./accessvar.Monkey,bytecode={%bytecodeobj%}, virtualmachine = {%virtualmachine%}, result={%string%}, datasource=Strings, opkind = {%opkind%}, opvalue = expKinds.BC_STRINGVAR
  			'endtemplate 

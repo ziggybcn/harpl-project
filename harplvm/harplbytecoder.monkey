@@ -70,6 +70,11 @@ Class HarplByteCoder
 		result.code = result.tmpCode.ToArray()
 		result.literals = result.tmpLiterals.ToArray()
 		result.floats = result.tmpFloats.ToArray()
+		result.requiredBooleanSize = harplAsm.requiredBoolSize 
+		result.RequiredFloatSize = harplAsm.requiredFloatSize 
+		result.RequiredIntegerSize = harplAsm.requiredIntSize 
+		result.requiredStringsSize = harplAsm.requiredStringSize 
+
 		result.tmpCode = null
 		Return result
 		
