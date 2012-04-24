@@ -60,6 +60,7 @@ Class Hvm
 		instructionSet[AssemblerObj.BC_SET_NEWSCOPE] = New Set_NewScope
 		instructionSet[AssemblerObj.BC_SET_VAR] = New Set_SetVar 
 		instructionSet[AssemblerObj.BC_SET_DEFVAR] = New Set_DefVar 
+		instructionSet[AssemblerObj.BC_SUB] = New SUB
 		Local BaseNOP := New NOP
 		For Local i:Int = 0 until MaxInstructions 
 			if instructionSet[i] = null then instructionSet[i] = BaseNOP
