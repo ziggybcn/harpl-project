@@ -275,5 +275,5 @@
       </CursorPos>
     </Document>
   </Files>
-  <CompilerConfig Configuration="debug" BuildMode="build" Target="stdcpp" />
+  <CompilerConfig Configuration="release" BuildMode="build" Target="stdcpp" />
 </JiProj>
