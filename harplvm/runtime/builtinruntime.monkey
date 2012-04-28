@@ -1,5 +1,6 @@
 Import Harpl
 Import binaryops
+Import stringops
 
 Class IO_Output Extends HarplFunction 
 	Method Run:Void(vm:Hvm,bco:ByteCodeObj )
@@ -83,7 +84,7 @@ Class IO_Output Extends HarplFunction
 				bco.pos+=1;	Print vm.tmpInt[bco.code[bco.pos]]
 				bco.pos +=1	'We end in the next sentence.
 
-			Case expKinds.TMPSTRING 
+			Case expKinds.BC_TMPSTRING 
 				bco.pos+=1;	Print vm.tmpStrings[bco.code[bco.pos]]
 				bco.pos +=1	'We end in the next sentence.
 

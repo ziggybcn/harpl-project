@@ -227,7 +227,7 @@ Class Sub extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -279,7 +279,7 @@ Class Sub extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -333,7 +333,7 @@ Class Sub extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -385,7 +385,7 @@ Class Sub extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -630,7 +630,7 @@ Class Sum extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -682,7 +682,7 @@ Class Sum extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -736,7 +736,7 @@ Class Sum extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -788,7 +788,7 @@ Class Sum extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -1033,7 +1033,7 @@ Class Mul extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -1085,7 +1085,7 @@ Class Mul extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -1139,7 +1139,7 @@ Class Mul extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -1191,7 +1191,7 @@ Class Mul extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -1436,7 +1436,7 @@ Class Div extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -1488,7 +1488,7 @@ Class Div extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -1542,7 +1542,7 @@ Class Div extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -1594,7 +1594,7 @@ Class Div extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -1839,7 +1839,7 @@ Class Modulus extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -1891,7 +1891,7 @@ Class Modulus extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -1945,7 +1945,7 @@ Class Modulus extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 
@@ -1997,7 +1997,7 @@ Class Modulus extends HarplFunction
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpInt[varNum] = result 
 					 'endtemplate
-				Case expKinds.TMPSTRING 
+				Case expKinds.BC_TMPSTRING 
 					 'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
 					 bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
 					 vm.tmpStrings[varNum] = result 

@@ -1,6 +1,2 @@
-!This is a very first Harpl sample:
-Define MyText as Float = 16, another as Float = MyText *2 + 56 / -8.0-9
-Output "Welcome to Harpl!"
-Output "~tThe contents of the ~qanother~q var is:"
-Output another
-Output "Done!"
+Define a as integer =4, subject as string = "subject to change"
+Output "Result is " ++ a ++ " but this is nothing fixed and it is " ++ subject

@@ -69,6 +69,7 @@ Class Hvm
 		instructionSet[AssemblerObj.BC_MUL] = New Mul
 		instructionSet[AssemblerObj.BC_DIV] = New Div
 		instructionSet[AssemblerObj.BC_MODULUS] = New Modulus
+		instructionSet[AssemblerObj.BC_CONCAT] = New Concat
 		Local BaseNOP := New NOP
 		For Local i:Int = 0 until MaxInstructions 
 			if instructionSet[i] = null then instructionSet[i] = BaseNOP
