@@ -1,2 +1,10 @@
-Define a as integer =4, subject as string = "subject to change"
-Output "Result is " ++ a ++ " but this is nothing fixed and it is " ++ subject
+!This is a small Harpl source code sample.
+!This sample creates 2 string variables, and outputs them to the console, 
+!using a simple concatenation expression that also adds a "!" character 
+!at the end of the output text.
+
+Define FirstWord as string = 'Hello', SecondWord as String = 'world';
+Output FirstWord ++ " " ++SecondWord ++ "!";
+
+Define White as Integer = #FFFFFF;
+Output "White color has a value of " ++ White
