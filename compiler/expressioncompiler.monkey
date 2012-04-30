@@ -332,8 +332,13 @@ Class ExpressionCompiler
 							
 							'Returning Float:
 							Case "+","-","*","/", "^"
-								Store = eTmpTokens.TMPFLOAT + floatCounter
-								Self.floatCounter +=1
+								if IsIntPrefix(prefix1) And IsIntPrefix(prefix2) then
+									Store = eTmpTokens.TMPINT + intCounter 
+									Self.intCounter +=1
+								else
+									Store = eTmpTokens.TMPFLOAT + floatCounter
+									Self.floatCounter +=1
+								EndIf
 							
 							'Returning Bool:
 							Case "=",">=", "<=", ">", "<"
@@ -401,25 +406,34 @@ Class ExpressionCompiler
 		Return true
 	End
 	
-	Method IsOpenBracket:Bool(token:Token)
+	Function IsOpenBracket:Bool(token:Token)
 		if token.Kind<> eToken.OPERATOR Then Return False
 		if token.text = "(" or token.text = "[" Then Return True
 		Return false
 	End
 	
-	Method isCloseBracket:Bool(token:Token)
+	Function isCloseBracket:Bool(token:Token)
 		if token.Kind<> eToken.OPERATOR Then Return False
 		if token.text = ")" or token.text = "]" Then Return True
 		Return false
 	End
 	
-	Method IsItem:Bool(token:Token)
+	Function IsItem:Bool(token:Token)
 		Select token.Kind
 			Case eToken.NUMBER, eToken.STRINGLITERAL, eToken.IDENTIFIER
 				Return True
 			Default
 				Return False 
 		End 
+	End
+	
+	Function IsIntPrefix:Bool(prefix:String)
+		Select prefix
+			Case expKinds.INTPREFIX, expKinds.INTVAR, expKinds.TMPINTEGER
+				Return true
+			Default
+				Return false
+		end
 	End
 	
 End
