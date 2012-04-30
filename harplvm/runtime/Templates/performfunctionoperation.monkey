@@ -1,11 +1,10 @@
-
-local result:{%resultkind%} = {%operator1%} {%operation%} {%operator2%}
+local result:{%resultkind%} = {%function%} ( {%operator1%} , {%operator2%} )
 {%bytecodeobj%}.pos+=1; Local varKind:Int = {%bytecodeobj%}.code[{%bytecodeobj%}.pos]
 Select varKind
 	Case expKinds.BC_ARRAYVAR 
-		Error("Can't convert from Array to {%resultkind%}")
+		Error("Can't convert from to Array to {%resultkind%}")
 	Case expKinds.BC_BOOLVAR 
-		Error("Can't convert from Bool to {%resultkind%}")
+		Error("Can't convert from Boolean to {%resultkind%}")
 	Case expKinds.BC_FLOATVAR 
 		'LoadTemplate ./settovar.monkey, bytecode={%bytecodeobj%}, virtualmachine={%virtualmachine%}, result= result, datasource=Floats
 		'endtemplate
@@ -18,7 +17,7 @@ Select varKind
 		'LoadTemplate ./settovar.monkey, bytecode={%bytecodeobj%}, virtualmachine={%virtualmachine%}, result= result, datasource=Strings
 		'endtemplate
 	Case expKinds.BC_TMPBOOL
-		Error("Can't convert from Bool to {%resultkind%}")
+		Error("Can't convert from Boolean to {%resultkind%}")
 	Case expKinds.BC_TMPFLOAT 
 		 'LoadTemplate ./settotmp.monkey, bytecode={%bytecodeobj%}, virtualmachine={%virtualmachine%}, result= result, source=tmpFloat
 		 'endtemplate

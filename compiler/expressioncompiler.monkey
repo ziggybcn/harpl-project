@@ -375,7 +375,7 @@ Class ExpressionCompiler
 							Case "-"; result = float(Prev.text) - float(Post.text)
 							Case "*"; result = float(Prev.text) * float(Post.text)
 							Case "/"; result = float(Prev.text) / float(Post.text)
-							Case "^"; result = Pow(float(Prev.text) ,float(Post.text))
+							Case "^"; result = math.Pow(float(Prev.text) ,float(Post.text))
 							Case "%"; result = float(Prev.text) mod float(Post.text)
 							Case "&"; result = Int(Prev.text) & Int(Post.text)
 							Case "|"; result = Int(Prev.text) | Int(Post.text)

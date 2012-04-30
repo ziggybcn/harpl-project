@@ -8,3 +8,5 @@ Output FirstWord ++ " " ++SecondWord ++ "!";
 
 Define White as Integer = #FFFFFF;
 Output "White color has a value of " ++ White
+Define another as Integer = 255
+Output "White with some operations=" ++ another ^2 ++ " but it could be a lot worse."
