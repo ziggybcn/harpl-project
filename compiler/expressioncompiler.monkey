@@ -262,6 +262,7 @@ Class ExpressionCompiler
 			"<", AssemblerObj.MINOR,
 			">", AssemblerObj.MAJOR,
 			"=", AssemblerObj.EQUALS,
+			"<>", AssemblerObj.NOT_EQUALS,
 			"<=", AssemblerObj.MINOR_EQUAL,
 			">=", AssemblerObj.MAJOR_EQUAL],
 			 expression) = False Then Return false		
@@ -348,7 +349,7 @@ Class ExpressionCompiler
 								EndIf
 							
 							'Returning Bool:
-							Case "=",">=", "<=", ">", "<"
+							Case "=",">=", "<=", ">", "<", "<>"
 								Store = eTmpTokens.TMPBOOL  + booleanCounter
 								Self.booleanCounter += 1
 							Case "++"

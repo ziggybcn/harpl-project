@@ -1,2 +1,5 @@
 Define X as Integer = 4, Y as Integer = 6
-Define IsMajor as Boolean = X >= Y
+Define IsMajor as Boolean = X = Y
+
+Define MyBoolean as Boolean = X <> Y;
+

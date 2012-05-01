@@ -133,6 +133,9 @@ Class AssemblerObj
 	Const MINOR_EQUAL:String = "MINOR_OR_EQUAL_THAN"
 	Const BC_MINOR_EQUAL:Int = 118
 
+	Const NOT_EQUALS:String = "NOT_EQUALS"
+	Const BC_NOT_EQUALS:Int = 119
+
 	'------------------------------------------------------
 	'DATA ALLOCATION:
 	#Rem

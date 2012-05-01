@@ -77,6 +77,8 @@ Class Hvm
 		instructionSet[AssemblerObj.BC_MINOR] = New MINOR_THAN
 		instructionSet[AssemblerObj.BC_MINOR_EQUAL] = New MINOR_EQUAL 
 		instructionSet[AssemblerObj.BC_EQUALS] = New EQUALS
+		instructionSet[AssemblerObj.BC_NOT_EQUALS] = New NOTEQUALS 
+		
 		Local BaseNOP := New NOP
 		For Local i:Int = 0 until MaxInstructions 
 			if instructionSet[i] = null then instructionSet[i] = BaseNOP
