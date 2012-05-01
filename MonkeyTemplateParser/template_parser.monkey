@@ -71,7 +71,9 @@ Function ParseDoc:String(text:String, replaces:Replacer[], fileLocation:String, 
 				local data:String[] = line.Trim.Split(",")
 				Local repList:List<Replacer> = new List<Replacer>
 				For Local i:Int = 1 until data.Length
-					Local repData:String[] = data[i].Split("=")
+					Local repData:String[2] '= data[i].Split("=")
+					repData[0] = data[i][.. data[i].Find("=")]
+					repData[1] = data[i][data[i].Find("=") ..]
 					Local rep:Replacer = new Replacer
 					if repData.Length = 2
 						rep.find = repData[0]

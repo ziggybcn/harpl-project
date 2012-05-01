@@ -258,6 +258,13 @@ Class ExpressionCompiler
 			  expression) = False Then Return false
 			  
 		'COMPARISON OPERATORS PENDING:
+		if ProcessBinaryOperator([
+			"<", AssemblerObj.MINOR,
+			">", AssemblerObj.MAJOR,
+			"=", AssemblerObj.EQUALS,
+			"<=", AssemblerObj.MINOR_EQUAL,
+			">=", AssemblerObj.MAJOR_EQUAL],
+			 expression) = False Then Return false		
 
 		'return WriteAsm(expression, scope )
 		if expression.IsEmpty = True Then

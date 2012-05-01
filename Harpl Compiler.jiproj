@@ -113,6 +113,20 @@
         <Y>0</Y>
       </CursorPos>
     </Document>
+    <Document Filename=".\harplvm\runtime\Templates\booleanassembleroperation.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+      <DocGUID />
+      <CursorPos>
+        <X>0</X>
+        <Y>0</Y>
+      </CursorPos>
+    </Document>
+    <Document Filename=".\harplvm\runtime\Templates\booleanperformoperation.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+      <DocGUID />
+      <CursorPos>
+        <X>0</X>
+        <Y>0</Y>
+      </CursorPos>
+    </Document>
     <Document Filename=".\harplvm\runtime\Templates\loadoperator.Monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />
       <CursorPos>
@@ -177,6 +191,13 @@
       </CursorPos>
     </Document>
     <Document Filename=".\harplvm\runtime\builtinruntime.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+      <DocGUID />
+      <CursorPos>
+        <X>0</X>
+        <Y>0</Y>
+      </CursorPos>
+    </Document>
+    <Document Filename=".\harplvm\runtime\comparisonops.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />
       <CursorPos>
         <X>0</X>

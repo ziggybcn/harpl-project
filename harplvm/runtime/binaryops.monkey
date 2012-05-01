@@ -184,7 +184,6 @@ Class Sub extends HarplFunction
 	if opKind1 = expKinds.BC_FLOATVAR 
 		if opKind2 = expKinds.BC_FLOATVAR 
 			'loadtemplate ./numericperformoperation.Monkey, operation=-, resultkind = Float, operator1=Float1, operator2=Float2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Float1 - Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -236,7 +235,6 @@ Class Sub extends HarplFunction
 			'endtemplate
 		ElseIf opKind2 = expKinds.BC_INTVAR
 			'loadtemplate ./numericperformoperation.Monkey, operation=-, resultkind = Float, operator1=Float1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Float1 - Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -290,7 +288,6 @@ Class Sub extends HarplFunction
 	ElseIf opKind1 = expKinds.BC_INTVAR
 		if opKind2 = expKinds.BC_FLOATVAR 
 			'loadtemplate ./numericperformoperation.Monkey, operation=-, resultkind = Float, operator1=Int1, operator2=Float2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Int1 - Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -342,7 +339,6 @@ Class Sub extends HarplFunction
 			'endtemplate
 		ElseIf opKind2 = expKinds.BC_INTVAR
 			'loadtemplate ./numericperformoperation.Monkey, operation=-, resultkind = Int, operator1=Int1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Int = Int1 - Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -587,7 +583,6 @@ Class Sum extends HarplFunction
 	if opKind1 = expKinds.BC_FLOATVAR 
 		if opKind2 = expKinds.BC_FLOATVAR 
 			'loadtemplate ./numericperformoperation.Monkey, operation=+, resultkind = Float, operator1=Float1, operator2=Float2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Float1 + Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -639,7 +634,6 @@ Class Sum extends HarplFunction
 			'endtemplate
 		ElseIf opKind2 = expKinds.BC_INTVAR
 			'loadtemplate ./numericperformoperation.Monkey, operation=+, resultkind = Float, operator1=Float1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Float1 + Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -693,7 +687,6 @@ Class Sum extends HarplFunction
 	ElseIf opKind1 = expKinds.BC_INTVAR
 		if opKind2 = expKinds.BC_FLOATVAR 
 			'loadtemplate ./numericperformoperation.Monkey, operation=+, resultkind = Float, operator1=Int1, operator2=Float2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Int1 + Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -745,7 +738,6 @@ Class Sum extends HarplFunction
 			'endtemplate
 		ElseIf opKind2 = expKinds.BC_INTVAR
 			'loadtemplate ./numericperformoperation.Monkey, operation=+, resultkind = Int, operator1=Int1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Int = Int1 + Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -990,7 +982,6 @@ Class Mul extends HarplFunction
 	if opKind1 = expKinds.BC_FLOATVAR 
 		if opKind2 = expKinds.BC_FLOATVAR 
 			'loadtemplate ./numericperformoperation.Monkey, operation=*, resultkind = Float, operator1=Float1, operator2=Float2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Float1 * Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -1042,7 +1033,6 @@ Class Mul extends HarplFunction
 			'endtemplate
 		ElseIf opKind2 = expKinds.BC_INTVAR
 			'loadtemplate ./numericperformoperation.Monkey, operation=*, resultkind = Float, operator1=Float1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Float1 * Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -1096,7 +1086,6 @@ Class Mul extends HarplFunction
 	ElseIf opKind1 = expKinds.BC_INTVAR
 		if opKind2 = expKinds.BC_FLOATVAR 
 			'loadtemplate ./numericperformoperation.Monkey, operation=*, resultkind = Float, operator1=Int1, operator2=Float2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Int1 * Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -1148,7 +1137,6 @@ Class Mul extends HarplFunction
 			'endtemplate
 		ElseIf opKind2 = expKinds.BC_INTVAR
 			'loadtemplate ./numericperformoperation.Monkey, operation=*, resultkind = Int, operator1=Int1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Int = Int1 * Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -1393,7 +1381,6 @@ Class Div extends HarplFunction
 	if opKind1 = expKinds.BC_FLOATVAR 
 		if opKind2 = expKinds.BC_FLOATVAR 
 			'loadtemplate ./numericperformoperation.Monkey, operation=/, resultkind = Float, operator1=Float1, operator2=Float2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Float1 / Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -1445,7 +1432,6 @@ Class Div extends HarplFunction
 			'endtemplate
 		ElseIf opKind2 = expKinds.BC_INTVAR
 			'loadtemplate ./numericperformoperation.Monkey, operation=/, resultkind = Float, operator1=Float1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Float1 / Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -1499,7 +1485,6 @@ Class Div extends HarplFunction
 	ElseIf opKind1 = expKinds.BC_INTVAR
 		if opKind2 = expKinds.BC_FLOATVAR 
 			'loadtemplate ./numericperformoperation.Monkey, operation=/, resultkind = Float, operator1=Int1, operator2=Float2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Int1 / Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -1551,7 +1536,6 @@ Class Div extends HarplFunction
 			'endtemplate
 		ElseIf opKind2 = expKinds.BC_INTVAR
 			'loadtemplate ./numericperformoperation.Monkey, operation=/, resultkind = Int, operator1=Int1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Int = Int1 / Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -1796,7 +1780,6 @@ Class Modulus extends HarplFunction
 	if opKind1 = expKinds.BC_FLOATVAR 
 		if opKind2 = expKinds.BC_FLOATVAR 
 			'loadtemplate ./numericperformoperation.Monkey, operation=Mod, resultkind = Float, operator1=Float1, operator2=Float2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Float1 Mod Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -1848,7 +1831,6 @@ Class Modulus extends HarplFunction
 			'endtemplate
 		ElseIf opKind2 = expKinds.BC_INTVAR
 			'loadtemplate ./numericperformoperation.Monkey, operation=Mod, resultkind = Float, operator1=Float1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Float1 Mod Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -1902,7 +1884,6 @@ Class Modulus extends HarplFunction
 	ElseIf opKind1 = expKinds.BC_INTVAR
 		if opKind2 = expKinds.BC_FLOATVAR 
 			'loadtemplate ./numericperformoperation.Monkey, operation=Mod, resultkind = Float, operator1=Int1, operator2=Float2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Float = Int1 Mod Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind
@@ -1954,7 +1935,6 @@ Class Modulus extends HarplFunction
 			'endtemplate
 		ElseIf opKind2 = expKinds.BC_INTVAR
 			'loadtemplate ./numericperformoperation.Monkey, operation=Mod, resultkind = Int, operator1=Int1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
-			
 			local result:Int = Int1 Mod Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
 			Select varKind

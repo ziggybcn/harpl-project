@@ -1,4 +1,3 @@
-
 local result:{%resultkind%} = {%operator1%} {%operation%} {%operator2%}
 {%bytecodeobj%}.pos+=1; Local varKind:Int = {%bytecodeobj%}.code[{%bytecodeobj%}.pos]
 Select varKind

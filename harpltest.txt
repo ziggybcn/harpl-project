@@ -1,12 +1,2 @@
-!This is a small Harpl source code sample.
-!This sample creates 2 string variables, and outputs them to the console, 
-!using a simple concatenation expression that also adds a "!" character 
-!at the end of the output text.
-
-Define FirstWord as string = 'Hello', SecondWord as String = 'world';
-Output FirstWord ++ " " ++SecondWord ++ "!";
-
-Define White as Integer = 10;
-Output "White color has a value of " ++ White + 5 * 3.5;
-Define another as Integer = 256
-Output "White with some operations = " ++ another ^2 ++ " but it could be a lot worse."
+Define X as Integer = 4, Y as Integer = 6
+Define IsMajor as Boolean = X > Y

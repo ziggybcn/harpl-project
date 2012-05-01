@@ -117,6 +117,21 @@ Class AssemblerObj
 	
 	Const UNNARY_COMPLEMENT:String = "UNNARY_COMPLEMENT"
 	Const BC_UNNARY_COMPLEMENT:Int = 113
+	
+	Const MINOR:String = "MINOR_THAN"
+	Const BC_MINOR:Int = 114
+	
+	Const MAJOR:String = "MAJOR_THAN"
+	Const BC_MAJOR:Int = 115
+
+	Const EQUALS:String = "EQUALS"
+	Const BC_EQUALS:Int = 116
+
+	Const MAJOR_EQUAL:String = "MAJOR_OR_EQUAL_THAN"
+	Const BC_MAJOR_EQUAL:Int = 117
+
+	Const MINOR_EQUAL:String = "MINOR_OR_EQUAL_THAN"
+	Const BC_MINOR_EQUAL:Int = 118
 
 	'------------------------------------------------------
 	'DATA ALLOCATION:
