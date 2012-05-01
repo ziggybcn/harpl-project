@@ -73,6 +73,10 @@ Class Hvm
 		instructionSet[AssemblerObj.BC_MODULUS] = New Modulus
 		instructionSet[AssemblerObj.BC_CONCAT] = New Concat
 		instructionSet[AssemblerObj.BC_MAJOR] = New MAJOR_THAN
+		instructionSet[AssemblerObj.BC_MAJOR_EQUAL ] = New MAJOR_EQUAL 
+		instructionSet[AssemblerObj.BC_MINOR] = New MINOR_THAN
+		instructionSet[AssemblerObj.BC_MINOR_EQUAL] = New MINOR_EQUAL 
+		instructionSet[AssemblerObj.BC_EQUALS] = New EQUALS
 		Local BaseNOP := New NOP
 		For Local i:Int = 0 until MaxInstructions 
 			if instructionSet[i] = null then instructionSet[i] = BaseNOP

@@ -73,7 +73,7 @@ Function ParseDoc:String(text:String, replaces:Replacer[], fileLocation:String, 
 				For Local i:Int = 1 until data.Length
 					Local repData:String[2] '= data[i].Split("=")
 					repData[0] = data[i][.. data[i].Find("=")]
-					repData[1] = data[i][data[i].Find("=") ..]
+					repData[1] = data[i][data[i].Find("=")+1 ..]
 					Local rep:Replacer = new Replacer
 					if repData.Length = 2
 						rep.find = repData[0]
