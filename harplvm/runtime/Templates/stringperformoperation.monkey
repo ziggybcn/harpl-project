@@ -1,7 +1,6 @@
 
 local result:String = {%operator1%} {%operation%} {%operator2%}
 {%bytecodeobj%}.pos+=1; Local varKind:Int = {%bytecodeobj%}.code[{%bytecodeobj%}.pos]
-Print "Executing concat!"
 Select varKind
 	Case expKinds.BC_ARRAYVAR 
 		Error("Can't convert from Array to String")

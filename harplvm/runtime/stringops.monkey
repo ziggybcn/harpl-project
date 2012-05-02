@@ -186,7 +186,6 @@ Class Concat extends HarplFunction
 			
 			local result:String = Float1 +""+ Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
-			Print "Executing concat!"
 			Select varKind
 				Case expKinds.BC_ARRAYVAR 
 					Error("Can't convert from Array to String")
@@ -223,7 +222,6 @@ Class Concat extends HarplFunction
 			
 			local result:String = Float1 +""+ Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
-			Print "Executing concat!"
 			Select varKind
 				Case expKinds.BC_ARRAYVAR 
 					Error("Can't convert from Array to String")
@@ -260,7 +258,6 @@ Class Concat extends HarplFunction
 			
 			local result:String = Float1 +""+ String2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
-			Print "Executing concat!"
 			Select varKind
 				Case expKinds.BC_ARRAYVAR 
 					Error("Can't convert from Array to String")
@@ -302,7 +299,6 @@ Class Concat extends HarplFunction
 			
 			local result:String = Int1 +""+ Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
-			Print "Executing concat!"
 			Select varKind
 				Case expKinds.BC_ARRAYVAR 
 					Error("Can't convert from Array to String")
@@ -339,7 +335,6 @@ Class Concat extends HarplFunction
 			
 			local result:String = Int1 +""+ Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
-			Print "Executing concat!"
 			Select varKind
 				Case expKinds.BC_ARRAYVAR 
 					Error("Can't convert from Array to String")
@@ -376,7 +371,6 @@ Class Concat extends HarplFunction
 			
 			local result:String = Int1 +""+ String2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
-			Print "Executing concat!"
 			Select varKind
 				Case expKinds.BC_ARRAYVAR 
 					Error("Can't convert from Array to String")
@@ -417,7 +411,6 @@ Class Concat extends HarplFunction
 			
 			local result:String = String1 +""+ Float2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
-			Print "Executing concat!"
 			Select varKind
 				Case expKinds.BC_ARRAYVAR 
 					Error("Can't convert from Array to String")
@@ -454,7 +447,6 @@ Class Concat extends HarplFunction
 			
 			local result:String = String1 +""+ Int2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
-			Print "Executing concat!"
 			Select varKind
 				Case expKinds.BC_ARRAYVAR 
 					Error("Can't convert from Array to String")
@@ -491,7 +483,6 @@ Class Concat extends HarplFunction
 			
 			local result:String = String1 +""+ String2
 			bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
-			Print "Executing concat!"
 			Select varKind
 				Case expKinds.BC_ARRAYVAR 
 					Error("Can't convert from Array to String")
