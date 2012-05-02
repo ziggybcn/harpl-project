@@ -157,10 +157,17 @@ Class Compiler
 			'AddError("Error processing expression.", nextToken)
 			ConsumeSentence
 		EndIf
-
-		
+		CheckSentenceEnd()
 	End
 	
+	Method CheckSentenceEnd()
+		if Self.lexer.tokens.IsEmpty() = False
+			if Self.lexer.tokens.First().Kind <> eToken.CARRIER And Self.lexer.tokens.First().Kind <> eToken.ENDSENTENCE Then
+				AddError("Expecting end of instruction.",Self.lexer.tokens.First())
+			EndIf
+		EndIf 
+		
+	End
 	Method CompileVar:Bool()
 		'We eat the VAR token:
 		local varToken:Token = Self.lexer.tokens.RemoveFirst()
