@@ -22,6 +22,8 @@ if opKind1 = expKinds.BC_FLOATVAR
 	ElseIf opKind2 = expKinds.BC_STRINGVAR
 		'loadtemplate ./stringperformoperation.Monkey, operation={%operation%}, resultkind = String, operator1=Float1, operator2=String2, bytecodeobj=bco, virtualmachine=vm
 		'endtemplate
+	Else
+		Error("Wrong data type for String operation.")
 	
 	endif
 ElseIf opKind1 = expKinds.BC_INTVAR
@@ -34,6 +36,8 @@ ElseIf opKind1 = expKinds.BC_INTVAR
 	ElseIf opKind2 = expKinds.BC_STRINGVAR
 		'loadtemplate ./stringperformoperation.Monkey, operation={%operation%}, resultkind = String, operator1=Int1, operator2=String2, bytecodeobj=bco, virtualmachine=vm
 		'endtemplate
+	Else
+		Error("Wrong data type for String operation.")
 	endif
 ElseIf opKind1 = expKinds.BC_STRINGVAR
 	if opKind2 = expKinds.BC_FLOATVAR 
@@ -45,6 +49,8 @@ ElseIf opKind1 = expKinds.BC_STRINGVAR
 	ElseIf opKind2 = expKinds.BC_STRINGVAR
 		'loadtemplate ./stringperformoperation.Monkey, operation={%operation%}, resultkind = String, operator1=String1, operator2=String2, bytecodeobj=bco, virtualmachine=vm
 		'endtemplate
+	Else
+		Error("Wrong data type for String operation.")
 	endif
 
 Else
