@@ -245,11 +245,11 @@ Class ExpressionCompiler
 			 "-", AssemblerObj.SUB], expression) = False Then Return false
 		
 		if ProcessBinaryOperator([
-		"shl",AssemblerObj.BC_BIT_SHL, "shr",AssemblerObj.BC_BIT_SHR ], expression) = False Then Return false
+		"shl",AssemblerObj.BIT_SHL, "shr",AssemblerObj.BIT_SHR ], expression) = False Then Return false
 		
 			  
 		if ProcessBinaryOperator(["&", AssemblerObj.BIT_AND], expression) = False Then Return false
-		if ProcessBinaryOperator(["~", AssemblerObj.BC_BIT_XOR], expression) = False Then Return false
+		if ProcessBinaryOperator(["~", AssemblerObj.BIT_XOR], expression) = False Then Return false
 		
 		if ProcessBinaryOperator(["|", AssemblerObj.BIT_OR], expression) = False Then Return false
 				

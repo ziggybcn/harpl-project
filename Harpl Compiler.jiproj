@@ -113,6 +113,13 @@
         <Y>0</Y>
       </CursorPos>
     </Document>
+    <Document Filename=".\harplvm\runtime\Templates\bitwiseassembleroperation.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+      <DocGUID />
+      <CursorPos>
+        <X>0</X>
+        <Y>0</Y>
+      </CursorPos>
+    </Document>
     <Document Filename=".\harplvm\runtime\Templates\booleanassembleroperation.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />
       <CursorPos>
@@ -184,6 +191,13 @@
       </CursorPos>
     </Document>
     <Document Filename=".\harplvm\runtime\binaryops.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+      <DocGUID />
+      <CursorPos>
+        <X>0</X>
+        <Y>0</Y>
+      </CursorPos>
+    </Document>
+    <Document Filename=".\harplvm\runtime\bitwiseops.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />
       <CursorPos>
         <X>0</X>

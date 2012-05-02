@@ -6,6 +6,7 @@ Import scopestack
 Import harplvm.runtime.builtinruntime 
 Import harplvm.runtime.dynamicscopestack 
 Import harplvm.runtime.comparisonops 
+Import harplvm.runtime.bitwiseops 
 
 #Rem
 	summary: This is the Harpl Virtual Machine Class.
@@ -78,7 +79,11 @@ Class Hvm
 		instructionSet[AssemblerObj.BC_MINOR_EQUAL] = New MINOR_EQUAL 
 		instructionSet[AssemblerObj.BC_EQUALS] = New EQUALS
 		instructionSet[AssemblerObj.BC_NOT_EQUALS] = New NOTEQUALS 
-		
+		instructionSet[AssemblerObj.BC_BIT_AND] = New Bitwise_AND
+		instructionSet[AssemblerObj.BC_BIT_OR] = New Bitwise_OR 
+		instructionSet[AssemblerObj.BC_BIT_XOR] = New Bitwise_XOR 
+		instructionSet[AssemblerObj.BC_BIT_SHL] = New Bitwise_shl 
+		instructionSet[AssemblerObj.BC_BIT_SHR] = New Bitwise_shr 
 		Local BaseNOP := New NOP
 		For Local i:Int = 0 until MaxInstructions 
 			if instructionSet[i] = null then instructionSet[i] = BaseNOP
