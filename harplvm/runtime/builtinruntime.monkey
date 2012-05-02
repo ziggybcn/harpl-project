@@ -281,7 +281,7 @@ Class Set_SetVar extends HarplFunction
 						Error("Can't convert from Boolean to float")
 						
 					Case expKinds.BC_INTVAR   'Asignar una TMP BOOL a una variable int
-						Error("Can't convert from Boolean to float")
+						Error("Can't convert from Boolean to Integer")
 						
 					Case expKinds.BC_STRINGVAR 'Asignar una TMP BOOL a una variable String
 						Error("Can't convert from Boolean to String")
