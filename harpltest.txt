@@ -1,7 +1,7 @@
-Define X as Integer = 10
+Define X as Integer = 2^16
 Output "Value=" ++ X ^ 0
 Output "Value=" ++ X ^ 1
 Output "Value=" ++ X ^ 2
 Output "Value=" ++ X ^ 3
 Output "Value=" ++ X ^ 4
-Output "Value=" ++ X ^ 5
+Output "Value=" ++ X ^ 16

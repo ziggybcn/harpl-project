@@ -1,13 +1,17 @@
 Import dynamicdatascope
 
 Class DynamicScopeStack
+	
+	Private
+	Field scopes:DynamicDataScope[] 
 	Const DEFAULT_SCOPE_SIZE:Int = 100
 	Const SCOPE_OVERFLOW:Int = 1024
-	Field scopes:DynamicDataScope[] 
 	Field pointer:Int = 0
+	Public
 	
 	Method New()
 		Init
+		
 	End
 	
 	Method Init()

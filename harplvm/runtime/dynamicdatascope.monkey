@@ -1,7 +1,11 @@
 Import Harpl
 
 Class DynamicDataScope
+
+	Private
 	Const  DEFAULT_MEM_SIZE:Int = 32
+	Public
+
 	Field Ints:Int[]
 	Field Floats:Float[]
 	Field Strings:String[]
@@ -16,4 +20,5 @@ Class DynamicDataScope
 		Objects = New Int[DEFAULT_MEM_SIZE ];
 		Arrays = New Object[DEFAULT_MEM_SIZE];
 	End
+	
 End
