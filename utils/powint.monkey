@@ -1,14 +1,12 @@
-Function PowInt:Int(value1:Int, value2:Int)
-	Local result:Int
-	if value2>0 Then
-		result = value1
-		For Local i:Int = 2 to value2
-			result*=result
-		Next
-		Return result
-	ElseIf value2 = 0 Then Return 1
-	
-	Else
-		Return 0
-	EndIf
+Function PowInt:Int(base:Int, exp:Int)
+	if exp<0 Then Return 0
+	Local result:Int = 1
+	While exp
+		If exp & 1
+			result *= base
+		End
+		exp Shr= 1
+		base *= base
+	Wend
+	Return result
 End
