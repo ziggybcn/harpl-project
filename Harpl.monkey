@@ -65,33 +65,35 @@ Function Main()
 	next
 	
 	lCompiler.CompileFile(fileToCompile)
-		For Local err:CompileError = eachin lCompiler.compileErrors
-			Print "Error: " + err.description
-			if err.file <>"" Then
-				Print "    At file: " + err.file + "[" + err.posX + "," + err.posY + "]"
-			EndIf
-			Print ""
-		Next
-	'Else
-		Local harplByteCoder := New HarplByteCoder 
-		local bco:ByteCodeObj = harplByteCoder.GenerateByteCode(lCompiler.generatedAsm)
-		if bco = null Then
-			Print "Bytecode generator failed."
-		else
-			Local count:Int = 0
-			For Local i:Int = eachin bco.code
-				WriteInConsole ("Bytecode (" + count + ") : " + i)
-				count += 1
-			Next
+	For Local err:CompileError = eachin lCompiler.compileErrors
+		Print "Error: " + err.description
+		if err.file <>"" Then
+			Print "    At file: " + err.file + "[" + err.posX+1 + "," + err.posY+1 + "]"
 		EndIf
-		Local virtualMachine:Hvm = new Hvm
-		if bco <> null then
-			Input("Press ENTER to run the compiled script>")
-			virtualMachine.Run(bco)
-		Else
-			Print "The Byte Code Generator could not generate a valid bytecode object."
-		endif
-	'EndIf
+		Print ""
+	Next
+	if lCompiler.compileErrors.IsEmpty = False
+		Local ignoreerrors$ = Input("Do you want to run this, ignoring all the compilation errors? (Y/N)")
+		if ignoreerrors.Trim.ToLower.StartsWith("y")= false then return 4 
+	EndIf
+	Local harplByteCoder := New HarplByteCoder 
+	local bco:ByteCodeObj = harplByteCoder.GenerateByteCode(lCompiler.generatedAsm)
+	if bco = null Then
+		Print "Bytecode generator failed."
+	else
+		Local count:Int = 0
+		For Local i:Int = eachin bco.code
+			WriteInConsole ("Bytecode (" + count + ") : " + i)
+			count += 1
+		Next
+	EndIf
+	Local virtualMachine:Hvm = new Hvm
+	if bco <> null then
+		Input("Press ENTER to run the compiled script>")
+		virtualMachine.Run(bco)
+	Else
+		Print "The Byte Code Generator could not generate a valid bytecode object."
+	endif
 	
 End
 

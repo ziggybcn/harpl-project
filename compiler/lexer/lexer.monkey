@@ -219,17 +219,17 @@ Class Lexer
 						Local grandpaNode:list.Node<Token> = prevNode.PrevNode()
 						if (grandpaNode <> null And grandpaNode.Value.Kind = eToken.OPERATOR) or grandpaNode = null
 							if prevNode.Value.text = "-" then
-							'We leave this for the unnary operators calculation becouse of ^ preference.
+							'We leave this for the unary operators calculation becouse of ^ preference.
 '								if token.text[0] <> "-"[0] Then 
 '									token.text = "-" + token.text
 '								Else
 '									token.text = Mid(token.text,2)
 '								EndIf
 '								prevNode.Remove()
-'								readNext = False;	'Chain possible unnary operators.
+'								readNext = False;	'Chain possible unary operators.
 							ElseIf prevNode.Value.text = "+" then 'We can just ignore expresions of kind a = 45 * +7, and considere them 45 * 7
 								prevNode.Remove()
-								readNext = False;	'Chain possible unnary operators.
+								readNext = False;	'Chain possible unary operators.
 							endif
 
 						EndIf

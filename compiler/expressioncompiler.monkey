@@ -131,14 +131,14 @@ Class ExpressionCompiler
 		
 		'"Item" es el TOKEN sobre el que se aplicará la operación unaria.
 		
-		if Item.PrevNode = null Then Return 	'No unnary operator!!!
+		if Item.PrevNode = null Then Return 	'No unary operator!!!
 
 		'"Operator" es el operador que precede a Item:
 		Local operator:Token = Item.PrevNode.Value()
 
 		If operator.Kind <> eToken.OPERATOR Then Return 'No valid operator
 		If operator.text = "+" Then
-			'This unnary operator is neutral, no need to compile anything
+			'This unary operator is neutral, no need to compile anything
 			Item.PrevNode.Remove
 			
 		ElseIf operator.text = "-"
@@ -152,7 +152,7 @@ Class ExpressionCompiler
 					Item.Value.text = newval
 				EndIf
 			else
-				compiler.generatedAsm.AddInstruction(AssemblerObj.UNNARY_SUB)
+				compiler.generatedAsm.AddInstruction(AssemblerObj.UNARY_SUB)
 				compiler.WriteIdentParameter(Item.Value)
 				Item.PrevNode.Remove
 				Local store:String = eTmpTokens.TMPINT + intCounter
@@ -173,7 +173,7 @@ Class ExpressionCompiler
 				Local newval:Int = -int(Item.Value.text)
 				Item.Value.text = newval
 			else
-				compiler.generatedAsm.AddInstruction(AssemblerObj.UNNARY_COMPLEMENT )
+				compiler.generatedAsm.AddInstruction(AssemblerObj.UNARY_COMPLEMENT )
 				compiler.WriteIdentParameter(Item.Value)
 				Item.PrevNode.Remove
 				Local store:String = eTmpTokens.TMPINT + intCounter
@@ -202,7 +202,7 @@ Class ExpressionCompiler
 			Select tokenNode.Value.Kind
 				Case eToken.IDENTIFIER, eToken.NUMBER 
 					Local Prev:list.Node<Token> = tokenNode.PrevNode 
-					'There is a Prev node that is an operator that can be a unnary operator:
+					'There is a Prev node that is an operator that can be a unary operator:
 					if Prev <> Null And  Prev.Value.Kind = eToken.OPERATOR And (Prev.Value.text = "-" or Prev.Value.text = "~" or Prev.Value.text = "+")
 						'we check if it is a "initial" unary operation:
 						Local GrandPa:list.Node<Token> = Prev.PrevNode()
@@ -227,7 +227,7 @@ Class ExpressionCompiler
 
 		'TODO: Pending Braces!!
 		
-		'Unnary operators
+		'Unary operators
 		CompileUnaries(expression,compilerScopeStack.compiler)
 		
 		'Binary operators:

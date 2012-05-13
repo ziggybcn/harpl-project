@@ -47,7 +47,7 @@ Class HarplByteCoder
 					
 				'ARITHMETICS:
 				
-				Case AssemblerObj.UNNARY_COMPLEMENT, AssemblerObj.UNNARY_SUB
+				Case AssemblerObj.UNARY_COMPLEMENT, AssemblerObj.UNARY_SUB
 					CompileUnaryOp(result)
 				
 				Case AssemblerObj.BIT_AND, AssemblerObj.BIT_OR, 
@@ -104,10 +104,10 @@ Class HarplByteCoder
 	Method CompileUnaryOp:Bool(result:ByteCodeObj )
 		Local instruct:Int = 0
 		Select node.Value
-			Case AssemblerObj.UNNARY_COMPLEMENT 
-				instruct = AssemblerObj.BC_UNNARY_COMPLEMENT 
-			Case AssemblerObj.UNNARY_SUB 
-				instruct = AssemblerObj.BC_UNNARY_SUB 
+			Case AssemblerObj.UNARY_COMPLEMENT 
+				instruct = AssemblerObj.BC_UNARY_COMPLEMENT 
+			Case AssemblerObj.UNARY_SUB 
+				instruct = AssemblerObj.BC_UNARY_SUB 
 			Default
 				Error("Unknown unary operator was found.")
 				Return false
