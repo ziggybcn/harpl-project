@@ -27,7 +27,7 @@ Class AssemblerScopeStack
 	#rem
 		summary: closes current compiler data scope, and writes the required assembler code. It also removes the scope from the stack.
 	#end
-	Method CloseDataScope:CompilerDataScope()
+	Method CloseDataScope:AssemblerScope()
 		Local currentDataScope:AssemblerScope = dataScopes.RemoveLast()
 		currentIndex -= 1
 		Return currentDataScope

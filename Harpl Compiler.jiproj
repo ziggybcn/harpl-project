@@ -267,20 +267,6 @@
         <Y>0</Y>
       </CursorPos>
     </Document>
-    <Document Filename=".\harplvm\runtimescope.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
-      <DocGUID />
-      <CursorPos>
-        <X>0</X>
-        <Y>0</Y>
-      </CursorPos>
-    </Document>
-    <Document Filename=".\harplvm\scopestack.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
-      <DocGUID />
-      <CursorPos>
-        <X>0</X>
-        <Y>0</Y>
-      </CursorPos>
-    </Document>
     <Document Filename=".\utils\byref.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />
       <CursorPos>
@@ -345,5 +331,5 @@
       </CursorPos>
     </Document>
   </Files>
-  <CompilerConfig Configuration="debug" BuildMode="build" Target="stdcpp" />
+  <CompilerConfig Configuration="release" BuildMode="build" Target="stdcpp" />
 </JiProj>

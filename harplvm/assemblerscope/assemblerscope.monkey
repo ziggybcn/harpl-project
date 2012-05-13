@@ -37,11 +37,16 @@ Class AssemblerScope
 	End
 
 	Method AddArrayVar(Name:String)
-		arrayVars.Add(Name,arrayVars.Count-1)
+		Local ibr:IntByRef = New IntByRef
+		ibr.value = arrayVars.Count-1
+		arrayVars.Add(Name,ibr)
+		
 	End
 
 	Method AddObjVar(Name:String)
-		objVars.Add(Name,objVars.Count-1)
+		Local ibr:IntByRef = New IntByRef
+		ibr.value = objVars.Count-1
+		objVars.Add(Name,ibr)
 	End
 
 End

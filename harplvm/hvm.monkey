@@ -2,7 +2,6 @@ Import Harpl
 Import bytecodeobj
 Import harplfunction
 Import harplbytecoder
-Import scopestack
 Import harplvm.runtime.builtinruntime 
 Import harplvm.runtime.dynamicscopestack 
 Import harplvm.runtime.comparisonops 

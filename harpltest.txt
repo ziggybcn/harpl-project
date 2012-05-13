@@ -1,7 +1,5 @@
-Define X as Integer = 2^16
-Output "Value=" ++ X ^ 0
-Output "Value=" ++ X ^ 1
-Output "Value=" ++ X ^ 2
-Output "Value=" ++ X ^ 3
-Output "Value=" ++ X ^ 4
-Output "Value=" ++ X ^ 16
+Define X as Integer = 23
+Output ""
+Output "Welcome to the first Harpl demo!"
+Output "Attention!!: " ++ X ++ " is the value of the variable X."
+
