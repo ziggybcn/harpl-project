@@ -135,7 +135,8 @@ Class ExpressionCompiler
 
 		'"Operator" es el operador que precede a Item:
 		Local operator:Token = Item.PrevNode.Value()
-
+		Local Prefix:=TellPrefix(Item.Value(),compiler)
+		
 		If operator.Kind <> eToken.OPERATOR Then Return 'No valid operator
 		If operator.text = "+" Then
 			'This unary operator is neutral, no need to compile anything
@@ -155,8 +156,18 @@ Class ExpressionCompiler
 				compiler.generatedAsm.AddInstruction(AssemblerObj.UNARY_SUB)
 				compiler.WriteIdentParameter(Item.Value)
 				Item.PrevNode.Remove
-				Local store:String = eTmpTokens.TMPINT + intCounter
-				intCounter+=1
+				'We have to determine the better target:
+				Local store:String = ""
+				Select Prefix
+					Case expKinds.INTPREFIX, expKinds.INTVAR, expKinds.TMPINTEGER 
+						store = eTmpTokens.TMPINT + intCounter
+						intCounter+=1
+					Case expKinds.FLOATPREFIX, expKinds.FLOATVAR, expKinds.TMPFLOAT
+						store = eTmpTokens.TMPFLOAT + floatCounter
+						floatCounter+=1
+					Default
+						compiler.AddError("wrong data type for unnary - operator.",Item.Value)
+				End
 				Item.Value.text = store
 				Item.Value.Kind = eToken.IDENTIFIER 
 				'compiler.generatedAsm.AddParameter(store)
@@ -176,7 +187,17 @@ Class ExpressionCompiler
 				compiler.generatedAsm.AddInstruction(AssemblerObj.UNARY_COMPLEMENT )
 				compiler.WriteIdentParameter(Item.Value)
 				Item.PrevNode.Remove
-				Local store:String = eTmpTokens.TMPINT + intCounter
+				Local store:String = ""
+				Select Prefix
+					Case expKinds.INTPREFIX, expKinds.INTVAR, expKinds.TMPINTEGER 
+						store = eTmpTokens.TMPINT + intCounter
+						intCounter+=1
+					Case expKinds.FLOATPREFIX, expKinds.FLOATVAR, expKinds.TMPFLOAT
+						store = eTmpTokens.TMPFLOAT + floatCounter
+						floatCounter+=1
+					Default
+						compiler.AddError("wrong data type for unnary ~ operator.",Item.Value)
+				End
 				intCounter+=1
 				Item.Value.text = store
 				Item.Value.Kind = eToken.IDENTIFIER 
@@ -396,6 +417,9 @@ Class ExpressionCompiler
 							Case "shl"; result = Int(Prev.text) shl Int(Post.text)
 							Case "shr"; result = Int(Prev.text) shr Int(Post.text)
 						End
+						if prefix1 = expKinds.INTPREFIX And prefix2 = prefix1 Then
+							result = string(int(result))
+						EndIf
 						if result="" Then
 							compiler.AddError("Error evaluating expression",curT.sourceFile, curT.docX, curT.docY)
 						Else

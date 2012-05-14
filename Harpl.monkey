@@ -69,7 +69,7 @@ Function Main()
 	For Local err:CompileError = eachin lCompiler.compileErrors
 		Print "Error: " + err.description
 		if err.file <>"" Then
-			Print "    At file: " + err.file + "[" + err.posX+1 + "," + err.posY+1 + "]"
+			Print "    At file: " + err.file + "[" + (err.posX+1) + "," + (err.posY+1) + "]"
 		EndIf
 		Print ""
 	Next

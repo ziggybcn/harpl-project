@@ -51,6 +51,7 @@ Class Hvm
 			if value<instructionSet.Length() And value>=0
 				instructionSet[value].Run(Self,byteCodeObj)
 			Else
+				'Error, bad formed binary
 				byteCodeObj.pos+=1
 			endif
 		Wend
@@ -83,6 +84,8 @@ Class Hvm
 		instructionSet[AssemblerObj.BC_BIT_XOR] = New Bitwise_XOR 
 		instructionSet[AssemblerObj.BC_BIT_SHL] = New Bitwise_shl 
 		instructionSet[AssemblerObj.BC_BIT_SHR] = New Bitwise_shr 
+		instructionSet[AssemblerObj.BC_UNARY_SUB] = New Unary_Sub 
+		instructionSet[AssemblerObj.BC_UNARY_COMPLEMENT ] = New Unary_Complement 
 		Local BaseNOP := New NOP
 		For Local i:Int = 0 until MaxInstructions 
 			if instructionSet[i] = null then instructionSet[i] = BaseNOP

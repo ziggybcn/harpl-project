@@ -190,14 +190,14 @@
         <Y>0</Y>
       </CursorPos>
     </Document>
-    <Document Filename=".\harplvm\runtime\Templates\unaryperformoperation.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+    <Document Filename=".\harplvm\runtime\Templates\unaryop.Monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />
       <CursorPos>
         <X>0</X>
         <Y>0</Y>
       </CursorPos>
     </Document>
-    <Document Filename=".\harplvm\runtime\Templates\unnaryop.Monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+    <Document Filename=".\harplvm\runtime\Templates\unaryperformoperation.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />
       <CursorPos>
         <X>0</X>
