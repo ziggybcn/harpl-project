@@ -1,6 +1,14 @@
 !This is a small Harpl sample
-Define X as Float = #A
+Define X as Integer = #A
+Define value as boolean = (X  = 5) | (X = #A)
 Define isTrue as Boolean = X<5 
 Output ""
+Output ""
+Output ""
+Output ""
 Output "Welcome to the first Harpl demo!"
-Output "Attention!!: " ++ #A ++ " is the value of the variable X."
+Output "Attention!!: " ++ x^2 ++ " is the value of the variable X."
+Output ""
+Output ""
+Output ""
+Output ""

@@ -12,8 +12,16 @@ Method Run:Void(vm:Hvm,bco:ByteCodeObj)
 	'endtemplate	
 	
 	'PERFORM OPERATION:
-	If opKind1<>opKind2 or opKind1<>expKinds.BC_INTVAR Error ("Bitwise operation requires integer values.")
+	'If opKind1<>opKind2 or opKind1<>expKinds.BC_INTVAR Error ("Bitwise operation requires integer values.")
+	If opKind1<>opKind2 Error ("Bitwise operation requires equal kind operators values.")
+	If opKind1  = expKinds.BC_INTVAR then
 	'loadtemplate ./numericperformoperation.Monkey, operation={%operation%}, resultkind = Int, operator1=Int1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
 	'endtemplate
+	ElseIf opKind1 = expKinds.BC_BOOLVAR Then
+	'loadtemplate ./BooleanBitwiseOperation.Monkey, operation={%operation%}, operator1=Bool1, operator2=Bool2, bytecodeobj=bco, virtualmachine=vm
+	'endtemplate
+	Else
+		Error("Bitwise operations require interger or boolean operands")
+	endif
 	bco.pos+=1
 End

@@ -180,7 +180,9 @@ Class Bitwise_AND extends HarplFunction
 		'endtemplate	
 		
 		'PERFORM OPERATION:
-		If opKind1<>opKind2 or opKind1<>expKinds.BC_INTVAR Error ("Bitwise operation requires integer values.")
+		'If opKind1<>opKind2 or opKind1<>expKinds.BC_INTVAR Error ("Bitwise operation requires integer values.")
+		If opKind1<>opKind2 Error ("Bitwise operation requires equal kind operators values.")
+		If opKind1  = expKinds.BC_INTVAR then
 		'loadtemplate ./numericperformoperation.Monkey, operation=&, resultkind = Int, operator1=Int1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
 		local result:Int = Int1 & Int2
 		bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
@@ -231,6 +233,50 @@ Class Bitwise_AND extends HarplFunction
 				 'endtemplate
 		End select
 		'endtemplate
+		ElseIf opKind1 = expKinds.BC_BOOLVAR Then
+		'loadtemplate ./BooleanBitwiseOperation.Monkey, operation=&, operator1=Bool1, operator2=Bool2, bytecodeobj=bco, virtualmachine=vm
+		local result:Bool = (Int(Bool1) & Int(Bool2))<>0
+		bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
+		Select varKind
+			Case expKinds.BC_ARRAYVAR 
+				'Error("Can't convert from Array to {%resultkind%}")
+			Case expKinds.BC_BOOLVAR 
+				'LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Booleans
+				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
+				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
+				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
+				localScope.Booleans[varNum] = result
+				'endtemplate
+			Case expKinds.BC_FLOATVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Floats
+				''endtemplate
+			Case expKinds.BC_INTVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Ints
+				''endtemplate
+			Case expKinds.BC_OBJVAR 
+				'Error("Can't set from Object to {%resultkind%}")
+			Case expKinds.BC_STRINGVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Strings
+				''endtemplate
+			Case expKinds.BC_TMPBOOL
+				'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpBool
+				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
+				vm.tmpBool[varNum] = result 
+				'endtemplate
+			Case expKinds.BC_TMPFLOAT 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpFloat
+				 ''endtemplate
+			Case expKinds.BC_TMPINTEGER 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpInt
+				 ''endtemplate
+			Case expKinds.BC_TMPSTRING 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
+				 ''endtemplate
+		End select
+		'endtemplate
+		Else
+			Error("Bitwise operations require interger or boolean operands")
+		endif
 		bco.pos+=1
 	End
 	'#End Region
@@ -418,7 +464,9 @@ Class Bitwise_OR extends HarplFunction
 		'endtemplate	
 		
 		'PERFORM OPERATION:
-		If opKind1<>opKind2 or opKind1<>expKinds.BC_INTVAR Error ("Bitwise operation requires integer values.")
+		'If opKind1<>opKind2 or opKind1<>expKinds.BC_INTVAR Error ("Bitwise operation requires integer values.")
+		If opKind1<>opKind2 Error ("Bitwise operation requires equal kind operators values.")
+		If opKind1  = expKinds.BC_INTVAR then
 		'loadtemplate ./numericperformoperation.Monkey, operation=|, resultkind = Int, operator1=Int1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
 		local result:Int = Int1 | Int2
 		bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
@@ -469,6 +517,50 @@ Class Bitwise_OR extends HarplFunction
 				 'endtemplate
 		End select
 		'endtemplate
+		ElseIf opKind1 = expKinds.BC_BOOLVAR Then
+		'loadtemplate ./BooleanBitwiseOperation.Monkey, operation=|, operator1=Bool1, operator2=Bool2, bytecodeobj=bco, virtualmachine=vm
+		local result:Bool = (Int(Bool1) | Int(Bool2))<>0
+		bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
+		Select varKind
+			Case expKinds.BC_ARRAYVAR 
+				'Error("Can't convert from Array to {%resultkind%}")
+			Case expKinds.BC_BOOLVAR 
+				'LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Booleans
+				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
+				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
+				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
+				localScope.Booleans[varNum] = result
+				'endtemplate
+			Case expKinds.BC_FLOATVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Floats
+				''endtemplate
+			Case expKinds.BC_INTVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Ints
+				''endtemplate
+			Case expKinds.BC_OBJVAR 
+				'Error("Can't set from Object to {%resultkind%}")
+			Case expKinds.BC_STRINGVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Strings
+				''endtemplate
+			Case expKinds.BC_TMPBOOL
+				'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpBool
+				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
+				vm.tmpBool[varNum] = result 
+				'endtemplate
+			Case expKinds.BC_TMPFLOAT 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpFloat
+				 ''endtemplate
+			Case expKinds.BC_TMPINTEGER 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpInt
+				 ''endtemplate
+			Case expKinds.BC_TMPSTRING 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
+				 ''endtemplate
+		End select
+		'endtemplate
+		Else
+			Error("Bitwise operations require interger or boolean operands")
+		endif
 		bco.pos+=1
 	End
 	'#End Region
@@ -656,7 +748,9 @@ Class Bitwise_XOR extends HarplFunction
 		'endtemplate	
 		
 		'PERFORM OPERATION:
-		If opKind1<>opKind2 or opKind1<>expKinds.BC_INTVAR Error ("Bitwise operation requires integer values.")
+		'If opKind1<>opKind2 or opKind1<>expKinds.BC_INTVAR Error ("Bitwise operation requires integer values.")
+		If opKind1<>opKind2 Error ("Bitwise operation requires equal kind operators values.")
+		If opKind1  = expKinds.BC_INTVAR then
 		'loadtemplate ./numericperformoperation.Monkey, operation=~, resultkind = Int, operator1=Int1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
 		local result:Int = Int1 ~ Int2
 		bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
@@ -707,6 +801,50 @@ Class Bitwise_XOR extends HarplFunction
 				 'endtemplate
 		End select
 		'endtemplate
+		ElseIf opKind1 = expKinds.BC_BOOLVAR Then
+		'loadtemplate ./BooleanBitwiseOperation.Monkey, operation=~, operator1=Bool1, operator2=Bool2, bytecodeobj=bco, virtualmachine=vm
+		local result:Bool = (Int(Bool1) ~ Int(Bool2))<>0
+		bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
+		Select varKind
+			Case expKinds.BC_ARRAYVAR 
+				'Error("Can't convert from Array to {%resultkind%}")
+			Case expKinds.BC_BOOLVAR 
+				'LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Booleans
+				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
+				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
+				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
+				localScope.Booleans[varNum] = result
+				'endtemplate
+			Case expKinds.BC_FLOATVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Floats
+				''endtemplate
+			Case expKinds.BC_INTVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Ints
+				''endtemplate
+			Case expKinds.BC_OBJVAR 
+				'Error("Can't set from Object to {%resultkind%}")
+			Case expKinds.BC_STRINGVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Strings
+				''endtemplate
+			Case expKinds.BC_TMPBOOL
+				'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpBool
+				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
+				vm.tmpBool[varNum] = result 
+				'endtemplate
+			Case expKinds.BC_TMPFLOAT 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpFloat
+				 ''endtemplate
+			Case expKinds.BC_TMPINTEGER 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpInt
+				 ''endtemplate
+			Case expKinds.BC_TMPSTRING 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
+				 ''endtemplate
+		End select
+		'endtemplate
+		Else
+			Error("Bitwise operations require interger or boolean operands")
+		endif
 		bco.pos+=1
 	End
 	'#End Region
@@ -894,7 +1032,9 @@ Class Bitwise_shr extends HarplFunction
 		'endtemplate	
 		
 		'PERFORM OPERATION:
-		If opKind1<>opKind2 or opKind1<>expKinds.BC_INTVAR Error ("Bitwise operation requires integer values.")
+		'If opKind1<>opKind2 or opKind1<>expKinds.BC_INTVAR Error ("Bitwise operation requires integer values.")
+		If opKind1<>opKind2 Error ("Bitwise operation requires equal kind operators values.")
+		If opKind1  = expKinds.BC_INTVAR then
 		'loadtemplate ./numericperformoperation.Monkey, operation=shr, resultkind = Int, operator1=Int1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
 		local result:Int = Int1 shr Int2
 		bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
@@ -945,6 +1085,50 @@ Class Bitwise_shr extends HarplFunction
 				 'endtemplate
 		End select
 		'endtemplate
+		ElseIf opKind1 = expKinds.BC_BOOLVAR Then
+		'loadtemplate ./BooleanBitwiseOperation.Monkey, operation=shr, operator1=Bool1, operator2=Bool2, bytecodeobj=bco, virtualmachine=vm
+		local result:Bool = (Int(Bool1) shr Int(Bool2))<>0
+		bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
+		Select varKind
+			Case expKinds.BC_ARRAYVAR 
+				'Error("Can't convert from Array to {%resultkind%}")
+			Case expKinds.BC_BOOLVAR 
+				'LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Booleans
+				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
+				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
+				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
+				localScope.Booleans[varNum] = result
+				'endtemplate
+			Case expKinds.BC_FLOATVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Floats
+				''endtemplate
+			Case expKinds.BC_INTVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Ints
+				''endtemplate
+			Case expKinds.BC_OBJVAR 
+				'Error("Can't set from Object to {%resultkind%}")
+			Case expKinds.BC_STRINGVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Strings
+				''endtemplate
+			Case expKinds.BC_TMPBOOL
+				'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpBool
+				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
+				vm.tmpBool[varNum] = result 
+				'endtemplate
+			Case expKinds.BC_TMPFLOAT 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpFloat
+				 ''endtemplate
+			Case expKinds.BC_TMPINTEGER 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpInt
+				 ''endtemplate
+			Case expKinds.BC_TMPSTRING 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
+				 ''endtemplate
+		End select
+		'endtemplate
+		Else
+			Error("Bitwise operations require interger or boolean operands")
+		endif
 		bco.pos+=1
 	End
 	'#End Region
@@ -1131,7 +1315,9 @@ Class Bitwise_shl extends HarplFunction
 		'endtemplate	
 		
 		'PERFORM OPERATION:
-		If opKind1<>opKind2 or opKind1<>expKinds.BC_INTVAR Error ("Bitwise operation requires integer values.")
+		'If opKind1<>opKind2 or opKind1<>expKinds.BC_INTVAR Error ("Bitwise operation requires integer values.")
+		If opKind1<>opKind2 Error ("Bitwise operation requires equal kind operators values.")
+		If opKind1  = expKinds.BC_INTVAR then
 		'loadtemplate ./numericperformoperation.Monkey, operation=shl, resultkind = Int, operator1=Int1, operator2=Int2, bytecodeobj=bco, virtualmachine=vm
 		local result:Int = Int1 shl Int2
 		bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
@@ -1182,6 +1368,50 @@ Class Bitwise_shl extends HarplFunction
 				 'endtemplate
 		End select
 		'endtemplate
+		ElseIf opKind1 = expKinds.BC_BOOLVAR Then
+		'loadtemplate ./BooleanBitwiseOperation.Monkey, operation=shl, operator1=Bool1, operator2=Bool2, bytecodeobj=bco, virtualmachine=vm
+		local result:Bool = (Int(Bool1) shl Int(Bool2))<>0
+		bco.pos+=1; Local varKind:Int = bco.code[bco.pos]
+		Select varKind
+			Case expKinds.BC_ARRAYVAR 
+				'Error("Can't convert from Array to {%resultkind%}")
+			Case expKinds.BC_BOOLVAR 
+				'LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Booleans
+				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
+				bco.pos+=1; Local scopeNum:Int = bco.code[bco.pos]
+				Local localScope:DynamicDataScope = vm.dataScope.GetdynamicScope(scopeNum)
+				localScope.Booleans[varNum] = result
+				'endtemplate
+			Case expKinds.BC_FLOATVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Floats
+				''endtemplate
+			Case expKinds.BC_INTVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Ints
+				''endtemplate
+			Case expKinds.BC_OBJVAR 
+				'Error("Can't set from Object to {%resultkind%}")
+			Case expKinds.BC_STRINGVAR 
+				''LoadTemplate ./settovar.monkey, bytecode=bco, virtualmachine=vm, result= result, datasource=Strings
+				''endtemplate
+			Case expKinds.BC_TMPBOOL
+				'LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpBool
+				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
+				vm.tmpBool[varNum] = result 
+				'endtemplate
+			Case expKinds.BC_TMPFLOAT 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpFloat
+				 ''endtemplate
+			Case expKinds.BC_TMPINTEGER 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpInt
+				 ''endtemplate
+			Case expKinds.BC_TMPSTRING 
+				 ''LoadTemplate ./settotmp.monkey, bytecode=bco, virtualmachine=vm, result= result, source=tmpStrings
+				 ''endtemplate
+		End select
+		'endtemplate
+		Else
+			Error("Bitwise operations require interger or boolean operands")
+		endif
 		bco.pos+=1
 	End
 	'#End Region
