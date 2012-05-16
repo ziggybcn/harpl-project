@@ -1,6 +1,6 @@
 !This is a small Harpl sample
 Define X as Integer = #A
-Define value as boolean = (X  = 5) | (X = #A)
+Define value as boolean = (X=5) | (X=#A)
 Define isTrue as Boolean = X<5 
 Output ""
 Output ""
