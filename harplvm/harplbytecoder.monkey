@@ -58,7 +58,8 @@ Class HarplByteCoder
 					AssemblerObj.SUB , AssemblerObj.SUM, 
 					AssemblerObj.EQUALS, AssemblerObj.MAJOR,
 					AssemblerObj.MAJOR_EQUAL, AssemblerObj.MINOR,
-					AssemblerObj.MINOR_EQUAL, AssemblerObj.NOT_EQUALS
+					AssemblerObj.MINOR_EQUAL, AssemblerObj.NOT_EQUALS,
+					AssemblerObj.LOGICAL_AND, AssemblerObj.LOGICAL_OR 
 					CompileBynaryOp(result)
 			Default
 				Print "Unknown sentence in the Assembler object: " + node.Value
@@ -158,6 +159,10 @@ Class HarplByteCoder
 				instruct = AssemblerObj.BC_MINOR_EQUAL 
 			Case AssemblerObj.NOT_EQUALS
 				instruct = AssemblerObj.BC_NOT_EQUALS 
+			Case AssemblerObj.LOGICAL_AND
+				instruct = AssemblerObj.BC_LOGICAL_AND 
+			Case AssemblerObj.LOGICAL_OR
+				instruct = AssemblerObj.BC_LOGICAL_OR 
 			Default
 				Print "Unknown bynary operator found!"
 		End

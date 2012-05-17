@@ -141,7 +141,21 @@
         <Y>0</Y>
       </CursorPos>
     </Document>
+    <Document Filename=".\harplvm\runtime\Templates\ConvertAsBoolean.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+      <DocGUID />
+      <CursorPos>
+        <X>0</X>
+        <Y>0</Y>
+      </CursorPos>
+    </Document>
     <Document Filename=".\harplvm\runtime\Templates\loadoperator.Monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+      <DocGUID />
+      <CursorPos>
+        <X>0</X>
+        <Y>0</Y>
+      </CursorPos>
+    </Document>
+    <Document Filename=".\harplvm\runtime\Templates\LogicalAssemblerOperation.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />
       <CursorPos>
         <X>0</X>
@@ -247,6 +261,13 @@
       </CursorPos>
     </Document>
     <Document Filename=".\harplvm\runtime\dynamicscopestack.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
+      <DocGUID />
+      <CursorPos>
+        <X>0</X>
+        <Y>0</Y>
+      </CursorPos>
+    </Document>
+    <Document Filename=".\harplvm\runtime\logicalOps.monkey" Open="false" SplitView="false" SplitIsVertical="false" SplitSize="150">
       <DocGUID />
       <CursorPos>
         <X>0</X>
@@ -359,5 +380,5 @@
       </CursorPos>
     </Document>
   </Files>
-  <CompilerConfig Configuration="release" BuildMode="build" Target="stdcpp" />
+  <CompilerConfig Configuration="debug" BuildMode="run" Target="stdcpp" />
 </JiProj>

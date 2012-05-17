@@ -135,6 +135,12 @@ Class AssemblerObj
 
 	Const NOT_EQUALS:String = "NOT_EQUALS"
 	Const BC_NOT_EQUALS:Int = 119
+	
+	Const LOGICAL_AND:String = "LOGICAL_AND"
+	Const BC_LOGICAL_AND:Int = 120
+	
+	Const LOGICAL_OR:String = "LOGICAL_OR"
+	Const BC_LOGICAL_OR:Int = 121
 
 	'------------------------------------------------------
 	'DATA ALLOCATION:

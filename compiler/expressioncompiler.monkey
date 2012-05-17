@@ -278,7 +278,7 @@ Class ExpressionCompiler
 			["++", AssemblerObj.CONCAT],
 			  expression) = False Then Return false
 			  
-		'COMPARISON OPERATORS PENDING:
+		'COMPARISON OPERATORS:
 		if ProcessBinaryOperator([
 			"<", AssemblerObj.MINOR,
 			">", AssemblerObj.MAJOR,
@@ -287,6 +287,13 @@ Class ExpressionCompiler
 			"<=", AssemblerObj.MINOR_EQUAL,
 			">=", AssemblerObj.MAJOR_EQUAL],
 			 expression) = False Then Return false		
+
+		'LOGICAL OPERATORS:
+		if ProcessBinaryOperator([
+			"and", AssemblerObj.LOGICAL_AND,
+			"or", AssemblerObj.LOGICAL_OR],
+			 expression) = False Then Return false		
+
 
 		'return WriteAsm(expression, scope )
 		if expression.IsEmpty = True Then
@@ -370,7 +377,7 @@ Class ExpressionCompiler
 								EndIf
 							
 							'Returning Bool:
-							Case "=",">=", "<=", ">", "<", "<>"
+							Case "=",">=", "<=", ">", "<", "<>", "and", "or"
 								Store = eTmpTokens.TMPBOOL  + booleanCounter
 								Self.booleanCounter += 1
 							Case "++"
@@ -416,6 +423,8 @@ Class ExpressionCompiler
 							Case "~"; result = Int(Prev.text) ~ Int(Post.text)
 							Case "shl"; result = Int(Prev.text) shl Int(Post.text)
 							Case "shr"; result = Int(Prev.text) shr Int(Post.text)
+							Case "and"; result = Int(Float(Prev.text)<>0 And Float(Post.text)<>0)
+							Case "or"; result = Int(Float(Prev.text)<>0 Or Float(Post.text)<>0)
 						End
 						if prefix1 = expKinds.INTPREFIX And prefix2 = prefix1 Then
 							result = string(int(result))
