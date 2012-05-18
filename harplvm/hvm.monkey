@@ -143,7 +143,3 @@ End
 	'Const TmpFloat= 12
 	'Const TmpBool = 13
 'End
-
-
-
-

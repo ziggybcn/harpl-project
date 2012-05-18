@@ -274,7 +274,7 @@ Class Unary_Complement extends HarplFunction
 				'endtemplate
 			Case expKinds.BC_TMPSTRING 
 				'LoadTemplate ./accestmp.Monkey, bytecode=bco, virtualmachine = vm, result = String1, source=tmpStrings, opkind = opKind1, opvalue = expKinds.BC_STRINGVAR
-				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]
+				bco.pos+=1; Local varNum:Int = bco.code[bco.pos]		
 				String1 = vm.tmpStrings[varNum]
 				opKind1 = expKinds.BC_STRINGVAR
 				'endtemplate
@@ -375,6 +375,7 @@ Class Unary_Complement extends HarplFunction
 		Error("Invalid data type for arithmetic operation.")
 	EndIf
 	bco.pos+=1
+	
 	End
 	'#End Region
 	'endtemplate

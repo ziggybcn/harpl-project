@@ -1,1 +1,1 @@
-@.\Harpl.build\stdcpp\main_winnt -verbose harpltest.txt
+@.\Harpl.build\stdcpp\main_winnt -verbose harpltest.harpl

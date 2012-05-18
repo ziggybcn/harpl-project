@@ -83,7 +83,7 @@ Class Compiler
 
 				Case eToken.IDENTIFIER 
 					Select token.text
-						case HarplKeywords.Var 	'Add a local variable
+						case HarplKeywords.Define 	'Add a local variable
 							CompileVar()
 							if lexer.tokens.IsEmpty = false
 								tokenNode = lexer.tokens.FirstNode()
@@ -171,7 +171,7 @@ Class Compiler
 	Method CompileVar:Bool()
 		'We eat the VAR token:
 		local varToken:Token = Self.lexer.tokens.RemoveFirst()
-		if varToken.text <> HarplKeywords.Var Then
+		if varToken.text <> HarplKeywords.Define Then
 			Error "Var compilation requested without Var identifier. Found: " + varToken.text
 		EndIf
 		Local done:Bool = false, firstRound:bool = true
@@ -183,11 +183,6 @@ Class Compiler
 				Continue
 			endif
 			Local varname:Token = self.lexer.tokens.RemoveFirst()
-			if varname.Kind <> eToken.IDENTIFIER and varname.Kind <> eToken.CARRIER Then
-				AddError("Expecting a valid variable name when declaring " + varname.text, varname)
-				ConsumeSentence
-				Continue				
-			EndIf
 			if Not firstRound then
 				While varname <>null And varname.Kind = eToken.CARRIER 'We allow carrier after a coma
 					varname = self.lexer.tokens.RemoveFirst()
@@ -195,11 +190,16 @@ Class Compiler
 			else
 				firstRound = false
 			endif
+			if IsValidVarName(varname) = False Then 
+				AddError("Define could not be processed. ~q" + varname.text + "~q is not a valid variable name.", varname)
+				ConsumeSentence
+				return False		
+			EndIf
 			'We get the AS clause:
 			if Self.lexer.tokens.IsEmpty Then 
 				AddError("Expecting As clause when declaring " + varname.text, varname)
 				ConsumeSentence
-				Continue
+				Continue 
 			endif
 			Local as:Token = self.lexer.tokens.RemoveFirst()
 			if not(as.Kind=eToken.IDENTIFIER And as.text = HarplKeywords.As) Then
@@ -215,9 +215,7 @@ Class Compiler
 			EndIf
 
 			'PENDING:
-			'1.- SET VALUE TO VAR
-			'2.- CLOSE DATA SCOPE SENTENCES
-			
+		
 			Select dataType.text
 
 				Case HarplKeywords._Float 
@@ -349,6 +347,18 @@ Class Compiler
 		compileErrors = New List < CompileError >
 		lexer = New Lexer
 		ErrorsCount = 0
+	End
+	
+	Method IsValidVarName:Bool(varname:Token)
+		Print "checking token: " + varname.text 
+		if varname.Kind <> eToken.IDENTIFIER Then Return False
+		Select varname.text
+			Case HarplKeywords._Float, HarplKeywords._String, HarplKeywords.As, HarplKeywords.Boolean,
+			HarplKeywords.Integer,HarplKeywords.Output, HarplKeywords.Define
+				Return False
+			Default
+				Return true
+		End
 	End
 	
 	Field generatedAsm:AssemblerObj 
