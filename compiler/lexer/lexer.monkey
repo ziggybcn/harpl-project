@@ -287,7 +287,7 @@ End
 
 Function IsATextualOperator:Bool(token:Token)
 	Select token.text
-		Case "and", "or", "not", "shr", "shl"
+		Case "and", "or", "not", "shr", "shl", "as"
 			token.Kind = eToken.OPERATOR 
 			Return true
 		default

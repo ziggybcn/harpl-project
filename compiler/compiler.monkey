@@ -202,20 +202,18 @@ Class Compiler
 				Continue 
 			endif
 			Local as:Token = self.lexer.tokens.RemoveFirst()
-			if not(as.Kind=eToken.IDENTIFIER And as.text = HarplKeywords.As) Then
+			if (as.Kind<>eToken.OPERATOR or as.text <> HarplKeywords.As) Then
 				AddError("As clause was expected. Syntax error delcaring " + varname.text + "[" + varname.docX +", " + varname.docY,as)
 				ConsumeSentence()
 				Return false
 			EndIf
 			Local dataType:Token = self.lexer.tokens.RemoveFirst()
-			if not(as.Kind=eToken.IDENTIFIER)  Then
-				AddError("Data type expected. Syntax error",dataType)
-				ConsumeSentence()
-				Return False
-			EndIf
+'			if not(as.Kind=eToken.IDENTIFIER)  Then
+'				AddError("Data type expected. Syntax error",dataType)
+'				ConsumeSentence()
+'				Return False
+'			EndIf
 
-			'PENDING:
-		
 			Select dataType.text
 
 				Case HarplKeywords._Float 
@@ -350,7 +348,6 @@ Class Compiler
 	End
 	
 	Method IsValidVarName:Bool(varname:Token)
-		Print "checking token: " + varname.text 
 		if varname.Kind <> eToken.IDENTIFIER Then Return False
 		Select varname.text
 			Case HarplKeywords._Float, HarplKeywords._String, HarplKeywords.As, HarplKeywords.Boolean,

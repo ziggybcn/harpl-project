@@ -1,10 +1,11 @@
 	!This is a small Harpl sample
 	!Just testing the RAW status of the compiler
-	!Hi!
+	!Hi
+	!We activate everything here:
 	
 Output "Defining variables..."
 Define X as Integer = #000A
-Define Output as boolean = X=5 or X=#A
+Define MyVariable as boolean = X=5 or X=#A
 Define MyStringVariable As String = "This is a String variable"
 Define IntegerVar As Integer = 34, FloatVar as Float = IntegerVar ^ 2 * 2
-Output "Program executed. The value of MyStringVariable is:" ++ MyStringVariable	
+Output "Program executed. The value of MyStringVariable is:" ++ MyStringVariable
