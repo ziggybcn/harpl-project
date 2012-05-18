@@ -21,7 +21,11 @@ Const APPEXTRA:String = ""
 
 'summary: This function returns a string reprention of current application name, version and extra information, useful to display app info.
 Function AppString:String()
-	if APPEXTRA = "" Then Return APPNAME + " " + APPVERSION Else Return APPNAME + " " + APPVERSION + " " + APPEXTRA;
+	if APPEXTRA = "" Then 
+		Return APPNAME + " " + APPVERSION 
+	Else 
+		Return APPNAME + " " + APPVERSION + " " + APPEXTRA;
+	end
 End
  
 Global HarplShowDebug:Bool = False
