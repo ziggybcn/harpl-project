@@ -151,6 +151,9 @@ Class AssemblerObj
 	Const AS_BOOLEAN:String = "AS_BOOLEAN"
 	Const BC_AS_BOOLEAN:Int = 153
 
+	Const SET_TRUE:String = "SET_TRUE"
+	Const BC_SET_TRUE:Int = 154
+
 	'------------------------------------------------------
 	'DATA ALLOCATION:
 	#Rem

@@ -43,6 +43,9 @@ Class Hvm
 		byteCodeObj.pos = 2
 		
 		WriteInConsole("Required float size: " + byteCodeObj.RequiredFloatSize )
+		WriteInConsole("Required Int size: " + byteCodeObj.RequiredIntegerSize)
+		WriteInConsole("Required String size: " + byteCodeObj.requiredStringsSize  )
+		WriteInConsole("Required Bool size: " + byteCodeObj.requiredBooleanSize  )
 		WriteInConsole("Allocated float size: " + tmpFloat.Length )
 		
 		
@@ -92,6 +95,10 @@ Class Hvm
 		instructionSet[AssemblerObj.BC_UNARY_COMPLEMENT ] = New Unary_Complement 
 		instructionSet[AssemblerObj.BC_LOGICAL_AND] = New Logical_And
 		instructionSet[AssemblerObj.BC_LOGICAL_OR] = New Logical_Or
+		instructionSet[AssemblerObj.BC_AS_STRING] = New Unary_AsString 
+		instructionSet[AssemblerObj.BC_AS_INTEGER] = New Unary_AsInteger 
+		instructionSet[AssemblerObj.BC_AS_BOOLEAN] = New Unary_AsBool 
+		instructionSet[AssemblerObj.BC_SET_TRUE] = New Set_True 
 		Local BaseNOP := New NOP
 		For Local i:Int = 0 until MaxInstructions 
 			if instructionSet[i] = null then instructionSet[i] = BaseNOP

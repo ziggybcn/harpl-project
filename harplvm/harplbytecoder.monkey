@@ -47,7 +47,8 @@ Class HarplByteCoder
 					
 				'ARITHMETICS:
 				
-				Case AssemblerObj.UNARY_COMPLEMENT, AssemblerObj.UNARY_SUB
+				Case AssemblerObj.UNARY_COMPLEMENT, AssemblerObj.UNARY_SUB, AssemblerObj.AS_BOOLEAN,
+				AssemblerObj.AS_FLOAT, AssemblerObj.AS_INTEGER, AssemblerObj.AS_STRING 
 					CompileUnaryOp(result)
 				
 				Case AssemblerObj.BIT_AND, AssemblerObj.BIT_OR, 
@@ -61,6 +62,12 @@ Class HarplByteCoder
 					AssemblerObj.MINOR_EQUAL, AssemblerObj.NOT_EQUALS,
 					AssemblerObj.LOGICAL_AND, AssemblerObj.LOGICAL_OR 
 					CompileBynaryOp(result)
+				
+				Case AssemblerObj.SET_TRUE
+					result.tmpCode.AddLast(AssemblerObj.BC_SET_TRUE)
+					CompileVarAccess(result)
+
+					
 			Default
 				Print "Unknown sentence in the Assembler object: " + node.Value
 				'Return null
@@ -109,6 +116,14 @@ Class HarplByteCoder
 				instruct = AssemblerObj.BC_UNARY_COMPLEMENT 
 			Case AssemblerObj.UNARY_SUB 
 				instruct = AssemblerObj.BC_UNARY_SUB 
+			Case AssemblerObj.AS_BOOLEAN 
+				instruct = AssemblerObj.BC_AS_BOOLEAN 
+			Case AssemblerObj.AS_FLOAT 
+				instruct = AssemblerObj.BC_AS_FLOAT 
+			Case AssemblerObj.AS_INTEGER 
+				instruct = AssemblerObj.BC_AS_INTEGER 
+			Case AssemblerObj.AS_STRING 
+				instruct = AssemblerObj.BC_AS_STRING
 			Default
 				Error("Unknown unary operator was found.")
 				Return false

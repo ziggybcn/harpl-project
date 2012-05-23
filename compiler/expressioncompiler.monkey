@@ -503,7 +503,7 @@ Class ExpressionCompiler
 							curT.Kind = eToken.IDENTIFIER 
 							curT.text = Store
 					Else
-						Local result:String 
+						Local result:String , isBoolean:Bool = false
 						Select curT.text
 							Case "+"; result = float(Prev.text) + float(Post.text)
 							Case "-"; result = float(Prev.text) - float(Post.text)
@@ -518,18 +518,25 @@ Class ExpressionCompiler
 							Case "shr"; result = Int(Prev.text) shr Int(Post.text)
 							Case "and"; result = Int(Float(Prev.text)<>0 And Float(Post.text)<>0)
 							Case "or"; result = Int(Float(Prev.text)<>0 Or Float(Post.text)<>0)
+							Case "="; result = BoolToString(Float(Prev.text) = Float(Post.text));isBoolean = true
+							Case ">"; result = BoolToString(Float(Prev.text) > Float(Post.text));isBoolean = true
+							Case "<"; result = BoolToString(Float(Prev.text) < Float(Post.text));isBoolean = true
+							Case ">="; result = BoolToString(Float(Prev.text) >= Float(Post.text));isBoolean = true
+							Case "<="; result = BoolToString(Float(Prev.text) <= Float(Post.text));isBoolean = true
+							Case "<>"; result = BoolToString(Float(Prev.text) <> Float(Post.text));isBoolean = true
 						End
-						if prefix1 = expKinds.INTPREFIX And prefix2 = prefix1 Then
+						if prefix1 = expKinds.INTPREFIX And prefix2 = prefix1 and isBoolean = false Then
 							result = string(int(result))
 						EndIf
 						if result="" Then
 							compiler.AddError("Error evaluating expression",curT.sourceFile, curT.docX, curT.docY)
 						Else
 							curT.text = result
-							curT.Kind = eToken.NUMBER 
+							if isBoolean Then curT.Kind = eToken.IDENTIFIER else curT.Kind = eToken.NUMBER 
 							node.PrevNode.Remove
 							node.NextNode.Remove
 						EndIf
+						
 					endif
 					Exit	'We do not re-parse the same token, we could, as it is not an operator any more but not nice.
 				EndIf
@@ -540,6 +547,9 @@ Class ExpressionCompiler
 		Return true
 	End
 	
+	Function BoolToString:String(Expression:Bool)
+		if Expression Return "true" Else Return "false"
+	End
 	Function IsOpenBracket:Bool(token:Token)
 		if token.Kind<> eToken.OPERATOR Then Return False
 		if token.text = "(" or token.text = "[" Then Return True

@@ -37,6 +37,7 @@ Class Compiler
 		EndIf
 		generatedAsm = New AssemblerObj
 		compilerScopeStack = New CompilerScopeStack(Self) 
+		
 		Local txtStream:String = LoadString(filename)
 		
 		If txtStream = "" Then AddError("File " + filename + " is empty.", filename, 0, 0)
@@ -58,12 +59,26 @@ Class Compiler
 		'We add the global data scope:
 		compilerScopeStack.AddDataScope()
 		
+		'Add True and False identifiers to the compiler global scope:
+		Local tmpToken:Token = new Token
+		tmpToken.text = "true"
+		tmpToken.Kind = eToken.IDENTIFIER 
+		compilerScopeStack.AddVariable(Self,tmpToken , CompVariable.vBOOL)
+		generatedAsm.AddInstruction(AssemblerObj.SET_TRUE)
+		WriteIdentParameter(tmpToken)
+
+		tmpToken = New Token
+		tmpToken.text = "false"
+		tmpToken.Kind = eToken.IDENTIFIER 
+		compilerScopeStack.AddVariable(Self,tmpToken, CompVariable.vBOOL)		
+
+		
 		Local tokenNode:list.Node<Token> = lexer.tokens.FirstNode()
 		
 		Local done:Bool = false, iterations:Int = 0
 		While Not done 'And tokenNode.Value <> null
 		
-			if iterations > 2000 Then
+			if iterations > 200000 Then
 				Print "Ended due possible infitite loop."
 				done = True
 				Continue
