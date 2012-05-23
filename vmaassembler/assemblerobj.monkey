@@ -141,6 +141,15 @@ Class AssemblerObj
 	
 	Const LOGICAL_OR:String = "LOGICAL_OR"
 	Const BC_LOGICAL_OR:Int = 121
+	
+	Const AS_INTEGER:String = "AS_INTEGER"
+	Const BC_AS_INTEGER:Int = 150
+	Const AS_FLOAT:String = "AS_FLOAT"
+	Const BC_AS_FLOAT:Int = 151
+	Const AS_STRING:String = "AS_STRING"
+	Const BC_AS_STRING:Int = 152
+	Const AS_BOOLEAN:String = "AS_BOOLEAN"
+	Const BC_AS_BOOLEAN:Int = 153
 
 	'------------------------------------------------------
 	'DATA ALLOCATION:

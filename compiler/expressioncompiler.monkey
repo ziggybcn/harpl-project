@@ -127,6 +127,78 @@ Class ExpressionCompiler
 	
 	Field result:Token
 	
+	Method CompileAsUnary(expression:List < Token >, compiler:Compiler, Item:list.Node<Token>)
+		'Item es el token correspondiente al AS
+		Local affected:list.Node<Token> = Item.PrevNode()
+		Local kind:list.Node<Token>= Item.NextNode()
+		
+#Rem		
+				compiler.generatedAsm.AddInstruction(AssemblerObj.UNARY_SUB)
+				compiler.WriteIdentParameter(Item.Value)
+				Item.PrevNode.Remove
+				'We have to determine the better target:
+				Local store:String = ""
+				Select Prefix
+					Case expKinds.INTPREFIX, expKinds.INTVAR, expKinds.TMPINTEGER 
+						store = eTmpTokens.TMPINT + intCounter
+						intCounter+=1
+					Case expKinds.FLOATPREFIX, expKinds.FLOATVAR, expKinds.TMPFLOAT
+						store = eTmpTokens.TMPFLOAT + floatCounter
+						floatCounter+=1
+					Default
+						compiler.AddError("wrong data type for unnary - operator.",Item.Value)
+				End
+				Item.Value.text = store
+				Item.Value.Kind = eToken.IDENTIFIER 
+				'compiler.generatedAsm.AddParameter(store)
+				Local tmpToken:Token = new Token
+				tmpToken.Kind = eToken.IDENTIFIER 
+				tmpToken.text  = store
+				compiler.WriteIdentParameter(tmpToken)
+#End
+		
+		Local instruction:String = ""
+		Local store:String = ""
+		Select kind.Value.text
+		
+			Case HarplKeywords._String 
+				instruction = AssemblerObj.AS_STRING
+				store = eTmpTokens.TMPSTRING  + stringCounter 
+				stringCounter+=1
+
+			Case HarplKeywords.Boolean 
+				instruction = AssemblerObj.AS_BOOLEAN
+				store = eTmpTokens.TMPBOOL + booleanCounter 
+				booleanCounter+=1
+				
+			Case HarplKeywords.Integer 
+				instruction = AssemblerObj.AS_INTEGER
+				store = eTmpTokens.TMPINT + intCounter 
+				intCounter+=1
+				
+			Case HarplKeywords._Float 
+				instruction = AssemblerObj.AS_FLOAT
+				store = eTmpTokens.TMPFLOAT + floatCounter 
+				floatCounter+=1
+				
+			Default
+				compiler.AddError("data type " + kind.Value.text + " is not supported with the AS operator.", Item.Value)
+		End Select
+		compiler.generatedAsm.AddInstruction(instruction)
+		compiler.WriteIdentParameter(affected.Value)
+		
+		Item.Value.text = store
+		Item.Value.Kind = eToken.IDENTIFIER 
+		'compiler.generatedAsm.AddParameter(store)
+		Local tmpToken:Token = new Token
+		tmpToken.Kind = eToken.IDENTIFIER 
+		tmpToken.text  = store
+		compiler.WriteIdentParameter(tmpToken)
+		affected.Remove()
+		kind.Remove()
+		
+	End method
+	
 	Method CompileUnary(expression:List < Token >, compiler:Compiler, Item:list.Node<Token>)
 		
 		'"Item" es el TOKEN sobre el que se aplicará la operación unaria.
@@ -218,6 +290,27 @@ Class ExpressionCompiler
 		
 		'Possible optimization on chains of ----. this is a nice TODO.
 		
+		While Not done			
+			Local readNext:Bool = True
+			Select tokenNode.Value.Kind
+				Case eToken.OPERATOR 
+				if tokenNode.Value.text = HarplKeywords.As 
+				
+					Local Prev:list.Node<Token> = tokenNode.PrevNode 
+					'There is a Prev node that is an operator that can be a unary operator:
+					if Prev <> Null 
+						CompileAsUnary(expression,compiler,tokenNode)
+						readNext = false	'We want to process chained unary operators.
+					End If
+				End if
+				Default
+			End
+			if readNext then tokenNode = tokenNode.NextNode( )
+			if tokenNode = null Then done = true
+		Wend
+		
+		done = false
+		tokenNode = expression.FirstNode()
 		While Not done
 			Local readNext:Bool = True
 			Select tokenNode.Value.Kind

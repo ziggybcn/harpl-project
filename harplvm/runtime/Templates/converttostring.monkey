@@ -18,9 +18,17 @@ Select opKind1
 		'loadtemplate ./unaryperformoperation.Monkey, operation=""+, resultkind = String, operator1=Int1, bytecodeobj=bco, virtualmachine=vm
 		'endtemplate
 	Case expKinds.BC_STRINGVAR 
+		'loadtemplate ./settovar.monkey,bytecode=bco,virtualmachine=vm, datasource=Strings, result=String1
+		'endtemplate		
 	
 	Case expKinds.BC_BOOLVAR
-	
+		if Bool1 Then
+			'loadtemplate ./settovar.monkey,bytecode=bco,virtualmachine=vm, datasource=Strings, result="1"
+			'endtemplate
+		Else
+			'loadtemplate ./settovar.monkey,bytecode=bco,virtualmachine=vm, datasource=Strings, result="0"
+			'endtemplate		
+		EndIf
 	Default
 		Error("Invalid data type for arithmetic operation.")
 	
