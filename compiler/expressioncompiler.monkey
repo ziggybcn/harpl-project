@@ -621,13 +621,3 @@ Function TellPrefix:String(t:Token, compiler:Compiler) 'compilerScopeStack:Compi
 	End
 End
 
-
-
-
-
-
-
-
-
-
-
