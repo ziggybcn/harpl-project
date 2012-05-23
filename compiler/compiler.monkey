@@ -61,14 +61,14 @@ Class Compiler
 		
 		'Add True and False identifiers to the compiler global scope:
 		Local tmpToken:Token = new Token
-		tmpToken.text = "true"
+		tmpToken.text = HarplKeywords._True 
 		tmpToken.Kind = eToken.IDENTIFIER 
 		compilerScopeStack.AddVariable(Self,tmpToken , CompVariable.vBOOL)
 		generatedAsm.AddInstruction(AssemblerObj.SET_TRUE)
 		WriteIdentParameter(tmpToken)
 
 		tmpToken = New Token
-		tmpToken.text = "false"
+		tmpToken.text = HarplKeywords._False
 		tmpToken.Kind = eToken.IDENTIFIER 
 		compilerScopeStack.AddVariable(Self,tmpToken, CompVariable.vBOOL)		
 
@@ -365,8 +365,9 @@ Class Compiler
 	Method IsValidVarName:Bool(varname:Token)
 		if varname.Kind <> eToken.IDENTIFIER Then Return False
 		Select varname.text
-			Case HarplKeywords._Float, HarplKeywords._String, HarplKeywords.As, HarplKeywords.Boolean,
-			HarplKeywords.Integer,HarplKeywords.Output, HarplKeywords.Define
+			Case HarplKeywords._Float, HarplKeywords._String, HarplKeywords.As, HarplKeywords.Boolean, 
+			HarplKeywords._False, HarplKeywords._True,	HarplKeywords.Integer,HarplKeywords.Output,
+			HarplKeywords.Define
 				Return False
 			Default
 				Return true

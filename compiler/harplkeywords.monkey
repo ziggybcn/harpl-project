@@ -9,7 +9,9 @@ Class HarplKeywords
 	Const Boolean:String = "boolean"
 	Const _String:String = "string"
 	Const _Float:String = "float"
-	
+	 
 	Const Output:String = "output"
+	Const _True:String = "true"
+	Const _False:String = "false"
 	
 End

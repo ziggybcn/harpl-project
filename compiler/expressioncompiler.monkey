@@ -548,7 +548,7 @@ Class ExpressionCompiler
 	End
 	
 	Function BoolToString:String(Expression:Bool)
-		if Expression Return "true" Else Return "false"
+		if Expression Return HarplKeywords._True  Else Return HarplKeywords._False 
 	End
 	Function IsOpenBracket:Bool(token:Token)
 		if token.Kind<> eToken.OPERATOR Then Return False
