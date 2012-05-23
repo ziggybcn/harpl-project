@@ -98,6 +98,7 @@ Class Hvm
 		instructionSet[AssemblerObj.BC_AS_STRING] = New Unary_AsString 
 		instructionSet[AssemblerObj.BC_AS_INTEGER] = New Unary_AsInteger 
 		instructionSet[AssemblerObj.BC_AS_BOOLEAN] = New Unary_AsBool 
+		instructionSet[AssemblerObj.BC_AS_FLOAT] = New Unary_AsFloat 
 		instructionSet[AssemblerObj.BC_SET_TRUE] = New Set_True 
 		Local BaseNOP := New NOP
 		For Local i:Int = 0 until MaxInstructions 

@@ -387,5 +387,5 @@
       </CursorPos>
     </Document>
   </Files>
-  <CompilerConfig Configuration="debug" BuildMode="run" Target="stdcpp" />
+  <CompilerConfig Configuration="debug" BuildMode="clean" Target="stdcpp" />
 </JiProj>
