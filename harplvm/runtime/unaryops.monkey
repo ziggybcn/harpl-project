@@ -380,3 +380,8 @@ Class Unary_Complement extends HarplFunction
 	'#End Region
 	'endtemplate
 End
+
+Class Unary_AsBoolean extends HarplFunction 
+	
+End
+

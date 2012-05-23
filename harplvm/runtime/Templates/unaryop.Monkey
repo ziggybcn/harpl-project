@@ -1,3 +1,4 @@
+'Import Harpl
 Method Run:Void(vm:Hvm,bco:ByteCodeObj)
 
 Local Bool1:Bool, Int1:Int, Float1:Float, String1:String, opKind1:Int
@@ -8,14 +9,16 @@ Local Bool1:Bool, Int1:Int, Float1:Float, String1:String, opKind1:Int
 'endtemplate	
 
 'PERFORM OPERATION:
-if opKind1 = expKinds.BC_FLOATVAR 
+Select opKind1
+	Case expKinds.BC_FLOATVAR 
 		'loadtemplate ./unaryperformoperation.Monkey, operation={%operation%}, resultkind = Float, operator1=Float1, bytecodeobj=bco, virtualmachine=vm
 		'endtemplate
-ElseIf opKind1 = expKinds.BC_INTVAR
+	Case expKinds.BC_INTVAR
 		'loadtemplate ./unaryperformoperation.Monkey, operation={%operation%}, resultkind = Int, operator1=Int1, bytecodeobj=bco, virtualmachine=vm
-		'endtemplate
-Else
-	Error("Invalid data type for arithmetic operation.")
-EndIf
+		'endtemplate	
+	Default
+		Error("Invalid data type for arithmetic operation.")
+	
+End Select
 bco.pos+=1
 End
