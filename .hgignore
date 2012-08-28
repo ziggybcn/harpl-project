@@ -3,3 +3,4 @@ syntax:glob
 *.JILayout
 *.orig
 Harpl.build/*
+MinGW/*
