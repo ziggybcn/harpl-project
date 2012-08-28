@@ -83,12 +83,11 @@ Function Main()
 		if ignoreerrors.Trim.ToLower.StartsWith("y")= false then return 4 
 	EndIf
 	
-	
 	Local cpp:= New CppTrans
 	cpp.source = lCompiler
 	cpp.Translate()
 	
-	Return
+	Return 0
 	
 	Local harplByteCoder := New HarplByteCoder 
 	local bco:ByteCodeObj = harplByteCoder.GenerateByteCode(lCompiler.generatedAsm)

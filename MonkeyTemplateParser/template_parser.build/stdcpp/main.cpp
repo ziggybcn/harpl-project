@@ -34,6 +34,8 @@ typedef float Float;
 #define FLOAT(X) X##f
 #endif
 
+void dbg_error( const char *p );
+
 //***** GC Config *****
 
 #if CFG_CPP_DEBUG_GC
@@ -85,7 +87,7 @@ struct gc_object{
 	
 	virtual void mark(){
 	}
-
+	
 	void *operator new( size_t size ){
 		return gc_malloc( size );
 	}
@@ -377,12 +379,12 @@ public:
 	}
 	
 	T &At( int index ){
-		if( index<0 || index>=rep->length ) throw "Array index out of range";
+		if( index<0 || index>=rep->length ) dbg_error( "Array index out of range" );
 		return rep->data[index]; 
 	}
 	
 	const T &At( int index )const{
-		if( index<0 || index>=rep->length ) throw "Array index out of range";
+		if( index<0 || index>=rep->length ) dbg_error( "Array index out of range" );
 		return rep->data[index]; 
 	}
 	
@@ -514,7 +516,7 @@ public:
 		rep=Rep::alloc( t_strlen(buf) );
 		for( int i=0;i<rep->length;++i ) rep->data[i]=buf[i];
 	}
-
+	
 	String( Float n ){
 		char buf[256];
 		
@@ -825,7 +827,7 @@ public:
 	bool Save( FILE *fp ){
 		std::vector<unsigned char> buf;
 		Save( buf );
-		return fwrite( &buf[0],1,buf.size(),fp )==buf.size();
+		return buf.size() ? fwrite( &buf[0],1,buf.size(),fp )==buf.size() : true;
 	}
 	
 	void Save( std::vector<unsigned char> &buf ){
@@ -874,7 +876,7 @@ public:
 			if( n>0 ) buf.insert( buf.end(),tmp,tmp+n );
 			if( n!=4096 ) break;
 		}
-		return String::Load( &buf[0],buf.size() );
+		return buf.size() ? String::Load( &buf[0],buf.size() ) : "";
 	}
 	
 	static String Load( unsigned char *p,int n ){
@@ -984,62 +986,336 @@ public:
 	virtual int Compare( Object *obj ){
 		return (char*)this-(char*)obj;
 	}
+	
+	virtual String debug(){
+		return "+Object\n";
+	}
+};
+
+class ThrowableObject : public Object{
 };
 
 struct gc_interface{
 	virtual ~gc_interface(){}
 };
 
+
+//***** Debugger *****
+
+int Print( String t );
+
+#define dbg_stream stderr
+
+#if _MSC_VER
+#define dbg_typeof decltype
+#else
+#define dbg_typeof __typeof__
+#endif 
+
+struct dbg_func;
+struct dbg_var_type;
+
+static int dbg_suspend;
+static int dbg_stepmode;
+
+const char *dbg_info;
+String dbg_exstack;
+
+static void *dbg_var_buf[65536*3];
+static void **dbg_var_ptr=dbg_var_buf;
+
+static dbg_func *dbg_func_buf[1024];
+static dbg_func **dbg_func_ptr=dbg_func_buf;
+
+String dbg_type( bool *p ){
+	return "Bool";
+}
+
+String dbg_type( int *p ){
+	return "Int";
+}
+
+String dbg_type( Float *p ){
+	return "Float";
+}
+
+String dbg_type( String *p ){
+	return "String";
+}
+
+template<class T> String dbg_type( T *p ){
+	return "Object";
+}
+
+template<class T> String dbg_type( Array<T> *p ){
+	return dbg_type( &(*p)[0] )+"[]";
+}
+
+String dbg_value( bool *p ){
+	return *p ? "True" : "False";
+}
+
+String dbg_value( int *p ){
+	return String( *p );
+}
+
+String dbg_value( Float *p ){
+	return String( *p );
+}
+
+String dbg_value( String *p ){
+	return String( "\"" )+(*p).Replace( "\"","~q" )+String( "\"" );
+}
+
+template<class T> String dbg_value( T *t ){
+	Object *p=dynamic_cast<Object*>( *t );
+	char buf[64];
+	sprintf( buf,"%p",p );
+	return String("@") + (buf[0]=='0' && buf[1]=='x' ? buf+2 : buf );
+}
+
+template<class T> String dbg_value( Array<T> *p ){
+	String t="[";
+	int n=(*p).Length();
+	for( int i=0;i<n;++i ){
+		if( i ) t+=",";
+		t+=dbg_value( &(*p)[i] );
+	}
+	return t+"]";
+}
+
+template<class T> String dbg_decl( const char *id,T *ptr ){
+	return String( id )+":"+dbg_type(ptr)+"="+dbg_value(ptr)+"\n";
+}
+
+struct dbg_var_type{
+	virtual String type( void *p )=0;
+	virtual String value( void *p )=0;
+};
+
+template<class T> struct dbg_var_type_t : public dbg_var_type{
+
+	String type( void *p ){
+		return dbg_type( (T*)p );
+	}
+	
+	String value( void *p ){
+		return dbg_value( (T*)p );
+	}
+	
+	static dbg_var_type_t<T> info;
+};
+template<class T> dbg_var_type_t<T> dbg_var_type_t<T>::info;
+
+struct dbg_blk{
+	void **var_ptr;
+	
+	dbg_blk():var_ptr(dbg_var_ptr){
+		if( dbg_stepmode=='l' ) --dbg_suspend;
+	}
+	
+	~dbg_blk(){
+		if( dbg_stepmode=='l' ) ++dbg_suspend;
+		dbg_var_ptr=var_ptr;
+	}
+};
+
+struct dbg_func : public dbg_blk{
+	const char *id;
+	const char *info;
+
+	dbg_func( const char *p ):id(p),info(dbg_info){
+		*dbg_func_ptr++=this;
+		if( dbg_stepmode=='s' ) --dbg_suspend;
+	}
+	
+	~dbg_func(){
+		if( dbg_stepmode=='s' ) ++dbg_suspend;
+		--dbg_func_ptr;
+		dbg_info=info;
+	}
+};
+
+int dbg_print( String t ){
+	static char *buf;
+	static int len;
+	int n=t.Length();
+	if( n+100>len ){
+		len=n+100;
+		free( buf );
+		buf=(char*)malloc( len );
+	}
+	buf[n]='\n';
+	for( int i=0;i<n;++i ) buf[i]=t[i];
+	fwrite( buf,n+1,1,dbg_stream );
+	fflush( dbg_stream );
+	return 0;
+}
+
+void dbg_callstack(){
+
+	void **var_ptr=dbg_var_buf;
+	dbg_func **func_ptr=dbg_func_buf;
+	
+	while( var_ptr!=dbg_var_ptr ){
+		while( func_ptr!=dbg_func_ptr && var_ptr==(*func_ptr)->var_ptr ){
+			const char *id=(*func_ptr++)->id;
+			const char *info=func_ptr!=dbg_func_ptr ? (*func_ptr)->info : dbg_info;
+			fprintf( dbg_stream,"+%s;%s\n",id,info );
+		}
+		void *vp=*var_ptr++;
+		const char *nm=(const char*)*var_ptr++;
+		dbg_var_type *ty=(dbg_var_type*)*var_ptr++;
+		dbg_print( String(nm)+":"+ty->type(vp)+"="+ty->value(vp) );
+	}
+	while( func_ptr!=dbg_func_ptr ){
+		const char *id=(*func_ptr++)->id;
+		const char *info=func_ptr!=dbg_func_ptr ? (*func_ptr)->info : dbg_info;
+		fprintf( dbg_stream,"+%s;%s\n",id,info );
+	}
+}
+
+String dbg_stacktrace(){
+	if( !dbg_info || !dbg_info[0] ) return "";
+	String str=String( dbg_info )+"\n";
+	dbg_func **func_ptr=dbg_func_ptr;
+	if( func_ptr==dbg_func_buf ) return str;
+	while( --func_ptr!=dbg_func_buf ){
+		str+=String( (*func_ptr)->info )+"\n";
+	}
+	return str;
+}
+
+void dbg_throw( const char *err ){
+	dbg_exstack=dbg_stacktrace();
+	throw err;
+}
+
+void dbg_stop(){
+
+#ifdef TARGET_OS_IPHONE
+	dbg_throw( "STOP" );
+#endif
+
+	fprintf( dbg_stream,"{{~~%s~~}}\n",dbg_info );
+	dbg_callstack();
+	dbg_print( "" );
+	
+	for(;;){
+
+		char buf[256];
+		char *e=fgets( buf,256,stdin );
+		if( !e ) exit( -1 );
+		
+		e=strchr( buf,'\n' );
+		if( !e ) exit( -1 );
+		
+		*e=0;
+		
+		Object *p;
+		
+		switch( buf[0] ){
+		case '?':
+			break;
+		case 'r':	//run
+			dbg_suspend=0;		
+			dbg_stepmode=0;
+			return;
+		case 's':	//step
+			dbg_suspend=1;
+			dbg_stepmode='s';
+			return;
+		case 'e':	//enter func
+			dbg_suspend=1;
+			dbg_stepmode='e';
+			return;
+		case 'l':	//leave block
+			dbg_suspend=0;
+			dbg_stepmode='l';
+			return;
+		case '@':	//dump object
+			p=0;
+			sscanf( buf+1,"%p",&p );
+			if( p ){
+				dbg_print( p->debug() );
+			}else{
+				dbg_print( "" );
+			}
+			break;
+		case 'q':	//quit!
+			exit( 0 );
+			break;			
+		default:
+			printf( "????? %s ?????",buf );fflush( stdout );
+			exit( -1 );
+		}
+	}
+}
+
+void dbg_error( const char *err ){
+
+#ifdef TARGET_OS_IPHONE
+	dbg_throw( err );
+#endif
+
+	for(;;){
+		Print( String("Monkey Runtime Error : ")+err );
+		Print( dbg_stacktrace() );
+		dbg_stop();
+	}
+}
+
+#define DBG_INFO(X) dbg_info=(X);if( dbg_suspend>0 ) dbg_stop();
+
+#define DBG_ENTER(P) dbg_func _dbg_func(P);
+
+#define DBG_BLOCK(T) dbg_blk _dbg_blk;
+
+#define DBG_GLOBAL( ID,NAME )	//TODO!
+
+#define DBG_LOCAL( ID,NAME )\
+*dbg_var_ptr++=&ID;\
+*dbg_var_ptr++=(void*)NAME;\
+*dbg_var_ptr++=&dbg_var_type_t<dbg_typeof(ID)>::info;
+
 //**** main ****
 
 int argc;
 const char **argv;
-const char *errInfo="";
-std::vector<const char*> errStack;
 
 Float D2R=0.017453292519943295f;
 Float R2D=57.29577951308232f;
 
-void pushErr(){
-	errStack.push_back( errInfo );
-}
-
-void popErr(){
-	errInfo=errStack.back();
-	errStack.pop_back();
-}
-
-String StackTrace(){
-	String str;
-	pushErr();
-	for( int i=errStack.size()-1;i>=0;--i ){
-		str+=String( errStack[i] )+"\n";
-	}
-	popErr();
-	return str;
-}
-
 int Print( String t ){
-	puts( t.ToCString<char>() );
+	static char *buf;
+	static int len;
+	int n=t.Length();
+	if( n+100>len ){
+		len=n+100;
+		free( buf );
+		buf=(char*)malloc( len );
+	}
+	for( int i=0;i<n;++i ) buf[i]=t[i];
+	buf[n]=0;
+	puts( buf );
 	fflush( stdout );
 	return 0;
 }
 
 int Error( String err ){
-	throw err.ToCString<char>();
+	if( !err.Length() ) exit( 0 );
+	dbg_error( err.ToCString<char>() );
 	return 0;
 }
 
-int Compare( int x,int y ){
-	return x-y;
+int DebugLog( String t ){
+	Print( t );
+	return 0;
 }
 
-int Compare( Float x,Float y ){
-	return x<y ? -1 : x>y;
-}
-
-int Compare( String x,String y ){
-	return x.Compare( y );
+int DebugStop(){
+	dbg_stop();
+	return 0;
 }
 
 int bbInit();
@@ -1047,43 +1323,29 @@ int bbMain();
 
 #if _MSC_VER
 
-//Ok, this is butt ugly stuff, but MSVC's SEH seems to be the only
-//way you can catch int divide by zero...let's use it for null objects too...
-//
-const char *FilterException( int type ){
-	switch( type ){
-	case STATUS_ACCESS_VIOLATION:return "Memory access violation";
-	case STATUS_INTEGER_DIVIDE_BY_ZERO:return "Integer divide by zero";
-	}
-	return 0;
-}
+static void _cdecl seTranslator( unsigned int ex,EXCEPTION_POINTERS *p ){
 
-int seh_call( int(*f)() ){
-	const char *p;
-	__try{
-		return f();
-	}__except( (p=FilterException(GetExceptionCode()))!=0 ){
-		puts( p );
-		throw p;
+	switch( ex ){
+	case EXCEPTION_ACCESS_VIOLATION:dbg_error( "Memory access violation" );
+	case EXCEPTION_ILLEGAL_INSTRUCTION:dbg_error( "Illegal instruction" );
+	case EXCEPTION_INT_DIVIDE_BY_ZERO:dbg_error( "Integer divide by zero" );
+	case EXCEPTION_STACK_OVERFLOW:dbg_error( "Stack overflow" );
 	}
+	dbg_error( "Unknown exception" );
 }
 
 #else
 
-int seh_call( int(*f)() ){
-	return f();
-}
-
 void sighandler( int sig  ){
 	switch( sig ){
-	case SIGILL:throw "Illegal instruction";
-	case SIGFPE:throw "Floating point exception";
+	case SIGSEGV:dbg_error( "Memory access violation" );
+	case SIGILL:dbg_error( "Illegal instruction" );
+	case SIGFPE:dbg_error( "Floating point exception" );
 #if !_WIN32
-	case SIGBUS:throw "Bus error";
-#endif
-	case SIGSEGV:throw "Segmentation violation";
+	case SIGBUS:dbg_error( "Bus error" );
+#endif	
 	}
-	throw "Unknown exception";
+	dbg_error( "Unknown signal" );
 }
 
 #endif
@@ -1091,27 +1353,33 @@ void sighandler( int sig  ){
 //entry point call by target main()...
 //
 int bb_std_main( int argc,const char **argv ){
-	
+
 	::argc=argc;
 	::argv=argv;
 	
-#if !_MSC_VER
+#if _MSC_VER
+
+	_set_se_translator( seTranslator );
+
+#else
+	
+	signal( SIGSEGV,sighandler );
 	signal( SIGILL,sighandler );
 	signal( SIGFPE,sighandler );
 #if !_WIN32
 	signal( SIGBUS,sighandler );
 #endif
-	signal( SIGSEGV,sighandler );
+
 #endif
 
-	seh_call( bbInit );
+	bbInit();
 	
 #if CFG_CPP_INCREMENTAL_GC
 	gc_mark_roots();
 #endif
 	
-	seh_call( bbMain );
-	
+	bbMain();
+
 	return 0;
 }
 
@@ -1340,7 +1608,7 @@ Array<String> LoadDir( String path ){
 
 #endif
 
-	return Array<String>( &files[0],files.size() );
+	return files.size() ? Array<String>( &files[0],files.size() ) : Array<String>();
 }
 	
 int CopyFile( String srcpath,String dstpath ){
@@ -1432,7 +1700,7 @@ int Execute( String cmd ){
 	PROCESS_INFORMATION pi={0};
 	STARTUPINFOW si={sizeof(si)};
 
-	if( !CreateProcessW( 0,(WCHAR*)OS_STR(cmd),0,0,1,0,0,0,&si,&pi ) ) return -1;
+	if( !CreateProcessW( 0,(WCHAR*)OS_STR(cmd),0,0,1,CREATE_DEFAULT_ERROR_MODE,0,0,&si,&pi ) ) return -1;
 
 	WaitForSingleObject( pi.hProcess,INFINITE );
 
@@ -1472,7 +1740,9 @@ class bb_template_parser_Replacer : public Object{
 	bb_template_parser_Replacer();
 	bb_template_parser_Replacer* g_new();
 	void mark();
+	String debug();
 };
+String dbg_type(bb_template_parser_Replacer**p){return "Replacer";}
 class bb_list_List : public Object{
 	public:
 	bb_list_Node* f__head;
@@ -1482,7 +1752,9 @@ class bb_list_List : public Object{
 	bb_list_List* g_new2(Array<String >);
 	virtual bb_list_Enumerator2* m_ObjectEnumerator();
 	void mark();
+	String debug();
 };
+String dbg_type(bb_list_List**p){return "List";}
 class bb_list_Node : public Object{
 	public:
 	bb_list_Node* f__succ;
@@ -1492,13 +1764,17 @@ class bb_list_Node : public Object{
 	bb_list_Node* g_new(bb_list_Node*,bb_list_Node*,String);
 	bb_list_Node* g_new2();
 	void mark();
+	String debug();
 };
+String dbg_type(bb_list_Node**p){return "Node";}
 class bb_list_HeadNode : public bb_list_Node{
 	public:
 	bb_list_HeadNode();
 	bb_list_HeadNode* g_new();
 	void mark();
+	String debug();
 };
+String dbg_type(bb_list_HeadNode**p){return "HeadNode";}
 class bb_list_List2 : public Object{
 	public:
 	bb_list_Node2* f__head;
@@ -1510,7 +1786,9 @@ class bb_list_List2 : public Object{
 	virtual bb_list_Enumerator* m_ObjectEnumerator();
 	virtual Array<bb_template_parser_Replacer* > m_ToArray();
 	void mark();
+	String debug();
 };
+String dbg_type(bb_list_List2**p){return "List";}
 class bb_list_Node2 : public Object{
 	public:
 	bb_list_Node2* f__succ;
@@ -1520,13 +1798,17 @@ class bb_list_Node2 : public Object{
 	bb_list_Node2* g_new(bb_list_Node2*,bb_list_Node2*,bb_template_parser_Replacer*);
 	bb_list_Node2* g_new2();
 	void mark();
+	String debug();
 };
+String dbg_type(bb_list_Node2**p){return "Node";}
 class bb_list_HeadNode2 : public bb_list_Node2{
 	public:
 	bb_list_HeadNode2();
 	bb_list_HeadNode2* g_new();
 	void mark();
+	String debug();
 };
+String dbg_type(bb_list_HeadNode2**p){return "HeadNode";}
 class bb_list_Enumerator : public Object{
 	public:
 	bb_list_List2* f__list;
@@ -1537,7 +1819,9 @@ class bb_list_Enumerator : public Object{
 	virtual bool m_HasNext();
 	virtual bb_template_parser_Replacer* m_NextObject();
 	void mark();
+	String debug();
 };
+String dbg_type(bb_list_Enumerator**p){return "Enumerator";}
 extern bool bb_template_parser_Error;
 String bb_template_parser_ParseDoc(String,String);
 class bb_list_Enumerator2 : public Object{
@@ -1550,27 +1834,29 @@ class bb_list_Enumerator2 : public Object{
 	virtual bool m_HasNext();
 	virtual String m_NextObject();
 	void mark();
+	String debug();
 };
+String dbg_type(bb_list_Enumerator2**p){return "Enumerator";}
 String bb_template_parser_ParseDoc2(String,Array<bb_template_parser_Replacer* >,String,String,int);
 int bbMain();
 int bb_template_parser_PrintInfoHeader(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<42>";
+	DBG_ENTER("PrintInfoHeader")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<42>");
 	Print(String(L"Monkey template parser for the Harpl source code."));
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<43>";
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<43>");
 	Print(String(L"This is a simple parser app, pass the file to be pre-compiled as the first paramter, and you're good to go!"));
-	popErr();
 	return 0;
 }
 String bb_template_parser_GetDir(String t_filename){
-	pushErr();
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<51>";
+	DBG_ENTER("GetDir")
+	DBG_LOCAL(t_filename,"filename")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<51>");
 	t_filename=t_filename.Replace(String(L"/"),String(L"\\"));
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<52>";
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<52>");
 	int t_lastIndex=t_filename.FindLast(String(L"\\"));
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<53>";
+	DBG_LOCAL(t_lastIndex,"lastIndex")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<53>");
 	String t_=t_filename.Slice(0,t_lastIndex+1);
-	popErr();
 	return t_;
 }
 bb_template_parser_Replacer::bb_template_parser_Replacer(){
@@ -1578,58 +1864,73 @@ bb_template_parser_Replacer::bb_template_parser_Replacer(){
 	f_replace=String();
 }
 bb_template_parser_Replacer* bb_template_parser_Replacer::g_new(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<122>";
-	popErr();
+	DBG_ENTER("Replacer.new")
+	bb_template_parser_Replacer *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<122>");
 	return this;
 }
 void bb_template_parser_Replacer::mark(){
 	Object::mark();
 }
+String bb_template_parser_Replacer::debug(){
+	String t="(Replacer)\n";
+	t+=dbg_decl("find",&f_find);
+	t+=dbg_decl("replace",&f_replace);
+	return t;
+}
 bb_list_List::bb_list_List(){
 	f__head=((new bb_list_HeadNode)->g_new());
 }
 bb_list_List* bb_list_List::g_new(){
-	pushErr();
-	popErr();
+	DBG_ENTER("List.new")
+	bb_list_List *self=this;
+	DBG_LOCAL(self,"Self")
 	return this;
 }
 bb_list_Node* bb_list_List::m_AddLast(String t_data){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<120>";
+	DBG_ENTER("List.AddLast")
+	bb_list_List *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_LOCAL(t_data,"data")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<120>");
 	bb_list_Node* t_=(new bb_list_Node)->g_new(f__head,f__head->f__pred,t_data);
-	popErr();
 	return t_;
 }
 bb_list_List* bb_list_List::g_new2(Array<String > t_data){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<13>";
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<13>";
+	DBG_ENTER("List.new")
+	bb_list_List *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_LOCAL(t_data,"data")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<13>");
 	Array<String > t_=t_data;
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<13>";
 	int t_2=0;
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<13>";
 	while(t_2<t_.Length()){
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<13>";
+		DBG_BLOCK();
 		String t_t=t_.At(t_2);
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<13>";
 		t_2=t_2+1;
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<14>";
+		DBG_LOCAL(t_t,"t")
+		DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<14>");
 		m_AddLast(t_t);
 	}
-	popErr();
 	return this;
 }
 bb_list_Enumerator2* bb_list_List::m_ObjectEnumerator(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<124>";
+	DBG_ENTER("List.ObjectEnumerator")
+	bb_list_List *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<124>");
 	bb_list_Enumerator2* t_=(new bb_list_Enumerator2)->g_new(this);
-	popErr();
 	return t_;
 }
 void bb_list_List::mark(){
 	Object::mark();
 	gc_mark_q(f__head);
+}
+String bb_list_List::debug(){
+	String t="(List)\n";
+	t+=dbg_decl("_head",&f__head);
+	return t;
 }
 bb_list_Node::bb_list_Node(){
 	f__succ=0;
@@ -1637,24 +1938,29 @@ bb_list_Node::bb_list_Node(){
 	f__data=String();
 }
 bb_list_Node* bb_list_Node::g_new(bb_list_Node* t_succ,bb_list_Node* t_pred,String t_data){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<199>";
+	DBG_ENTER("Node.new")
+	bb_list_Node *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_LOCAL(t_succ,"succ")
+	DBG_LOCAL(t_pred,"pred")
+	DBG_LOCAL(t_data,"data")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<199>");
 	gc_assign(f__succ,t_succ);
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<200>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<200>");
 	gc_assign(f__pred,t_pred);
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<201>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<201>");
 	gc_assign(f__succ->f__pred,this);
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<202>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<202>");
 	gc_assign(f__pred->f__succ,this);
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<203>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<203>");
 	f__data=t_data;
-	popErr();
 	return this;
 }
 bb_list_Node* bb_list_Node::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<196>";
-	popErr();
+	DBG_ENTER("Node.new")
+	bb_list_Node *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<196>");
 	return this;
 }
 void bb_list_Node::mark(){
@@ -1662,105 +1968,130 @@ void bb_list_Node::mark(){
 	gc_mark_q(f__succ);
 	gc_mark_q(f__pred);
 }
+String bb_list_Node::debug(){
+	String t="(Node)\n";
+	t+=dbg_decl("_succ",&f__succ);
+	t+=dbg_decl("_pred",&f__pred);
+	t+=dbg_decl("_data",&f__data);
+	return t;
+}
 bb_list_HeadNode::bb_list_HeadNode(){
 }
 bb_list_HeadNode* bb_list_HeadNode::g_new(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<248>";
+	DBG_ENTER("HeadNode.new")
+	bb_list_HeadNode *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<248>");
 	bb_list_Node::g_new2();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<249>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<249>");
 	gc_assign(f__succ,(this));
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<250>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<250>");
 	gc_assign(f__pred,(this));
-	popErr();
 	return this;
 }
 void bb_list_HeadNode::mark(){
 	bb_list_Node::mark();
 }
+String bb_list_HeadNode::debug(){
+	String t="(HeadNode)\n";
+	t=bb_list_Node::debug()+t;
+	return t;
+}
 bb_list_List2::bb_list_List2(){
 	f__head=((new bb_list_HeadNode2)->g_new());
 }
 bb_list_List2* bb_list_List2::g_new(){
-	pushErr();
-	popErr();
+	DBG_ENTER("List.new")
+	bb_list_List2 *self=this;
+	DBG_LOCAL(self,"Self")
 	return this;
 }
 bb_list_Node2* bb_list_List2::m_AddLast2(bb_template_parser_Replacer* t_data){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<120>";
+	DBG_ENTER("List.AddLast")
+	bb_list_List2 *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_LOCAL(t_data,"data")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<120>");
 	bb_list_Node2* t_=(new bb_list_Node2)->g_new(f__head,f__head->f__pred,t_data);
-	popErr();
 	return t_;
 }
 bb_list_List2* bb_list_List2::g_new2(Array<bb_template_parser_Replacer* > t_data){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<13>";
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<13>";
+	DBG_ENTER("List.new")
+	bb_list_List2 *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_LOCAL(t_data,"data")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<13>");
 	Array<bb_template_parser_Replacer* > t_=t_data;
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<13>";
 	int t_2=0;
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<13>";
 	while(t_2<t_.Length()){
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<13>";
+		DBG_BLOCK();
 		bb_template_parser_Replacer* t_t=t_.At(t_2);
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<13>";
 		t_2=t_2+1;
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<14>";
+		DBG_LOCAL(t_t,"t")
+		DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<14>");
 		m_AddLast2(t_t);
 	}
-	popErr();
 	return this;
 }
 int bb_list_List2::m_Count(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<41>";
+	DBG_ENTER("List.Count")
+	bb_list_List2 *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<41>");
 	int t_n=0;
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<41>";
 	bb_list_Node2* t_node=f__head->f__succ;
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<42>";
+	DBG_LOCAL(t_n,"n")
+	DBG_LOCAL(t_node,"node")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<42>");
 	while(t_node!=f__head){
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<43>";
+		DBG_BLOCK();
+		DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<43>");
 		t_node=t_node->f__succ;
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<44>";
+		DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<44>");
 		t_n+=1;
 	}
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<46>";
-	popErr();
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<46>");
 	return t_n;
 }
 bb_list_Enumerator* bb_list_List2::m_ObjectEnumerator(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<124>";
+	DBG_ENTER("List.ObjectEnumerator")
+	bb_list_List2 *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<124>");
 	bb_list_Enumerator* t_=(new bb_list_Enumerator)->g_new(this);
-	popErr();
 	return t_;
 }
 Array<bb_template_parser_Replacer* > bb_list_List2::m_ToArray(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<19>";
+	DBG_ENTER("List.ToArray")
+	bb_list_List2 *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<19>");
 	Array<bb_template_parser_Replacer* > t_arr=Array<bb_template_parser_Replacer* >(m_Count());
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<19>";
 	int t_i=0;
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<20>";
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<20>";
+	DBG_LOCAL(t_arr,"arr")
+	DBG_LOCAL(t_i,"i")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<20>");
 	bb_list_Enumerator* t_=this->m_ObjectEnumerator();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<20>";
 	while(t_->m_HasNext()){
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<20>";
+		DBG_BLOCK();
 		bb_template_parser_Replacer* t_t=t_->m_NextObject();
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<21>";
+		DBG_LOCAL(t_t,"t")
+		DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<21>");
 		gc_assign(t_arr.At(t_i),t_t);
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<22>";
+		DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<22>");
 		t_i+=1;
 	}
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<24>";
-	popErr();
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<24>");
 	return t_arr;
 }
 void bb_list_List2::mark(){
 	Object::mark();
 	gc_mark_q(f__head);
+}
+String bb_list_List2::debug(){
+	String t="(List)\n";
+	t+=dbg_decl("_head",&f__head);
+	return t;
 }
 bb_list_Node2::bb_list_Node2(){
 	f__succ=0;
@@ -1768,24 +2099,29 @@ bb_list_Node2::bb_list_Node2(){
 	f__data=0;
 }
 bb_list_Node2* bb_list_Node2::g_new(bb_list_Node2* t_succ,bb_list_Node2* t_pred,bb_template_parser_Replacer* t_data){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<199>";
+	DBG_ENTER("Node.new")
+	bb_list_Node2 *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_LOCAL(t_succ,"succ")
+	DBG_LOCAL(t_pred,"pred")
+	DBG_LOCAL(t_data,"data")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<199>");
 	gc_assign(f__succ,t_succ);
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<200>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<200>");
 	gc_assign(f__pred,t_pred);
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<201>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<201>");
 	gc_assign(f__succ->f__pred,this);
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<202>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<202>");
 	gc_assign(f__pred->f__succ,this);
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<203>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<203>");
 	gc_assign(f__data,t_data);
-	popErr();
 	return this;
 }
 bb_list_Node2* bb_list_Node2::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<196>";
-	popErr();
+	DBG_ENTER("Node.new")
+	bb_list_Node2 *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<196>");
 	return this;
 }
 void bb_list_Node2::mark(){
@@ -1794,61 +2130,81 @@ void bb_list_Node2::mark(){
 	gc_mark_q(f__pred);
 	gc_mark_q(f__data);
 }
+String bb_list_Node2::debug(){
+	String t="(Node)\n";
+	t+=dbg_decl("_succ",&f__succ);
+	t+=dbg_decl("_pred",&f__pred);
+	t+=dbg_decl("_data",&f__data);
+	return t;
+}
 bb_list_HeadNode2::bb_list_HeadNode2(){
 }
 bb_list_HeadNode2* bb_list_HeadNode2::g_new(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<248>";
+	DBG_ENTER("HeadNode.new")
+	bb_list_HeadNode2 *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<248>");
 	bb_list_Node2::g_new2();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<249>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<249>");
 	gc_assign(f__succ,(this));
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<250>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<250>");
 	gc_assign(f__pred,(this));
-	popErr();
 	return this;
 }
 void bb_list_HeadNode2::mark(){
 	bb_list_Node2::mark();
+}
+String bb_list_HeadNode2::debug(){
+	String t="(HeadNode)\n";
+	t=bb_list_Node2::debug()+t;
+	return t;
 }
 bb_list_Enumerator::bb_list_Enumerator(){
 	f__list=0;
 	f__curr=0;
 }
 bb_list_Enumerator* bb_list_Enumerator::g_new(bb_list_List2* t_list){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<264>";
+	DBG_ENTER("Enumerator.new")
+	bb_list_Enumerator *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_LOCAL(t_list,"list")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<264>");
 	gc_assign(f__list,t_list);
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<265>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<265>");
 	gc_assign(f__curr,t_list->f__head->f__succ);
-	popErr();
 	return this;
 }
 bb_list_Enumerator* bb_list_Enumerator::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<261>";
-	popErr();
+	DBG_ENTER("Enumerator.new")
+	bb_list_Enumerator *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<261>");
 	return this;
 }
 bool bb_list_Enumerator::m_HasNext(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<269>";
+	DBG_ENTER("Enumerator.HasNext")
+	bb_list_Enumerator *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<269>");
 	while(f__curr->f__succ->f__pred!=f__curr){
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<270>";
+		DBG_BLOCK();
+		DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<270>");
 		gc_assign(f__curr,f__curr->f__succ);
 	}
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<272>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<272>");
 	bool t_=f__curr!=f__list->f__head;
-	popErr();
 	return t_;
 }
 bb_template_parser_Replacer* bb_list_Enumerator::m_NextObject(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<276>";
+	DBG_ENTER("Enumerator.NextObject")
+	bb_list_Enumerator *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<276>");
 	bb_template_parser_Replacer* t_data=f__curr->f__data;
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<277>";
+	DBG_LOCAL(t_data,"data")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<277>");
 	gc_assign(f__curr,f__curr->f__succ);
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<278>";
-	popErr();
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<278>");
 	return t_data;
 }
 void bb_list_Enumerator::mark(){
@@ -1856,12 +2212,19 @@ void bb_list_Enumerator::mark(){
 	gc_mark_q(f__list);
 	gc_mark_q(f__curr);
 }
+String bb_list_Enumerator::debug(){
+	String t="(Enumerator)\n";
+	t+=dbg_decl("_list",&f__list);
+	t+=dbg_decl("_curr",&f__curr);
+	return t;
+}
 bool bb_template_parser_Error;
 String bb_template_parser_ParseDoc(String t_text,String t_fileLocation){
-	pushErr();
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<128>";
+	DBG_ENTER("ParseDoc")
+	DBG_LOCAL(t_text,"text")
+	DBG_LOCAL(t_fileLocation,"fileLocation")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<128>");
 	String t_=bb_template_parser_ParseDoc2(t_text,Array<bb_template_parser_Replacer* >(),t_fileLocation,String(),0);
-	popErr();
 	return t_;
 }
 bb_list_Enumerator2::bb_list_Enumerator2(){
@@ -1869,40 +2232,47 @@ bb_list_Enumerator2::bb_list_Enumerator2(){
 	f__curr=0;
 }
 bb_list_Enumerator2* bb_list_Enumerator2::g_new(bb_list_List* t_list){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<264>";
+	DBG_ENTER("Enumerator.new")
+	bb_list_Enumerator2 *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_LOCAL(t_list,"list")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<264>");
 	gc_assign(f__list,t_list);
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<265>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<265>");
 	gc_assign(f__curr,t_list->f__head->f__succ);
-	popErr();
 	return this;
 }
 bb_list_Enumerator2* bb_list_Enumerator2::g_new2(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<261>";
-	popErr();
+	DBG_ENTER("Enumerator.new")
+	bb_list_Enumerator2 *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<261>");
 	return this;
 }
 bool bb_list_Enumerator2::m_HasNext(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<269>";
+	DBG_ENTER("Enumerator.HasNext")
+	bb_list_Enumerator2 *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<269>");
 	while(f__curr->f__succ->f__pred!=f__curr){
-		errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<270>";
+		DBG_BLOCK();
+		DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<270>");
 		gc_assign(f__curr,f__curr->f__succ);
 	}
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<272>";
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<272>");
 	bool t_=f__curr!=f__list->f__head;
-	popErr();
 	return t_;
 }
 String bb_list_Enumerator2::m_NextObject(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<276>";
+	DBG_ENTER("Enumerator.NextObject")
+	bb_list_Enumerator2 *self=this;
+	DBG_LOCAL(self,"Self")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<276>");
 	String t_data=f__curr->f__data;
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<277>";
+	DBG_LOCAL(t_data,"data")
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<277>");
 	gc_assign(f__curr,f__curr->f__succ);
-	errInfo="C:/Monkey Compiler/MonkeyPro58/modules/monkey/list.monkey<278>";
-	popErr();
+	DBG_INFO("C:/bmx2dev/MonkeyPro60/modules/monkey/list.monkey<278>");
 	return t_data;
 }
 void bb_list_Enumerator2::mark(){
@@ -1910,219 +2280,253 @@ void bb_list_Enumerator2::mark(){
 	gc_mark_q(f__list);
 	gc_mark_q(f__curr);
 }
+String bb_list_Enumerator2::debug(){
+	String t="(Enumerator)\n";
+	t+=dbg_decl("_list",&f__list);
+	t+=dbg_decl("_curr",&f__curr);
+	return t;
+}
 String bb_template_parser_ParseDoc2(String t_text,Array<bb_template_parser_Replacer* > t_replaces,String t_fileLocation,String t_prefix,int t_level){
-	pushErr();
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<57>";
+	DBG_ENTER("ParseDoc")
+	DBG_LOCAL(t_text,"text")
+	DBG_LOCAL(t_replaces,"replaces")
+	DBG_LOCAL(t_fileLocation,"fileLocation")
+	DBG_LOCAL(t_prefix,"prefix")
+	DBG_LOCAL(t_level,"level")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<57>");
 	Array<String > t_lines=t_text.Split(String(L"\n"));
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<58>";
+	DBG_LOCAL(t_lines,"lines")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<58>");
 	bb_list_List* t_lines2=(new bb_list_List)->g_new();
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<59>";
+	DBG_LOCAL(t_lines2,"lines2")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<59>");
 	int t_ignore=0;
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<60>";
+	DBG_LOCAL(t_ignore,"ignore")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<60>");
 	for(int t_i=0;t_i<t_lines.Length();t_i=t_i+1){
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<61>";
+		DBG_BLOCK();
+		DBG_LOCAL(t_i,"i")
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<61>");
 		String t_teststring=t_lines.At(t_i).Trim();
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<62>";
+		DBG_LOCAL(t_teststring,"teststring")
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<62>");
 		if(t_teststring.ToLower().StartsWith(String(L"'loadtemplate "))){
-			errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<63>";
+			DBG_BLOCK();
+			DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<63>");
 			if(t_ignore==0){
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<65>";
+				DBG_BLOCK();
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<65>");
 				String t_line=t_prefix+t_lines.At(t_i);
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<66>";
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<66>";
+				DBG_LOCAL(t_line,"line")
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<66>");
 				Array<bb_template_parser_Replacer* > t_=t_replaces;
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<66>";
 				int t_2=0;
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<66>";
 				while(t_2<t_.Length()){
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<66>";
+					DBG_BLOCK();
 					bb_template_parser_Replacer* t_rep=t_.At(t_2);
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<66>";
 					t_2=t_2+1;
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<67>";
+					DBG_LOCAL(t_rep,"rep")
+					DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<67>");
 					t_line=t_line.Replace(String(L"{%")+t_rep->f_find.Trim()+String(L"%}"),t_rep->f_replace.Trim());
 				}
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<69>";
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<69>");
 				t_lines2->m_AddLast(t_line);
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<70>";
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<70>");
 				String t_prefix2=t_prefix+t_lines.At(t_i).Slice(0,t_lines.At(t_i).Find(String(L"'"),0));
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<71>";
+				DBG_LOCAL(t_prefix2,"prefix2")
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<71>");
 				Array<String > t_data=t_line.Trim().Split(String(L","));
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<72>";
+				DBG_LOCAL(t_data,"data")
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<72>");
 				bb_list_List2* t_repList=(new bb_list_List2)->g_new();
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<73>";
+				DBG_LOCAL(t_repList,"repList")
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<73>");
 				for(int t_i2=1;t_i2<t_data.Length();t_i2=t_i2+1){
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<74>";
+					DBG_BLOCK();
+					DBG_LOCAL(t_i2,"i")
+					DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<74>");
 					Array<String > t_repData=Array<String >(2);
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<75>";
+					DBG_LOCAL(t_repData,"repData")
+					DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<75>");
 					t_repData.At(0)=t_data.At(t_i2).Slice(0,t_data.At(t_i2).Find(String(L"="),0));
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<76>";
+					DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<76>");
 					t_repData.At(1)=t_data.At(t_i2).Slice(t_data.At(t_i2).Find(String(L"="),0)+1);
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<77>";
+					DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<77>");
 					bb_template_parser_Replacer* t_rep2=(new bb_template_parser_Replacer)->g_new();
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<78>";
+					DBG_LOCAL(t_rep2,"rep")
+					DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<78>");
 					if(t_repData.Length()==2){
-						errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<79>";
+						DBG_BLOCK();
+						DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<79>");
 						t_rep2->f_find=t_repData.At(0);
-						errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<80>";
+						DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<80>");
 						t_rep2->f_replace=t_repData.At(1);
-						errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<81>";
+						DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<81>");
 						t_repList->m_AddLast2(t_rep2);
 					}
 				}
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<84>";
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<84>");
 				Array<bb_template_parser_Replacer* > t_repArray=t_repList->m_ToArray();
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<85>";
+				DBG_LOCAL(t_repArray,"repArray")
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<85>");
 				String t_filelocation=RealPath(t_fileLocation+t_data.At(0).Slice(14).Trim()).Replace(String(L"/"),String(L"\\"));
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<87>";
+				DBG_LOCAL(t_filelocation,"filelocation")
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<87>");
 				if(t_level==0){
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<87>";
+					DBG_BLOCK();
 					t_lines2->m_AddLast(t_prefix2+String(L"'#Region Code generated by the Harpl-Monkey template. Loaded from: ")+t_data.At(0).Slice(14).Trim());
 				}
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<88>";
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<88>");
 				if(FileType(t_filelocation)!=1){
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<89>";
+					DBG_BLOCK();
+					DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<89>");
 					Print(String(L"The file [")+t_filelocation+String(L"] can't be found."));
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<90>";
+					DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<90>");
 					bb_template_parser_Error=true;
 				}else{
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<92>";
+					DBG_BLOCK();
+					DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<92>");
 					t_lines2->m_AddLast(bb_template_parser_ParseDoc2(LoadString(t_filelocation),t_repArray,bb_template_parser_GetDir(t_filelocation),t_prefix2,t_level+1));
 				}
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<94>";
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<94>");
 				if(t_level==0){
-					errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<94>";
+					DBG_BLOCK();
 					t_lines2->m_AddLast(t_prefix2+String(L"'#End Region"));
 				}
 			}
-			errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<96>";
+			DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<96>");
 			t_ignore+=1;
 		}else{
-			errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<98>";
+			DBG_BLOCK();
+			DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<98>");
 			if(t_lines.At(t_i).Trim().ToLower()==String(L"'endtemplate")){
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<99>";
+				DBG_BLOCK();
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<99>");
 				t_ignore-=1;
 			}
 		}
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<101>";
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<101>");
 		if(t_ignore==0){
-			errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<102>";
+			DBG_BLOCK();
+			DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<102>");
 			String t_line2=t_prefix+t_lines.At(t_i);
-			errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<103>";
-			errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<103>";
+			DBG_LOCAL(t_line2,"line")
+			DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<103>");
 			Array<bb_template_parser_Replacer* > t_3=t_replaces;
-			errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<103>";
 			int t_4=0;
-			errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<103>";
 			while(t_4<t_3.Length()){
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<103>";
+				DBG_BLOCK();
 				bb_template_parser_Replacer* t_rep3=t_3.At(t_4);
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<103>";
 				t_4=t_4+1;
-				errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<104>";
+				DBG_LOCAL(t_rep3,"rep")
+				DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<104>");
 				t_line2=t_line2.Replace(String(L"{%")+t_rep3->f_find.Trim()+String(L"%}"),t_rep3->f_replace.Trim());
 			}
-			errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<106>";
+			DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<106>");
 			t_lines2->m_AddLast(t_line2);
 		}
 	}
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<109>";
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<109>");
 	String t_result=String();
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<109>";
 	bool t_first=true;
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<110>";
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<110>";
+	DBG_LOCAL(t_result,"result")
+	DBG_LOCAL(t_first,"first")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<110>");
 	bb_list_Enumerator2* t_5=t_lines2->m_ObjectEnumerator();
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<110>";
 	while(t_5->m_HasNext()){
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<110>";
+		DBG_BLOCK();
 		String t_s=t_5->m_NextObject();
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<111>";
+		DBG_LOCAL(t_s,"s")
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<111>");
 		if(t_first){
-			errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<112>";
+			DBG_BLOCK();
+			DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<112>");
 			t_result=t_s;
-			errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<113>";
+			DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<113>");
 			t_first=false;
 		}else{
-			errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<115>";
+			DBG_BLOCK();
+			DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<115>");
 			t_result=t_result+String(L"\n")+t_s;
 		}
 	}
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<118>";
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<118>");
 	if(t_ignore!=0){
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<118>";
+		DBG_BLOCK();
 		bb_template_parser_Error=true;
 	}
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<119>";
-	popErr();
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<119>");
 	return t_result;
 }
 int bbMain(){
-	pushErr();
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<4>";
+	DBG_ENTER("Main")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<4>");
 	if(AppArgs().Length()!=2){
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<5>";
+		DBG_BLOCK();
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<5>");
 		bb_template_parser_PrintInfoHeader();
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<6>";
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<6>");
 		Print(String(L"Wrong parameters number."));
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<7>";
-		popErr();
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<7>");
 		return -1;
 	}
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<9>";
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<9>");
 	String t_filePath=AppArgs().At(1);
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<11>";
+	DBG_LOCAL(t_filePath,"filePath")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<11>");
 	if(t_filePath.StartsWith(String(L".")) || t_filePath.Contains(String(L":"))==false){
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<11>";
+		DBG_BLOCK();
 		t_filePath=RealPath(t_filePath);
 	}
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<13>";
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<13>");
 	if(FileType(t_filePath)!=1){
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<14>";
+		DBG_BLOCK();
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<14>");
 		bb_template_parser_PrintInfoHeader();
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<15>";
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<15>");
 		Print(String(L"Wrong file. File was not found or it is not a file."));
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<16>";
-		popErr();
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<16>");
 		return -1;
 	}
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<19>";
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<19>");
 	String t_text=LoadString(AppArgs().At(1));
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<20>";
+	DBG_LOCAL(t_text,"text")
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<20>");
 	if(t_text==String()){
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<21>";
+		DBG_BLOCK();
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<21>");
 		bb_template_parser_PrintInfoHeader();
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<22>";
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<22>");
 		Print(String(L"File was empty"));
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<23>";
-		popErr();
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<23>");
 		return -1;
 	}
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<28>";
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<28>");
 	Print(String(L"Harpl-Monkey template parser."));
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<29>";
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<29>");
 	Print(String(L"Parsing ")+t_filePath);
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<30>";
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<30>");
 	t_text=bb_template_parser_ParseDoc(t_text,bb_template_parser_GetDir(t_filePath));
-	errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<31>";
+	DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<31>");
 	if(((bb_template_parser_Error)?1:0)==0){
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<32>";
+		DBG_BLOCK();
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<32>");
 		SaveString(t_text,t_filePath);
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<33>";
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<33>");
 		Print(String(L"File properly parsed."));
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<34>";
-		popErr();
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<34>");
 		return 0;
 	}else{
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<36>";
+		DBG_BLOCK();
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<36>");
 		Print(String(L"Error procesing source code. File was not modified"));
-		errInfo="C:/Monkey Compiler/harpl-project/MonkeyTemplateParser/template_parser.monkey<37>";
-		popErr();
+		DBG_INFO("C:/bmx2dev/harpl-project/MonkeyTemplateParser/template_parser.monkey<37>");
 		return 4;
 	}
 }
 int bbInit(){
 	bb_template_parser_Error=false;
+	DBG_GLOBAL("Error",&bb_template_parser_Error);
 	return 0;
 }
 void gc_mark(){
