@@ -23,6 +23,9 @@ Class Compiler
 	#end
 	Field lexer:=New Lexer
 
+	Field originalFile:String
+	
+	
 	Field compilerScopeStack:CompilerScopeStack 
 	
 	#rem
@@ -54,7 +57,7 @@ Class Compiler
 			Print "Warining: source code did not contain any valid Harpl code, or source code was invalid."
 			Return true
 		EndIf
-		
+		originalFile = filename
 		Print "Compiling..."
 		'We add the global data scope:
 		compilerScopeStack.AddDataScope()

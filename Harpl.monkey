@@ -11,6 +11,7 @@ Import compiler
 Import vmaassembler.assemblerobj
 Import harplvm.hvm
 Import os
+Import cpp.cpptrans
 
 'summary: This const contains the name of this application
 Const APPNAME:String = "Harpl compiler"
@@ -81,6 +82,14 @@ Function Main()
 		Local ignoreerrors$ = Input("Do you want to run this, ignoring all the compilation errors? (Y/N)")
 		if ignoreerrors.Trim.ToLower.StartsWith("y")= false then return 4 
 	EndIf
+	
+	
+	Local cpp:= New CppTrans
+	cpp.source = lCompiler
+	cpp.Translate()
+	
+	Return
+	
 	Local harplByteCoder := New HarplByteCoder 
 	local bco:ByteCodeObj = harplByteCoder.GenerateByteCode(lCompiler.generatedAsm)
 	if bco = null Then
