@@ -12,6 +12,9 @@ Import vmaassembler.assemblerobj
 Import harplvm.hvm
 Import os
 Import cpp.cpptrans
+Import abstractcompiler.astnode
+Import abstractcompiler.identifier
+Import abstractcompiler.astsatcktree
 
 'summary: This const contains the name of this application
 Const APPNAME:String = "Harpl compiler"
@@ -56,8 +59,6 @@ Function Main()
 	
 	Local fileToCompile:String = AppArgs[AppArgs.Length-1]
 	
-	
-	
 	Local lCompiler := New Compiler
 	
 	For Local i:Int = 1 until AppArgs.Length-1
@@ -86,6 +87,11 @@ Function Main()
 	Local cpp:= New CppTrans
 	cpp.source = lCompiler
 	cpp.Translate()
+	
+	For Local line:String = EachIn cpp.outputcode
+		Print line
+	Next
+	
 	
 	Return 0
 	

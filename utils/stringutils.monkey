@@ -32,3 +32,17 @@ Function HexToInteger:Int(hex:String, success:BoolByRef = null)
 	if success <> null then success.value = True;
 	Return value;
 End
+
+Function Tabs:String(count:Int)
+	if count < 0 Then count = 0
+	if count > TabsString.Length Then
+		While TabsString.Length < count
+			TabsString += "~t"
+		Wend
+	EndIf
+	if count = 0 Then Return ""
+	Return TabsString[ .. count]
+End
+
+Private
+Global TabsString:String = ""

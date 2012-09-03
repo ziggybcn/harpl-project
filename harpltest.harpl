@@ -1,3 +1,4 @@
 Define MyInt as Integer = 45
 Define Bool1 as Boolean = MyInt<100
+Define MyName as String = "Hello world!"
 Output "The result of the Bool1 variable, converted to String is: " ++ Bool1 as Float

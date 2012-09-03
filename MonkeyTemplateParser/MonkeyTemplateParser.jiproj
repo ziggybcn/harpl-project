@@ -9,5 +9,5 @@
       </CursorPos>
     </Document>
   </Files>
-  <CompilerConfig Configuration="debug" BuildMode="build" Target="stdcpp" />
+  <CompilerConfig Configuration="debug" BuildMode="update" Target="stdcpp" />
 </JiProj>
